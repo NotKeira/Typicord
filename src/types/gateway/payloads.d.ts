@@ -16,9 +16,9 @@ export interface IdentifyPayload {
     token: string;
     intents: number;
     properties: {
-      os: string;
-      browser: string;
-      device: string;
+      $os: string;
+      $browser: string;
+      $device: string;
     };
   };
 }

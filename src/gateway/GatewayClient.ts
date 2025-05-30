@@ -7,7 +7,7 @@ import type {
 import { GatewayEvents, GatewayOpcodes } from "./constants";
 import { HeartbeatManager } from "./HeartbeatManager";
 import { EventEmitter } from "@/events/EventEmitter";
-import { ReadyEvent } from "@/types/gateway/events";
+import { MessageCreateEvent, ReadyEvent } from "@/types/gateway/events";
 
 export class GatewayClient {
   private ws: WebSocket | null = null;
@@ -55,12 +55,23 @@ export class GatewayClient {
           break;
 
         case GatewayOpcodes.DISPATCH:
-          if (packet.t === GatewayEvents.READY) {
-            this.events.emit<ReadyEvent>(
-              GatewayEvents.READY,
-              packet.d as ReadyEvent
-            );
-            console.log("[Gateway] Ready event received");
+          switch (packet.t) {
+            case GatewayEvents.MESSAGE_CREATE:
+              this.events.emit<MessageCreateEvent>(
+                GatewayEvents.MESSAGE_CREATE,
+                packet.d as MessageCreateEvent
+              );
+              break;
+            case GatewayEvents.READY:
+              this.events.emit<ReadyEvent>(
+                GatewayEvents.READY,
+                packet.d as ReadyEvent
+              );
+              break;
+            default:
+              console.error(
+                `[Gateway] Unknown event ${packet.t}` /*, packet.d*/
+              );
           }
           break;
         default:

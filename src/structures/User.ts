@@ -1,0 +1,19 @@
+import type { User as RawUser } from "../types/structures/User";
+
+export class User {
+  constructor(public data: RawUser) {}
+
+  get tag(): string {
+    return `${this.data.username}#${this.data.discriminator}`;
+  }
+
+  get isBot(): boolean {
+    return this.data.bot === true;
+  }
+
+  get avatarURL(): string | null {
+    return this.data.avatar
+      ? `https://cdn.discordapp.com/avatars/${this.data.id}/${this.data.avatar}.png`
+      : null;
+  }
+}
