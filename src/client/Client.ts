@@ -5,32 +5,49 @@ import { Message } from "@/structures/Message";
 import type { TypicordEvents } from "@/types/gateway/events";
 import { GuildCacheManager } from "@/cache/GuildCacheManager";
 import { UserCacheManager } from "@/cache/UserCacheManager";
+import { RESTClient } from "@/client/RESTClient";
+
+/**
+ * The main Typicord client for interacting with Discord's API and Gateway.
+ * Handles events, caching, and REST actions.
+ */
 export class Client extends EventEmitter {
-  private gatewayInstance: GatewayClient;
+  // private gateway: GatewayClient; // Removed duplicate
   public token: string;
   public intents: number;
+  public rest: RESTClient;
   public cache: {
     guilds: GuildCacheManager;
     users: UserCacheManager;
   };
+  private _gateway: GatewayClient;
 
+  /**
+   * Create a new Typicord client instance.
+   * @param token The bot token
+   * @param intents The gateway intents bitfield
+   */
   constructor(token: string, intents: number) {
     super();
     this.token = token;
     this.intents = intents;
-    this.gatewayInstance = new GatewayClient(this);
+    this.rest = new RESTClient({ token });
+    this._gateway = new GatewayClient(this);
     this.cache = {
       guilds: new GuildCacheManager(),
       users: new UserCacheManager(),
     };
   }
 
+  /**
+   * Connect to the Discord Gateway.
+   */
   public connect(): void {
-    this.gatewayInstance.connect();
+    this._gateway.connect();
   }
 
   public get gateway(): GatewayClient {
-    return this.gatewayInstance;
+    return this._gateway;
   }
 
   public override on<K extends keyof TypicordEvents>(
@@ -41,23 +58,19 @@ export class Client extends EventEmitter {
     return this;
   }
 
+  /**
+   * Send a message to a channel via the Discord REST API.
+   * @param channelId The channel ID
+   * @param content The message content
+   * @param options Additional message options (e.g., message_reference)
+   */
   async sendMessage(
     channelId: string,
     content: string,
     options?: { message_reference?: { message_id: string } }
   ) {
     const body: any = { content, ...options };
-    const url = `https://discord.com/api/v10/channels/${channelId}/messages`;
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bot ${this.token}`,
-      },
-      body: JSON.stringify(body),
-    });
-    if (!res.ok) throw new Error(`Failed to send message: ${res.statusText}`);
-    const data = await res.json();
+    const data = await this.rest.post(`/channels/${channelId}/messages`, body);
     return new Message(this, data);
   }
 }

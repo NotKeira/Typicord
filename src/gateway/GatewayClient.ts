@@ -16,6 +16,9 @@ import { Client } from "@/client/Client";
 import fs from "fs";
 import path from "path";
 
+/**
+ * Handles the Discord gateway connection, events, and caching.
+ */
 export class GatewayClient {
   private client: Client;
   private ws: WebSocket | null = null;
@@ -23,14 +26,24 @@ export class GatewayClient {
   private cachedGuilds: Set<string> = new Set();
   private readyReceived = false;
 
+  /**
+   * Create a new GatewayClient instance.
+   * @param client The Typicord client
+   */
   constructor(client: Client) {
     this.client = client;
   }
 
+  /**
+   * Get the current WebSocket latency.
+   */
   public get latency(): number {
     return this.heartbeatManager?.getPing() ?? -1;
   }
 
+  /**
+   * Connect to the Discord gateway.
+   */
   public connect(): void {
     this.ws = new WebSocket("wss://gateway.discord.gg/?v=10&encoding=json");
 

@@ -3,6 +3,9 @@ import type { Message as GatewayMessage } from "@/types/gateway/structures/Messa
 import type { Emoji } from "./Emoji";
 // import type { Emoji as GatewayEmoji } from "@/types/gateway/structures/Emoji";
 
+/**
+ * Represents a Discord message and provides helper methods for common actions.
+ */
 export class Message {
   public id: string;
   public channelId: string;
@@ -30,54 +33,48 @@ export class Message {
     this.edited_timestamp = data.edited_timestamp || null;
   }
 
+  /**
+   * Reply to this message.
+   * @param content The reply content
+   */
   public async reply(content: string): Promise<Message> {
     return this.client.sendMessage(this.channelId, content, {
       message_reference: { message_id: this.id },
     });
   }
 
+  /**
+   * Edit this message.
+   * @param content The new content
+   */
   public async edit(content: string): Promise<Message> {
-    const url = `https://discord.com/api/v10/channels/${this.channelId}/messages/${this.id}`;
-    const res = await fetch(url, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bot ${this.client.token}`,
-      },
-      body: JSON.stringify({ content }),
-    });
-
-    if (!res.ok) throw new Error(`Failed to edit message: ${res.statusText}`);
-    const data = await res.json();
+    const data = await this.client.rest.patch(
+      `/channels/${this.channelId}/messages/${this.id}`,
+      { content }
+    );
     return new Message(this.client, data);
   }
 
+  /**
+   * Delete this message.
+   */
   public async delete(): Promise<void> {
-    const url = `https://discord.com/api/v10/channels/${this.channelId}/messages/${this.id}`;
-    const res = await fetch(url, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bot ${this.client.token}`,
-      },
-    });
-    if (!res.ok) throw new Error(`Failed to delete message: ${res.statusText}`);
+    await this.client.rest.delete(
+      `/channels/${this.channelId}/messages/${this.id}`
+    );
     return;
   }
 
+  /**
+   * React to this message with an emoji.
+   * @param emoji The emoji to react with
+   */
   public async react(emoji: string) {
-    const url = `https://discord.com/api/v10/channels/${
-      this.channelId
-    }/messages/${this.id}/reactions/${encodeURIComponent(emoji)}/@me`;
-    const res = await fetch(url, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bot ${this.client.token}`,
-      },
-    });
-    if (!res.ok)
-      throw new Error(`Failed to react to message: ${res.statusText}`);
+    await this.client.rest.put(
+      `/channels/${this.channelId}/messages/${
+        this.id
+      }/reactions/${encodeURIComponent(emoji)}/@me`
+    );
     return;
   }
 }
