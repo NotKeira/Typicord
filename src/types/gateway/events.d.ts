@@ -18,3 +18,44 @@ export interface ReadyEvent {
 }
 
 export interface MessageCreateEvent extends Message {}
+
+export interface TypicordEvents {
+  READY: ReadyEvent;
+  MESSAGE_CREATE: MessageCreateEvent;
+  MESSAGE_UPDATE: Partial<Message>;
+  MESSAGE_DELETE: {
+    id: string;
+    channel_id: string;
+    guild_id?: string;
+  };
+  GUILD_CREATE: any;
+  GUILD_UPDATE: any;
+  GUILD_DELETE: { id: string; unavailable?: boolean };
+  CHANNEL_CREATE: any;
+  CHANNEL_UPDATE: any;
+  CHANNEL_DELETE: any;
+  INTERACTION_CREATE: any;
+  TYPING_START: {
+    channel_id: string;
+    user_id: string;
+    timestamp: number;
+    guild_id?: string;
+    member?: any;
+  };
+  MESSAGE_REACTION_ADD: any;
+  MESSAGE_REACTION_REMOVE: any;
+  MESSAGE_REACTION_REMOVE_ALL: {
+    channel_id: string;
+    message_id: string;
+    guild_id?: string;
+  };
+  MESSAGE_REACTION_REMOVE_EMOJI: {
+    channel_id: string;
+    message_id: string;
+    emoji: { id: string | null; name: string };
+    guild_id?: string;
+  };
+  PRESENCE_UPDATE: any;
+  VOICE_STATE_UPDATE: any;
+  USER_UPDATE: any;
+}

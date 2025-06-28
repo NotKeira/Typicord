@@ -1,4 +1,4 @@
-import WebSocket, { WebSocketServer } from "ws";
+import WebSocket from "ws";
 import { handleHello } from "./handlers";
 import type {
   GatewayPayload,
@@ -6,22 +6,32 @@ import type {
 } from "@/types/gateway/payloads";
 import { GatewayEvents, GatewayOpcodes } from "./constants";
 import { HeartbeatManager } from "./HeartbeatManager";
-import { EventEmitter } from "@/events/EventEmitter";
-import { MessageCreateEvent, ReadyEvent } from "@/types/gateway/events";
+import type {
+  TypicordEvents,
+  MessageCreateEvent,
+  ReadyEvent,
+} from "@/types/gateway/events";
+import { Message } from "@/structures/Message";
+import { Client } from "@/client/Client";
+import fs from "fs";
+import path from "path";
 
 export class GatewayClient {
+  private client: Client;
   private ws: WebSocket | null = null;
-  private token: string;
-  private intents: number;
   private heartbeatManager: HeartbeatManager | null = null;
-  public events = new EventEmitter();
+  private cachedGuilds: Set<string> = new Set();
+  private readyReceived = false;
 
-  constructor(token: string, intents: number) {
-    this.token = token;
-    this.intents = intents;
+  constructor(client: Client) {
+    this.client = client;
   }
 
-  connect() {
+  public get latency(): number {
+    return this.heartbeatManager?.getPing() ?? -1;
+  }
+
+  public connect(): void {
     this.ws = new WebSocket("wss://gateway.discord.gg/?v=10&encoding=json");
 
     this.ws.on("open", () => {
@@ -29,54 +39,98 @@ export class GatewayClient {
     });
 
     this.ws.on("message", (data) => {
-      const packet: GatewayPayload = JSON.parse(data.toString());
+      try {
+        const packet: GatewayPayload = JSON.parse(data.toString());
 
-      switch (packet.op) {
-        case GatewayOpcodes.HELLO:
-          this.heartbeatManager = new HeartbeatManager(
-            this.ws!,
-            (packet.d as HelloPayloadData).heartbeat_interval,
-            () => {
-              console.warn("[Gateway] Missed heartbeat ACK, Reconnecting...");
-              this.ws?.terminate();
-              this.connect();
+        switch (packet.op) {
+          case GatewayOpcodes.HELLO:
+            this.heartbeatManager = new HeartbeatManager(
+              this.ws!,
+              (packet.d as HelloPayloadData).heartbeat_interval,
+              () => {
+                console.warn("[Gateway] Missed heartbeat ACK, Reconnecting...");
+                this.ws?.terminate();
+                this.connect();
+              }
+            );
+            this.heartbeatManager.start();
+
+            handleHello(this.ws!, packet.d as HelloPayloadData, {
+              token: this.client.token,
+              intents: this.client.intents,
+            });
+            break;
+
+          case GatewayOpcodes.HEARTBEAT_ACK:
+            this.heartbeatManager?.onHeartbeatAck();
+            break;
+
+          case GatewayOpcodes.DISPATCH: {
+            const event = packet.t as keyof TypicordEvents;
+
+            const handlers: Partial<{
+              [K in keyof TypicordEvents]: (data: TypicordEvents[K]) => void;
+            }> = {
+              READY: (data) => {
+                // Cache all guilds from READY event
+                if (Array.isArray((data as any).guilds)) {
+                  for (const guild of (data as any).guilds) {
+                    if (guild.id) this.client.cache.guilds.set(guild.id, guild);
+                  }
+                }
+                this.readyReceived = true;
+                this.client.emit(GatewayEvents.READY, data as ReadyEvent);
+              },
+              MESSAGE_CREATE: (data) => {
+                const msg = new Message(
+                  this.client,
+                  data as MessageCreateEvent
+                );
+                this.client.emit(GatewayEvents.MESSAGE_CREATE, msg);
+              },
+              GUILD_CREATE: (data: any) => {
+                const guildId = data.id;
+                if (!this.readyReceived) {
+                  // During startup, just cache
+                  this.client.cache.guilds.set(guildId, data);
+                  this.client.emit("GUILD_CREATE", data); // Optionally emit all at startup
+                } else if (!this.client.cache.guilds.has(guildId)) {
+                  // Truly new guild
+                  this.client.cache.guilds.set(guildId, data);
+                  this.client.emit("GUILD_CREATE", data);
+                } else {
+                  // Not a new join, ignore
+                }
+              },
+            };
+
+            const handler = handlers[event];
+            if (handler) {
+              handler(packet.d as any);
+            } else {
+              console.log(`[Gateway] Unhandled dispatch event: ${packet.t}`);
             }
-          );
-          this.heartbeatManager.start();
-
-          handleHello(this.ws!, packet.d as HelloPayloadData, {
-            token: this.token,
-            intents: this.intents,
-          });
-          break;
-
-        case GatewayOpcodes.HEARTBEAT_ACK:
-          this.heartbeatManager?.onHeartbeatAck();
-          break;
-
-        case GatewayOpcodes.DISPATCH:
-          switch (packet.t) {
-            case GatewayEvents.MESSAGE_CREATE:
-              this.events.emit<MessageCreateEvent>(
-                GatewayEvents.MESSAGE_CREATE,
-                packet.d as MessageCreateEvent
-              );
-              break;
-            case GatewayEvents.READY:
-              this.events.emit<ReadyEvent>(
-                GatewayEvents.READY,
-                packet.d as ReadyEvent
-              );
-              break;
-            default:
-              console.error(
-                `[Gateway] Unknown event ${packet.t}` /*, packet.d*/
-              );
+            break;
           }
-          break;
-        default:
-          console.log(`[Gateway] Unknown opcode ${packet.op}`);
+
+          default:
+            console.log(`[Gateway] Unknown opcode: ${packet.op}`);
+        }
+      } catch (error) {
+        console.error("[Gateway] Failed to parse message:", error);
       }
+    });
+
+    this.ws.on("error", (err) => {
+      console.error("[Gateway] WebSocket error:", err);
+    });
+
+    this.ws.on("close", (code, reason) => {
+      console.warn(
+        `[Gateway] Connection closed: ${code} - ${reason.toString()}`
+      );
+      this.heartbeatManager?.stop();
+      setTimeout(() => this.connect(), 5000);
     });
   }
 }

@@ -1,19 +1,22 @@
-type Listener<T = any> = (data: T) => void;
+import type { TypicordEvents } from "@/types/gateway/events";
 
 export class EventEmitter {
-  private listeners: Map<string, Listener[]> = new Map();
+  private listeners: {
+    [K in keyof TypicordEvents]?: Array<(data: TypicordEvents[K]) => void>;
+  } = {};
 
-  on<T>(event: string, listener: Listener<T>): void {
-    const existing = this.listeners.get(event) ?? [];
-    existing.push(listener);
-    this.listeners.set(event, existing);
+  on<K extends keyof TypicordEvents>(
+    event: K,
+    listener: (data: TypicordEvents[K]) => void
+  ): void {
+    if (!this.listeners[event]) this.listeners[event] = [];
+    this.listeners[event]!.push(listener);
   }
 
-  emit<T>(event: string, data: T): void {
-    const listeners = this.listeners.get(event);
-    if (!listeners) return;
-    for (const listener of listeners) {
-      listener(data);
-    }
+  emit<K extends keyof TypicordEvents>(
+    event: K,
+    data: TypicordEvents[K]
+  ): void {
+    this.listeners[event]?.forEach((listener) => listener(data));
   }
 }

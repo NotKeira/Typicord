@@ -4,7 +4,7 @@
   "description": "Typicord is a TypeScript library for interacting with the Discord API, providing type definitions and utilities to simplify development.",
   "main": "src/main.ts",
   "scripts": {
-    "test:ready": "tsx ./tests/ready.ts"
+    "test": "tsx ./tests/ready.ts"
   },
   "keywords": [
     "typicord",
@@ -22,10 +22,10 @@
   "license": "MIT",
   "packageManager": "pnpm@10.11.0",
   "devDependencies": {
-    "@types/node": "^22.15.28",
+    "@types/node": "^22.15.31",
     "@types/ws": "^8.18.1",
     "tsc": "^2.0.4",
-    "tsx": "^4.19.4",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
   "dependencies": {

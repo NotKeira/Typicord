@@ -6,6 +6,9 @@ export class HeartbeatManager {
   private interval: number;
   private intervalId: NodeJS.Timeout | null = null;
   private lastAck = true;
+  private lastHeartbeat: number = 0;
+  private latency: number = 0;
+
   private onMissedHeartbeat: () => void;
 
   constructor(ws: WebSocket, interval: number, onMissedHeartbeat: () => void) {
@@ -14,7 +17,16 @@ export class HeartbeatManager {
     this.onMissedHeartbeat = onMissedHeartbeat;
   }
 
-  start() {
+  private sendHeartbeat() {
+    this.lastHeartbeat = Date.now();
+    this.ws.send(JSON.stringify({ op: GatewayOpcodes.HEARTBEAT, d: null }));
+  }
+
+  public getPing(): number {
+    return this.latency;
+  }
+
+  public start() {
     this.intervalId = setInterval(() => {
       if (!this.lastAck) {
         this.stop();
@@ -27,7 +39,9 @@ export class HeartbeatManager {
     }, this.interval);
   }
 
-  onHeartbeatAck() {
+  public onHeartbeatAck() {
+    const now = Date.now();
+    this.latency = now - this.lastHeartbeat;
     this.lastAck = true;
   }
 
