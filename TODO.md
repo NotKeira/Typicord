@@ -2,10 +2,10 @@
 
 ## Core Functionality
 
-- [ ] Implement proper error handling and custom error classes
-- [ ] Add rate limit handling for API requests
-- [ ] Create a REST API client class to handle HTTP requests
-- [ ] Add support for Discord API version configuration
+- [x] Implement proper error handling and custom error classes
+- [x] Add rate limit handling for API requests
+- [x] Create a REST API client class to handle HTTP requests
+- [x] Add support for Discord API version configuration
 - [ ] Implement reconnection logic with exponential backoff
 
 ## Gateway
@@ -37,18 +37,18 @@
 
 ## Documentation
 
-- [ ] Add JSDoc comments to all classes and methods
+- [x] Add JSDoc comments to all classes and methods
 - [ ] Create comprehensive API documentation
 - [ ] Add usage examples
 - [ ] Create contributing guidelines
-- [ ] Add unit tests
+- [x] Add unit tests (RESTClient and integration tests)
 
 ## Development
 
 - [ ] Set up CI/CD pipeline
 - [ ] Add ESLint configuration
 - [ ] Add Prettier configuration
-- [ ] Create automated testing setup
+- [x] Create automated testing setup (test script runs all test:\* scripts)
 - [ ] Add performance benchmarks
 
 ## Package Management

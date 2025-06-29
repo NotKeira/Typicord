@@ -35,10 +35,17 @@ export class GatewayClient {
   }
 
   /**
-   * Get the current WebSocket latency.
+   * Get the current WebSocket latency (ms).
    */
-  public get latency(): number {
-    return this.heartbeatManager?.getPing() ?? -1;
+  public getWebSocketLatency(): number {
+    return this.heartbeatManager?.getWebSocketLatency() ?? -1;
+  }
+
+  /**
+   * @deprecated Use getWebSocketLatency() instead.
+   */
+  public getPing(): number {
+    return this.getWebSocketLatency();
   }
 
   /**
@@ -85,14 +92,24 @@ export class GatewayClient {
               [K in keyof TypicordEvents]: (data: TypicordEvents[K]) => void;
             }> = {
               READY: (data) => {
-                // Cache all guilds from READY event
-                if (Array.isArray((data as any).guilds)) {
-                  for (const guild of (data as any).guilds) {
-                    if (guild.id) this.client.cache.guilds.set(guild.id, guild);
+                // Set client.user and client.guilds from READY event
+                if (typeof data === "object") {
+                  // Set user
+                  if ("user" in data) {
+                    const { User } = require("@/structures/User");
+                    this.client.user = new User((data as any).user);
+                  }
+                  // Set guilds
+                  if ("guilds" in data) {
+                    this.client.guilds = (data as any).guilds;
+                    for (const guild of (data as any).guilds) {
+                      if (guild.id)
+                        this.client.cache.guilds.set(guild.id, guild);
+                    }
                   }
                 }
                 this.readyReceived = true;
-                this.client.emit(GatewayEvents.READY, data as ReadyEvent);
+                this.client.emit(GatewayEvents.READY, undefined);
               },
               MESSAGE_CREATE: (data) => {
                 const msg = new Message(

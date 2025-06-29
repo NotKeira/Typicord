@@ -5,6 +5,9 @@
     "moduleResolution": "node",
     "outDir": "./dist",
     "rootDir": "./src",
+    "declaration": true,
+    "declarationDir": "./typings",
+    "declarationMap": true,
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -13,7 +16,7 @@
     "noImplicitAny": true,
     "baseUrl": "./",
     "paths": {
-        "@/*": ["src/*"]
+      "@/*": ["src/*"]
     }
   },
   "include": ["src"],

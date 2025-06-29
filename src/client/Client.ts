@@ -1,3 +1,5 @@
+// This is replaced at build time by tsup
+declare const __CLIENT_VERSION__: string;
 import { GatewayClient } from "@/gateway/GatewayClient";
 // import { GatewayEvents } from "@/gateway/constants";
 import { EventEmitter } from "@/events/EventEmitter";
@@ -12,7 +14,10 @@ import { RESTClient } from "@/client/RESTClient";
  * Handles events, caching, and REST actions.
  */
 export class Client extends EventEmitter {
-  // private gateway: GatewayClient; // Removed duplicate
+  /**
+   * The Typicord client version.
+   */
+  public static version: string = __CLIENT_VERSION__;
   public token: string;
   public intents: number;
   public rest: RESTClient;
@@ -20,6 +25,8 @@ export class Client extends EventEmitter {
     guilds: GuildCacheManager;
     users: UserCacheManager;
   };
+  public user: import("@/structures/User").User | null = null;
+  public guilds: any[] = [];
   private _gateway: GatewayClient;
 
   /**

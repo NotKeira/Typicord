@@ -25,10 +25,19 @@ export class RESTError extends Error {
   }
 }
 
+import { fetch as undiciFetch } from "undici";
+
 /**
  * A client for interacting with the Discord REST API.
  * Handles requests, error handling, and basic rate limiting.
+ * Reports per-request API latency via an optional callback.
  */
+export type APILatencyCallback = (
+  latencyMs: number,
+  method: string,
+  endpoint: string
+) => void;
+
 export class RESTClient {
   /** Bot token for authentication */
   public token: string;
@@ -37,6 +46,8 @@ export class RESTClient {
   /** Base URL for the Discord API */
   public baseURL: string;
   private rateLimits: Map<string, number> = new Map();
+  /** Optional callback for API latency reporting */
+  public onAPILatency?: APILatencyCallback;
 
   /**
    * Create a new RESTClient instance.
@@ -55,10 +66,13 @@ export class RESTClient {
    * @param res The fetch Response object
    * @returns True if rate limited and retried, false otherwise
    */
-  private async handleRateLimit(endpoint: string, res: Response) {
+  private async handleRateLimit(endpoint: string, res: any) {
     if (res.status === 429) {
       const retryAfter = Number(res.headers.get("retry-after")) || 1;
       this.rateLimits.set(endpoint, Date.now() + retryAfter * 1000);
+      console.warn(
+        `[REST] Rate limited on ${endpoint}, retrying after ${retryAfter}s`
+      );
       await new Promise((resolve) => setTimeout(resolve, retryAfter * 1000));
       return true;
     }
@@ -98,6 +112,9 @@ export class RESTClient {
     const url = `${this.baseURL}${endpoint}`;
     let headers: Record<string, string> = {
       Authorization: `Bot ${this.token}`,
+      "User-Agent": `DiscordBot (https://git.keira.boo/Typicord, ${
+        process.env.npm_package_version || this.version || "1.0.0"
+      }) Node.js/${process.version}`,
       ...extraHeaders,
     };
     let payload: any = undefined;
@@ -110,11 +127,14 @@ export class RESTClient {
         payload = JSON.stringify(body);
       }
     }
-    const res = await fetch(url, {
+    const start = Date.now();
+    const res = await undiciFetch(url, {
       method,
       headers,
       body: payload,
     });
+    const latency = Date.now() - start;
+    if (this.onAPILatency) this.onAPILatency(latency, method, endpoint);
     if (await this.handleRateLimit(endpoint, res)) {
       return this.request(method, endpoint, body, extraHeaders, isForm);
     }
@@ -140,7 +160,7 @@ export class RESTClient {
     ) {
       return undefined as T;
     }
-    return res.json();
+    return res.json() as Promise<T>;
   }
 
   /**
