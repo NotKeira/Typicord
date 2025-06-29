@@ -10,6 +10,7 @@
 
 ## Gateway
 
+- [x] Optimize gateway heartbeat and ws latency reporting (ACK-based, accurate getWebSocketLatency)
 - [ ] Add session resuming functionality
 - [ ] Implement proper shard management
 - [ ] Add compression support for gateway payloads
@@ -37,6 +38,8 @@
 
 ## Documentation
 
+- [x] Add API latency callback and logging to RESTClient
+- [x] Add rate limit logging for REST
 - [x] Add JSDoc comments to all classes and methods
 - [ ] Create comprehensive API documentation
 - [ ] Add usage examples
@@ -53,6 +56,12 @@
 
 ## Package Management
 
+- [x] Configure proper build system (tsup, ESM/CJS, typings)
+- [x] Set up proper package exports (discord.js style, ESM/CJS/types)
+- [x] Add TypeScript declaration file generation (auto with tsup)
+- [x] Configure package bundling (tsup, undici for REST)
+- [x] Use undici for REST API (fastest Node.js HTTP client)
+- [x] Add Discord-like user-agent header to REST requests
 - [ ] Configure proper build system
 - [ ] Set up proper package exports
 - [ ] Add TypeScript declaration file generation
