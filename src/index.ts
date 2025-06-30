@@ -3,6 +3,7 @@ export * from "./client/Client";
 export * from "./client/RESTClient";
 export * from "./gateway/GatewayClient";
 export * from "./gateway/HeartbeatManager";
+export * from "./gateway/ReconnectionManager";
 export * from "./gateway/constants";
 export * from "./gateway/handlers";
 export * from "./structures/Message";

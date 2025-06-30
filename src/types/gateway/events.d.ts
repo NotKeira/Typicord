@@ -20,7 +20,8 @@ export interface ReadyEvent {
 export interface MessageCreateEvent extends Message {}
 
 export interface TypicordEvents {
-  READY: void;
+  READY: ReadyEvent;
+  RESUMED: void;
   MESSAGE_CREATE: import("@/structures/Message").Message;
   MESSAGE_UPDATE: Partial<Message>;
   MESSAGE_DELETE: {

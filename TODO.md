@@ -6,16 +6,18 @@
 - [x] Add rate limit handling for API requests
 - [x] Create a REST API client class to handle HTTP requests
 - [x] Add support for Discord API version configuration
-- [ ] Implement reconnection logic with exponential backoff
+- [x] Implement reconnection logic with exponential backoff
+- [x] Add session resuming functionality with proper state management
 
 ## Gateway
 
 - [x] Optimize gateway heartbeat and ws latency reporting (ACK-based, accurate getWebSocketLatency)
-- [ ] Add session resuming functionality
+- [x] Add session resuming functionality
+- [x] Implement proper reconnection logic with exponential backoff and smart error handling
 - [ ] Implement proper shard management
 - [ ] Add compression support for gateway payloads
 - [x] Create gateway event validation and custom cache system (basic cache managers for guilds/users implemented)
-- [x] Add sequence number tracking for resume capability (partial: event flow and cache tracking implemented)
+- [x] Add sequence number tracking for resume capability (fully implemented with state management)
 - [x] Add GatewayIntentBits for easier intent management
 
 ## Structures

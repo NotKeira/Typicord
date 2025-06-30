@@ -10,14 +10,14 @@ import { UserCacheManager } from "@/cache/UserCacheManager";
 import { RESTClient } from "@/client/RESTClient";
 
 /**
- * The main Typicord client for interacting with Discord's API and Gateway.
- * Handles events, caching, and REST actions.
+ * The main Typicord client - this is what you'll be using to interact with Discord!
+ * Handles connecting to the gateway, sending messages, and all that good stuff.
  */
 export class Client extends EventEmitter {
   /**
-   * The Typicord client version.
+   * What version of Typicord this is
    */
-  public static version: string = __CLIENT_VERSION__;
+  public static version: string = typeof __CLIENT_VERSION__ !== 'undefined' ? __CLIENT_VERSION__ : '1.0.0';
   public token: string;
   public intents: number;
   public rest: RESTClient;
@@ -30,9 +30,9 @@ export class Client extends EventEmitter {
   private _gateway: GatewayClient;
 
   /**
-   * Create a new Typicord client instance.
-   * @param token The bot token
-   * @param intents The gateway intents bitfield
+   * Creates a new Typicord client instance
+   * @param token Your bot's token from Discord
+   * @param intents What events you want to receive (use GatewayIntentBits)
    */
   constructor(token: string, intents: number) {
     super();
@@ -47,12 +47,22 @@ export class Client extends EventEmitter {
   }
 
   /**
-   * Connect to the Discord Gateway.
+   * Actually connects to Discord - this starts everything up!
    */
   public connect(): void {
     this._gateway.connect();
   }
 
+  /**
+   * Cleanly disconnects from Discord
+   */
+  public disconnect(): void {
+    this._gateway.disconnect();
+  }
+
+  /**
+   * Gets our gateway client for advanced usage
+   */
   public get gateway(): GatewayClient {
     return this._gateway;
   }
@@ -66,10 +76,10 @@ export class Client extends EventEmitter {
   }
 
   /**
-   * Send a message to a channel via the Discord REST API.
-   * @param channelId The channel ID
-   * @param content The message content
-   * @param options Additional message options (e.g., message_reference)
+   * Sends a message to a channel - the bread and butter of Discord bots!
+   * @param channelId Where to send the message
+   * @param content What to say
+   * @param options Extra stuff like replying to a message
    */
   async sendMessage(
     channelId: string,
