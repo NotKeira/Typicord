@@ -1,8 +1,8 @@
 /**
- * Cache manager for guilds.
+ * Cache specifically for guild (server) data
  */
 import { CacheManager } from "./CacheManager";
 
 export class GuildCacheManager extends CacheManager<string, any> {
-  // maybe extend with guild-specific methods in the future
+  // Might add guild-specific methods later if we need them
 }

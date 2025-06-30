@@ -1,8 +1,8 @@
 /**
- * Cache manager for users.
+ * Cache specifically for user data
  */
 import { CacheManager } from "./CacheManager";
 
 export class UserCacheManager extends CacheManager<string, any> {
-  // maybe extend with user-specific methods in the future
+  // Might add user-specific methods later if we need them
 }

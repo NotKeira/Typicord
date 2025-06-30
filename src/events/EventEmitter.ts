@@ -1,20 +1,21 @@
 import type { TypicordEvents } from "@/types/gateway/events";
 
 /**
- * A simple event emitter for Typicord events.
+ * Simple event system for Typicord - lets you listen for things like messages,
+ * user joins, etc. Much simpler than Node's built-in EventEmitter but does what we need
  */
 export class EventEmitter {
   /**
-   * Registered event listeners.
+   * All our registered event listeners, organized by event type
    */
   private listeners: {
     [K in keyof TypicordEvents]?: Array<(data: TypicordEvents[K]) => void>;
   } = {};
 
   /**
-   * Register an event listener.
-   * @param event The event name
-   * @param listener The callback function
+   * Registers a function to be called when an event happens
+   * @param event What event to listen for
+   * @param listener Function to call when the event fires
    */
   on<K extends keyof TypicordEvents>(
     event: K,
@@ -25,9 +26,9 @@ export class EventEmitter {
   }
 
   /**
-   * Emit an event to all registered listeners.
-   * @param event The event name
-   * @param data The event data
+   * Fires an event, calling all registered listeners
+   * @param event What event happened
+   * @param data The data to pass to listeners
    */
   emit<K extends keyof TypicordEvents>(
     event: K,

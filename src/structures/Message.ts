@@ -4,19 +4,20 @@ import type { Emoji } from "./Emoji";
 // import type { Emoji as GatewayEmoji } from "@/types/gateway/structures/Emoji";
 
 /**
- * Represents a Discord message and provides helper methods for common actions.
+ * Represents a Discord message with helper methods for doing stuff with it
+ * Like replying, editing, deleting, reacting - all the good message things!
  */
 export class Message {
   public id: string;
   public channelId: string;
-  public channel_id: string; // Required to match MessageCreateEvent interface
+  public channel_id: string; // Discord uses snake_case, keeping both for compatibility
   public guildId?: string;
   public content: string;
   public author: GatewayMessage["author"];
   public raw: GatewayMessage;
   public timestamp: string;
   public editedTimestamp: string | null;
-  public edited_timestamp: string | null; // Required to match MessageCreateEvent interface
+  public edited_timestamp: string | null; // Again, Discord's naming
   private client: Client;
 
   constructor(client: Client, data: GatewayMessage) {
@@ -34,8 +35,8 @@ export class Message {
   }
 
   /**
-   * Reply to this message.
-   * @param content The reply content
+   * Replies to this message - creates a proper reply that shows up linked
+   * @param content What you want to say back
    */
   public async reply(content: string): Promise<Message> {
     return this.client.sendMessage(this.channelId, content, {
@@ -44,8 +45,8 @@ export class Message {
   }
 
   /**
-   * Edit this message.
-   * @param content The new content
+   * Edits this message to say something different
+   * @param content The new content for the message
    */
   public async edit(content: string): Promise<Message> {
     const data = await this.client.rest.patch(
@@ -56,7 +57,7 @@ export class Message {
   }
 
   /**
-   * Delete this message.
+   * Deletes this message - poof, it's gone!
    */
   public async delete(): Promise<void> {
     await this.client.rest.delete(
@@ -66,8 +67,8 @@ export class Message {
   }
 
   /**
-   * React to this message with an emoji.
-   * @param emoji The emoji to react with
+   * Reacts to this message with an emoji
+   * @param emoji The emoji to react with (can be unicode or custom emoji format)
    */
   public async react(emoji: string) {
     await this.client.rest.put(

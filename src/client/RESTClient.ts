@@ -1,23 +1,23 @@
 /**
- * Options for configuring the RESTClient.
+ * What you need to configure the REST client
  */
 export interface RESTOptions {
-  /** Bot token for authentication */
+  /** Your bot's token from Discord */
   token: string;
-  /** Discord API version (default: 10) */
+  /** Which API version to use (default: 10, which is the latest stable) */
   version?: number;
-  /** Base URL for the Discord API (default: https://discord.com/api/v{version}) */
+  /** Custom API base URL if you need it (probably don't) */
   baseURL?: string;
 }
 
 /**
- * Represents an error returned by the Discord REST API.
+ * When Discord's API returns an error, we wrap it in this
  */
 export class RESTError extends Error {
-  /** HTTP status code */
-  public status: number;
-  /** Error response data */
-  public response: any;
+  /** The HTTP status code (404, 403, etc.) */
+  status: number;
+  /** Whatever Discord sent back as the error response */
+  response: any;
   constructor(status: number, message: string, response?: any) {
     super(message);
     this.status = status;
@@ -28,9 +28,9 @@ export class RESTError extends Error {
 import { fetch as undiciFetch } from "undici";
 
 /**
- * A client for interacting with the Discord REST API.
- * Handles requests, error handling, and basic rate limiting.
- * Reports per-request API latency via an optional callback.
+ * Handles making HTTP requests to Discord's REST API
+ * Deals with rate limiting, error handling, and all that fun stuff
+ * so you don't have to worry about it
  */
 export type APILatencyCallback = (
   latencyMs: number,
@@ -39,19 +39,19 @@ export type APILatencyCallback = (
 ) => void;
 
 export class RESTClient {
-  /** Bot token for authentication */
+  /** Your bot's token */
   public token: string;
-  /** Discord API version */
+  /** Which Discord API version we're using */
   public version: number;
-  /** Base URL for the Discord API */
+  /** The base URL for Discord's API */
   public baseURL: string;
   private rateLimits: Map<string, number> = new Map();
-  /** Optional callback for API latency reporting */
+  /** Optional callback to track how long API requests take */
   public onAPILatency?: APILatencyCallback;
 
   /**
-   * Create a new RESTClient instance.
-   * @param options Configuration options for the REST client
+   * Creates a new REST client for talking to Discord's API
+   * @param options Configuration - at minimum you need a token
    */
   constructor(options: RESTOptions) {
     this.token = options.token;

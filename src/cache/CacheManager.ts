@@ -1,54 +1,55 @@
 /**
- * Generic cache manager for storing and retrieving entities by ID.
+ * Basic cache for storing stuff by ID - like a Map but with some extra methods
+ * Used for storing guilds, users, and other Discord objects we want to keep around
  */
 export class CacheManager<K, V> {
   /**
-   * Internal cache map.
+   * The actual Map that stores everything
    */
   protected cache: Map<K, V> = new Map();
 
   /**
-   * Get an item from the cache.
-   * @param id The key
+   * Gets something from the cache
+   * @param id What to look for
    */
   get(id: K): V | undefined {
     return this.cache.get(id);
   }
 
   /**
-   * Set an item in the cache.
-   * @param id The key
-   * @param value The value
+   * Stores something in the cache
+   * @param id The key to store it under
+   * @param value The actual thing to store
    */
   set(id: K, value: V): void {
     this.cache.set(id, value);
   }
 
   /**
-   * Check if the cache contains a key.
-   * @param id The key
+   * Checks if we have something in the cache
+   * @param id What to check for
    */
   has(id: K): boolean {
     return this.cache.has(id);
   }
 
   /**
-   * Delete an item from the cache.
-   * @param id The key
+   * Removes something from the cache
+   * @param id What to remove
    */
   delete(id: K): boolean {
     return this.cache.delete(id);
   }
 
   /**
-   * Get all values in the cache.
+   * Gets all the values in the cache (not the keys, just the values)
    */
   values(): IterableIterator<V> {
     return this.cache.values();
   }
 
   /**
-   * Clear the cache.
+   * Empties the entire cache
    */
   clear(): void {
     this.cache.clear();
