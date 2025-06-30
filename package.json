@@ -28,7 +28,12 @@
     "lint": "eslint src/ tests/ examples/",
     "lint:fix": "eslint src/ tests/ examples/ --fix",
     "format": "prettier --write src/ tests/ examples/",
-    "format:check": "prettier --check src/ tests/ examples/"
+    "format:check": "prettier --check src/ tests/ examples/",
+    "bench": "tsx ./benchmarks/index.ts",
+    "bench:rest": "tsx ./benchmarks/rest-client.bench.ts",
+    "bench:messages": "tsx ./benchmarks/message-processing.bench.ts",
+    "bench:gateway": "tsx ./benchmarks/gateway.bench.ts",
+    "bench:memory": "tsx --expose-gc ./benchmarks/memory.bench.ts"
   },
   "keywords": [
     "typicord",
@@ -46,10 +51,12 @@
   "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184",
   "devDependencies": {
     "@eslint/js": "^9.30.0",
+    "@types/benchmark": "^2.1.5",
     "@types/node": "^22.15.31",
     "@types/ws": "^8.18.1",
     "@typescript-eslint/eslint-plugin": "^8.35.1",
     "@typescript-eslint/parser": "^8.35.1",
+    "benchmark": "^2.1.4",
     "eslint": "^9.30.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
