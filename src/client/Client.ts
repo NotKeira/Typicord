@@ -61,6 +61,15 @@ export class Client extends EventEmitter {
   }
 
   /**
+   * Disconnects from Discord and cleans up all resources
+   * Call this when you're shutting down your bot to free up connections
+   */
+  destroy() {
+    this._gateway.disconnect();
+    this.rest.destroy();
+  }
+
+  /**
    * Gets our gateway client for advanced usage
    */
   public get gateway(): GatewayClient {

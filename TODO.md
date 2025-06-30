@@ -8,6 +8,7 @@
 - [x] Add support for Discord API version configuration
 - [x] Implement reconnection logic with exponential backoff
 - [x] Add session resuming functionality with proper state management
+- [x] Optimize REST client with persistent HTTP agent for connection pooling
 
 ## Gateway
 
@@ -37,12 +38,16 @@
 - [ ] Add support for message threading
 - [ ] Implement interaction handling
 - [ ] Add support for auto moderation
-
+- [ ] Implement support for scheduled events
+- [ ] Implement support for components v2
+- [ ] Add message reactions
+- [ ] Add support for components v1 (buttons, select menus, etc.)
 ## Documentation
 
 - [x] Add API latency callback and logging to RESTClient
 - [x] Add rate limit logging for REST
 - [x] Add JSDoc comments to all classes and methods
+- [x] Improve comment friendliness and readability throughout codebase
 - [ ] Create comprehensive API documentation
 - [ ] Add usage examples
 - [ ] Create contributing guidelines
@@ -64,7 +69,4 @@
 - [x] Configure package bundling (tsup, undici for REST)
 - [x] Use undici for REST API (fastest Node.js HTTP client)
 - [x] Add Discord-like user-agent header to REST requests
-- [ ] Configure proper build system
-- [ ] Set up proper package exports
-- [ ] Add TypeScript declaration file generation
-- [ ] Configure package bundling
+- [x] Add proper resource cleanup methods (destroy() for client and REST)

@@ -25,7 +25,7 @@ export class RESTError extends Error {
   }
 }
 
-import { fetch as undiciFetch } from "undici";
+import { fetch as undiciFetch, Agent } from "undici";
 
 /**
  * Handles making HTTP requests to Discord's REST API
@@ -45,6 +45,8 @@ export class RESTClient {
   public version: number;
   /** The base URL for Discord's API */
   public baseURL: string;
+  /** Reusable HTTP agent for connection pooling and better performance */
+  private agent: Agent;
   private rateLimits: Map<string, number> = new Map();
   /** Optional callback to track how long API requests take */
   public onAPILatency?: APILatencyCallback;
@@ -58,6 +60,13 @@ export class RESTClient {
     this.version = options.version ?? 10;
     this.baseURL =
       options.baseURL ?? `https://discord.com/api/v${this.version}`;
+    
+    // Create a persistent agent for connection pooling
+    this.agent = new Agent({
+      keepAliveTimeout: 10000, // 10 seconds
+      keepAliveMaxTimeout: 30000, // 30 seconds
+      maxCachedSessions: 100, // cache up to 100 TLS sessions
+    });
   }
 
   /**
@@ -132,6 +141,7 @@ export class RESTClient {
       method,
       headers,
       body: payload,
+      dispatcher: this.agent, // Use our persistent agent
     });
     const latency = Date.now() - start;
     if (this.onAPILatency) this.onAPILatency(latency, method, endpoint);
@@ -218,6 +228,14 @@ export class RESTClient {
     isForm?: boolean
   ) {
     return this.request<T>("PUT", endpoint, body, extraHeaders, isForm);
+  }
+
+  /**
+   * Clean up the REST client and close any open connections
+   * Call this when you're done with the client to free up resources
+   */
+  destroy() {
+    this.agent.destroy();
   }
 
   /**
