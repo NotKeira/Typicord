@@ -60,7 +60,7 @@ export class RESTClient {
     this.version = options.version ?? 10;
     this.baseURL =
       options.baseURL ?? `https://discord.com/api/v${this.version}`;
-    
+
     // Create a persistent agent for connection pooling
     this.agent = new Agent({
       keepAliveTimeout: 10000, // 10 seconds
@@ -82,7 +82,7 @@ export class RESTClient {
       console.warn(
         `[REST] Rate limited on ${endpoint}, retrying after ${retryAfter}s`
       );
-      await new Promise((resolve) => setTimeout(resolve, retryAfter * 1000));
+      await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
       return true;
     }
     return false;
@@ -119,7 +119,7 @@ export class RESTClient {
       throw new RESTError(429, `Rate limited for endpoint: ${endpoint}`);
     }
     const url = `${this.baseURL}${endpoint}`;
-    let headers: Record<string, string> = {
+    const headers: Record<string, string> = {
       Authorization: `Bot ${this.token}`,
       "User-Agent": `DiscordBot (https://git.keira.boo/Typicord, ${
         process.env.npm_package_version || this.version || "1.0.0"
@@ -132,8 +132,9 @@ export class RESTClient {
         // Assume body is FormData
         payload = body;
       } else {
-        headers["Content-Type"] = "application/json";
+        const newHeaders = { ...headers, "Content-Type": "application/json" };
         payload = JSON.stringify(body);
+        Object.assign(headers, newHeaders);
       }
     }
     const start = Date.now();

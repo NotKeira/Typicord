@@ -1,0 +1,8 @@
+dist/
+typings/
+node_modules/
+*.log
+*.md
+package-lock.json
+pnpm-lock.yaml
+.git/

@@ -24,7 +24,11 @@
     "test": "npm-run-all test:*",
     "test:rest": "tsx ./tests/restclient.test.ts",
     "test:bot": "tsx ./tests/bot.test.ts",
-    "test:reconnection": "tsx ./tests/reconnection.test.ts"
+    "test:reconnection": "tsx ./tests/reconnection.test.ts",
+    "lint": "eslint src/ tests/ examples/",
+    "lint:fix": "eslint src/ tests/ examples/ --fix",
+    "format": "prettier --write src/ tests/ examples/",
+    "format:check": "prettier --check src/ tests/ examples/"
   },
   "keywords": [
     "typicord",
@@ -41,12 +45,20 @@
   "license": "MIT",
   "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184",
   "devDependencies": {
+    "@eslint/js": "^9.30.0",
     "@types/node": "^22.15.31",
     "@types/ws": "^8.18.1",
+    "@typescript-eslint/eslint-plugin": "^8.35.1",
+    "@typescript-eslint/parser": "^8.35.1",
+    "eslint": "^9.30.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.5.1",
     "npm-run-all": "^4.1.5",
+    "prettier": "^3.6.2",
     "tsup": "^8.5.0",
     "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.1"
   },
   "dependencies": {
     "dotenv": "^17.0.0",

@@ -1,6 +1,6 @@
 import type { Client } from "@/client/Client";
 import type { Message as GatewayMessage } from "@/types/gateway/structures/Message";
-import type { Emoji } from "./Emoji";
+// import type { Emoji } from "./Emoji";
 // import type { Emoji as GatewayEmoji } from "@/types/gateway/structures/Emoji";
 
 /**

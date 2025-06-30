@@ -17,7 +17,8 @@ export class Client extends EventEmitter {
   /**
    * What version of Typicord this is
    */
-  public static version: string = typeof __CLIENT_VERSION__ !== 'undefined' ? __CLIENT_VERSION__ : '1.0.0';
+  public static version: string =
+    typeof __CLIENT_VERSION__ !== "undefined" ? __CLIENT_VERSION__ : "1.0.0";
   public token: string;
   public intents: number;
   public rest: RESTClient;

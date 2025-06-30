@@ -39,15 +39,15 @@ export class ReconnectionManager {
   private calculateDelay(): number {
     // Double the delay each time: 1s, 2s, 4s, 8s, 16s...
     let delay = this.baseDelay * Math.pow(2, this.attempts);
-    
+
     // Don't let it get ridiculous though
     delay = Math.min(delay, this.maxDelay);
-    
+
     // Add some randomness to avoid the thundering herd problem
     if (this.jitter) {
       delay = delay * (0.5 + Math.random() * 0.5);
     }
-    
+
     return Math.floor(delay);
   }
 
@@ -77,7 +77,10 @@ export class ReconnectionManager {
       try {
         this.reconnectCallback();
       } catch (error) {
-        console.error("[ReconnectionManager] Reconnection callback failed:", error);
+        console.error(
+          "[ReconnectionManager] Reconnection callback failed:",
+          error
+        );
         // Try again if the callback itself fails
         this.scheduleReconnect("callback failed");
       }
@@ -88,7 +91,9 @@ export class ReconnectionManager {
    * We successfully reconnected! Reset everything back to normal
    */
   public onConnectionSuccess(): void {
-    console.log("[ReconnectionManager] Connection successful, resetting backoff");
+    console.log(
+      "[ReconnectionManager] Connection successful, resetting backoff"
+    );
     this.attempts = 0;
     this.cancel();
   }

@@ -34,6 +34,6 @@ export class EventEmitter {
     event: K,
     data: TypicordEvents[K]
   ): void {
-    this.listeners[event]?.forEach((listener) => listener(data));
+    this.listeners[event]?.forEach(listener => listener(data));
   }
 }

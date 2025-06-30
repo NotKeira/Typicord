@@ -8,19 +8,24 @@ import { Client, GatewayIntentBits } from "../src/index";
 console.log("🚀 Starting Typicord reconnection example...");
 
 // Set up a client - using a dummy token since this is just a demo
-const client = new Client("DUMMY_TOKEN_FOR_DEMO", GatewayIntentBits.MessageContent);
+const client = new Client(
+  "DUMMY_TOKEN_FOR_DEMO",
+  GatewayIntentBits.MessageContent
+);
 
 // When the bot's ready, show some info
 client.on("READY", () => {
   console.log("✅ Bot is ready!");
-  console.log(`🤖 Logged in as: ${client.user?.name}#${client.user?.discriminator}`);
+  console.log(
+    `🤖 Logged in as: ${client.user?.name}#${client.user?.discriminator}`
+  );
   console.log(`🔌 Gateway latency: ${client.gateway.getWebSocketLatency()}ms`);
 });
 
 // Listen for messages and auto-reply to mentions
-client.on("MESSAGE_CREATE", (message) => {
+client.on("MESSAGE_CREATE", message => {
   console.log(`💬 Message from ${message.author.username}: ${message.content}`);
-  
+
   // Reply if we're mentioned
   if (message.content.includes(`<@${client.user?.id}>`)) {
     message.reply("Hello! I received your mention!");
@@ -29,15 +34,21 @@ client.on("MESSAGE_CREATE", (message) => {
 
 // Start connecting
 console.log("📡 Attempting to connect to Discord Gateway...");
-console.log("🔄 The client will automatically handle reconnections with exponential backoff");
-console.log("📝 Session resumption is enabled to maintain state across reconnections");
+console.log(
+  "🔄 The client will automatically handle reconnections with exponential backoff"
+);
+console.log(
+  "📝 Session resumption is enabled to maintain state across reconnections"
+);
 
 // This will fail with the dummy token, but shows how the reconnection system works
 try {
   client.connect();
 } catch (error) {
   console.log("❌ Connection failed (expected with dummy token)");
-  console.log("🔄 In a real scenario, the ReconnectionManager would handle retries automatically");
+  console.log(
+    "🔄 In a real scenario, the ReconnectionManager would handle retries automatically"
+  );
 }
 
 // Show off what the reconnection manager can do

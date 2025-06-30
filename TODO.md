@@ -56,8 +56,9 @@
 ## Development
 
 - [ ] Set up CI/CD pipeline
-- [ ] Add ESLint configuration
-- [ ] Add Prettier configuration
+- [x] Add ESLint configuration
+- [x] Add Prettier configuration
+- [x] Add lint and format scripts to package.json
 - [x] Create automated testing setup (test script runs all test:\* scripts)
 - [ ] Add performance benchmarks
 

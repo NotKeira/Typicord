@@ -17,7 +17,7 @@ export interface ReadyEvent {
   };
 }
 
-export interface MessageCreateEvent extends Message {}
+export type MessageCreateEvent = Message;
 
 export interface TypicordEvents {
   READY: ReadyEvent;
