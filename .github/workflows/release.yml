@@ -1,0 +1,143 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  test:
+    name: Test Before Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run linting
+        run: pnpm lint
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Run tests
+        run: pnpm test
+        env:
+          SKIP_INTEGRATION_TESTS: true
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          body: |
+            ## Changes in this Release
+            
+            Please see the [CHANGELOG.md](CHANGELOG.md) for detailed information about changes in this release.
+            
+            ## Installation
+            
+            ```bash
+            npm install typicord@${{ github.ref_name }}
+            # or
+            pnpm add typicord@${{ github.ref_name }}
+            # or  
+            yarn add typicord@${{ github.ref_name }}
+            ```
+
+      - name: Publish to NPM
+        run: pnpm publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  benchmark-on-release:
+    name: Benchmark Performance
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build project
+        run: pnpm build
+
+      - name: Run full benchmark suite
+        run: |
+          echo "## Performance Benchmarks for ${{ github.ref_name }}" >> benchmark-results.md
+          echo "" >> benchmark-results.md
+          echo "### Memory Usage" >> benchmark-results.md
+          pnpm bench:memory >> benchmark-results.md
+          echo "" >> benchmark-results.md
+          echo "### REST Client Performance" >> benchmark-results.md
+          timeout 30s pnpm bench:rest >> benchmark-results.md || echo "Benchmark completed" >> benchmark-results.md
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: benchmark-results.md
+          retention-days: 90

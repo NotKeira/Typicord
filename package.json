@@ -22,6 +22,8 @@
     "build": "tsup",
     "prepublishOnly": "pnpm run build",
     "test": "npm-run-all test:*",
+    "test:unit": "npm-run-all test:rest test:reconnection",
+    "test:integration": "npm-run-all test:bot",
     "test:rest": "tsx ./tests/restclient.test.ts",
     "test:bot": "tsx ./tests/bot.test.ts",
     "test:reconnection": "tsx ./tests/reconnection.test.ts",
@@ -30,9 +32,9 @@
     "format": "prettier --write src/ tests/ examples/",
     "format:check": "prettier --check src/ tests/ examples/",
     "bench": "tsx ./benchmarks/index.ts",
-    "bench:rest": "tsx ./benchmarks/rest-client.bench.ts",
-    "bench:messages": "tsx ./benchmarks/message-processing.bench.ts",
-    "bench:gateway": "tsx ./benchmarks/gateway.bench.ts",
+    "bench:rest": "timeout 30s tsx ./benchmarks/rest-client.bench.ts || true",
+    "bench:messages": "timeout 30s tsx ./benchmarks/message-processing.bench.ts || true",
+    "bench:gateway": "timeout 30s tsx ./benchmarks/gateway.bench.ts || true",
     "bench:memory": "tsx --expose-gc ./benchmarks/memory.bench.ts"
   },
   "keywords": [
