@@ -1,7 +1,6 @@
 import Benchmark from "benchmark";
 import { Message } from "../src/structures/Message";
-import { Client } from "../src/client/Client";
-import { GatewayIntentBits } from "../src/client/Client";
+import { GatewayIntentBits, Client } from "../src/client/Client";
 
 const suite = new Benchmark.Suite();
 

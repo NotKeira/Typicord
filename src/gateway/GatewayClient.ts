@@ -11,7 +11,6 @@ import { User } from "@/structures/User";
 import type {
   TypicordEvents,
   MessageCreateEvent,
-  ReadyEvent,
 } from "@/types/gateway/events";
 import { Message } from "@/structures/Message";
 import { Client } from "@/client/Client";
@@ -22,11 +21,11 @@ import { Client } from "@/client/Client";
  * the magic happens for real-time Discord stuff.
  */
 export class GatewayClient {
-  private client: Client;
+  private readonly client: Client;
   private ws: WebSocket | null = null;
   private heartbeatManager: HeartbeatManager | null = null;
-  private reconnectionManager: ReconnectionManager;
-  private cachedGuilds: Set<string> = new Set();
+  private readonly reconnectionManager: ReconnectionManager;
+  private readonly cachedGuilds: Set<string> = new Set();
   private readyReceived = false;
   // Session stuff for resuming connections - proper important this
   private sessionId: string | null = null;
@@ -51,6 +50,44 @@ export class GatewayClient {
         jitter: true,
       }
     );
+  }
+
+  /**
+   * Extracts and sets the session ID from the READY event data.
+   */
+  private handleSessionInfo(data: any): void {
+    if (typeof data === "object" && data && "session_id" in data) {
+      this.sessionId = data.session_id;
+      console.log("[Gateway] Session established:", this.sessionId);
+    }
+  }
+
+  /**
+   * Extracts and sets the resume gateway URL from the READY event data.
+   */
+  private handleResumeGatewayUrl(data: any): void {
+    if (typeof data === "object" && data && "resume_gateway_url" in data) {
+      this.resumeGatewayUrl = data.resume_gateway_url;
+    }
+  }
+
+  /**
+   * Sets up the client user and guilds from the READY event data.
+   */
+  private setupClientUserAndGuilds(data: any): void {
+    if (typeof data === "object") {
+      // Set user info
+      if ("user" in data) {
+        this.client.user = new User(data.user);
+      }
+      // Cache all the guilds we're in
+      if ("guilds" in data) {
+        this.client.guilds = data.guilds;
+        for (const guild of data.guilds) {
+          if (guild.id) this.client.cache.guilds.set(guild.id, guild);
+        }
+      }
+    }
   }
 
   /**
@@ -148,83 +185,79 @@ export class GatewayClient {
 
     this.ws.on("message", data => {
       try {
-        const packet: GatewayPayload = JSON.parse(data.toString());
+        let jsonString: string;
+        if (typeof data === "string") {
+          jsonString = data;
+        } else if (Buffer.isBuffer(data)) {
+          jsonString = data.toString("utf8");
+        } else {
+          throw new Error("[Gateway] Received unsupported data type from WebSocket");
+        }
+        const packet: GatewayPayload = JSON.parse(jsonString);
 
         // Keep track of sequence numbers for resuming sessions later
         if (packet.s !== null && packet.s !== undefined) {
           this.sequenceNumber = packet.s;
         }
 
+        // Handle different opcodes from Discord
         switch (packet.op) {
-          case GatewayOpcodes.HELLO:
-            // Discord says hello! Set up heartbeating and send our identify/resume
+          case GatewayOpcodes.HELLO: {
+            // First message from Discord - sets up heartbeat
+            console.log("[Gateway] Received HELLO");
+            const helloData = packet.d as HelloPayloadData;
+            handleHello(this.ws!, helloData, this.client);
+
             this.heartbeatManager = new HeartbeatManager(
               this.ws!,
-              (packet.d as HelloPayloadData).heartbeat_interval,
-              () => {
-                console.warn("[Gateway] Missed heartbeat ACK");
-                this.handleConnectionLoss("missed heartbeat");
-              }
+              helloData.heartbeat_interval,
+              () => this.handleConnectionLoss("missed heartbeat")
             );
             this.heartbeatManager.start();
 
-            // Either resume our session or send a fresh identify
+            // Send IDENTIFY or RESUME depending on if we're reconnecting
             if (resume && this.canResume()) {
               this.sendResume();
             } else {
-              handleHello(this.ws!, packet.d as HelloPayloadData, {
-                token: this.client.token,
-                intents: this.client.intents,
-              });
+              // Send IDENTIFY to start a new session
+              const identifyPayload = {
+                op: 2, // IDENTIFY opcode
+                d: {
+                  token: this.client.token,
+                  intents: this.client.intents,
+                  properties: {
+                    os: process.platform,
+                    browser: "Typicord",
+                    device: "Typicord",
+                  },
+                },
+              };
+              this.ws!.send(JSON.stringify(identifyPayload));
             }
             break;
+          }
 
-          case GatewayOpcodes.HEARTBEAT_ACK:
-            // Discord acknowledged our heartbeat - all good!
+          case GatewayOpcodes.HEARTBEAT_ACK: {
+            // Discord confirmed our heartbeat
             this.heartbeatManager?.onHeartbeatAck();
             break;
+          }
 
           case GatewayOpcodes.DISPATCH: {
+            // This is where actual events come through
             const event = packet.t as keyof TypicordEvents;
-
-            // Handle different event types - this is where the real work happens
+            
             const handlers: Partial<{
               [K in keyof TypicordEvents]: (data: TypicordEvents[K]) => void;
             }> = {
               READY: data => {
-                // Got the ready event! Save session info for later resuming
-                if (typeof data === "object" && data && "session_id" in data) {
-                  this.sessionId = (data as any).session_id;
-                  console.log("[Gateway] Session established:", this.sessionId);
-                }
-
-                if (
-                  typeof data === "object" &&
-                  data &&
-                  "resume_gateway_url" in data
-                ) {
-                  this.resumeGatewayUrl = (data as any).resume_gateway_url;
-                }
-
-                // Set up the client with user info and guilds
-                if (typeof data === "object") {
-                  // Set user info
-                  if ("user" in data) {
-                    this.client.user = new User((data as any).user);
-                  }
-                  // Cache all the guilds we're in
-                  if ("guilds" in data) {
-                    this.client.guilds = (data as any).guilds;
-                    for (const guild of (data as any).guilds) {
-                      if (guild.id)
-                        this.client.cache.guilds.set(guild.id, guild);
-                    }
-                  }
-                }
+                this.handleSessionInfo(data);
+                this.handleResumeGatewayUrl(data);
+                this.setupClientUserAndGuilds(data);
 
                 this.readyReceived = true;
                 this.reconnectionManager.onConnectionSuccess();
-                this.client.emit(GatewayEvents.READY, data as ReadyEvent);
+                this.client.emit(GatewayEvents.READY, data);
               },
               RESUMED: () => {
                 console.log("[Gateway] Session resumed successfully");
@@ -241,17 +274,12 @@ export class GatewayClient {
               },
               GUILD_CREATE: (data: any) => {
                 const guildId = data.id;
-                if (!this.readyReceived) {
-                  // During startup, just cache everything
+                if (!this.readyReceived || !this.client.cache.guilds.has(guildId)) {
+                  // During startup or when joining a new guild
                   this.client.cache.guilds.set(guildId, data);
                   this.client.emit("GUILD_CREATE", data);
-                } else if (!this.client.cache.guilds.has(guildId)) {
-                  // Actually joined a new guild!
-                  this.client.cache.guilds.set(guildId, data);
-                  this.client.emit("GUILD_CREATE", data);
-                } else {
-                  // Already know about this guild, ignore it
                 }
+                // If we already know about this guild, ignore it
               },
             };
 

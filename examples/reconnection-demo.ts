@@ -46,6 +46,7 @@ try {
   client.connect();
 } catch (error) {
   console.log("❌ Connection failed (expected with dummy token)");
+  console.error("Error details:", error);
   console.log(
     "🔄 In a real scenario, the ReconnectionManager would handle retries automatically"
   );

@@ -1,7 +1,7 @@
 // This is replaced at build time by tsup
 declare const __CLIENT_VERSION__: string;
 import { GatewayClient } from "@/gateway/GatewayClient";
-// import { GatewayEvents } from "@/gateway/constants";
+
 import { EventEmitter } from "@/events/EventEmitter";
 import { Message } from "@/structures/Message";
 import type { TypicordEvents } from "@/types/gateway/events";
@@ -17,7 +17,7 @@ export class Client extends EventEmitter {
   /**
    * What version of Typicord this is
    */
-  public static version: string =
+  public static readonly version: string =
     typeof __CLIENT_VERSION__ !== "undefined" ? __CLIENT_VERSION__ : "1.0.0";
   public token: string;
   public intents: number;
@@ -28,7 +28,7 @@ export class Client extends EventEmitter {
   };
   public user: import("@/structures/User").User | null = null;
   public guilds: any[] = [];
-  private _gateway: GatewayClient;
+  private readonly _gateway: GatewayClient;
 
   /**
    * Creates a new Typicord client instance
@@ -103,23 +103,23 @@ export class Client extends EventEmitter {
 }
 
 export enum GatewayIntentBits {
-  Guilds = 1 << 0,
-  GuildMembers = 1 << 1,
-  GuildModeration = 1 << 2,
-  GuildEmojisAndStickers = 1 << 3,
-  GuildIntegrations = 1 << 4,
-  GuildWebhooks = 1 << 5,
-  GuildInvites = 1 << 6,
-  GuildVoiceStates = 1 << 7,
-  GuildPresences = 1 << 8,
-  GuildMessages = 1 << 9,
-  GuildMessageReactions = 1 << 10,
-  GuildMessageTyping = 1 << 11,
-  DirectMessages = 1 << 12,
-  DirectMessageReactions = 1 << 13,
-  DirectMessageTyping = 1 << 14,
-  MessageContent = 1 << 15,
-  GuildScheduledEvents = 1 << 16,
-  AutoModerationConfiguration = 1 << 20,
-  AutoModerationExecution = 1 << 21,
+  Guilds = 1,
+  GuildMembers = 2,
+  GuildModeration = 4,
+  GuildEmojisAndStickers = 8,
+  GuildIntegrations = 16,
+  GuildWebhooks = 32,
+  GuildInvites = 64,
+  GuildVoiceStates = 128,
+  GuildPresences = 256,
+  GuildMessages = 512,
+  GuildMessageReactions = 1024,
+  GuildMessageTyping = 2048,
+  DirectMessages = 4096,
+  DirectMessageReactions = 8192,
+  DirectMessageTyping = 16384,
+  MessageContent = 32768,
+  GuildScheduledEvents = 65536,
+  AutoModerationConfiguration = 1048576,
+  AutoModerationExecution = 2097152,
 }

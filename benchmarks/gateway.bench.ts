@@ -13,7 +13,7 @@ const mockWS = {
 // Benchmark reconnection manager operations
 suite.add("ReconnectionManager creation", () => {
   const mockReconnect = () => {};
-  new ReconnectionManager(mockReconnect);
+  new ReconnectionManager(mockReconnect).getAttempts();
 });
 
 suite.add("Exponential backoff calculation", () => {
@@ -21,6 +21,7 @@ suite.add("Exponential backoff calculation", () => {
   const manager = new ReconnectionManager(mockReconnect);
   // Just test the creation/initialization, not actual scheduling
   // since scheduleReconnect starts timers that can hang the benchmark
+
 });
 
 suite.add("Reconnection manager reset", () => {

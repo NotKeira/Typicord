@@ -46,8 +46,8 @@ export class RESTClient {
   /** The base URL for Discord's API */
   public baseURL: string;
   /** Reusable HTTP agent for connection pooling and better performance */
-  private agent: Agent;
-  private rateLimits: Map<string, number> = new Map();
+  private readonly agent: Agent;
+  private readonly rateLimits: Map<string, number> = new Map();
   /** Optional callback to track how long API requests take */
   public onAPILatency?: APILatencyCallback;
 
@@ -122,7 +122,7 @@ export class RESTClient {
     const headers: Record<string, string> = {
       Authorization: `Bot ${this.token}`,
       "User-Agent": `DiscordBot (https://git.keira.boo/Typicord, ${
-        process.env.npm_package_version || this.version || "1.0.0"
+        (process.env.npm_package_version ?? this.version) || "1.0.0"
       }) Node.js/${process.version}`,
       ...extraHeaders,
     };

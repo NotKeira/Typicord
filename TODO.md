@@ -55,7 +55,7 @@
 
 ## Development
 
-- [ ] Set up CI/CD pipeline
+- [x] Set up CI/CD pipeline
 - [x] Add ESLint configuration
 - [x] Add Prettier configuration
 - [x] Add lint and format scripts to package.json
