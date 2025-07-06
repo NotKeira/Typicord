@@ -30,14 +30,14 @@
     "lint:fix": "eslint src/ tests/ examples/ benchmarks/ --fix",
     "format": "prettier --write src/ tests/ examples/ benchmarks/",
     "format:check": "prettier --check src/ tests/ examples/ benchmarks/",
-    "quality": "npm-run-all --parallel lint format:check",
+    "quality": "npm-run-all --parallel lint format:check --continue-on-error",
     "quality:fix": "npm-run-all lint:fix format",
     "bench": "npm-run-all bench:rest bench:messages bench:gateway bench:memory --continue-on-error",
     "bench:rest": "tsx ./benchmarks/rest-client.bench.ts",
     "bench:messages": "tsx ./benchmarks/message-processing.bench.ts",
     "bench:gateway": "tsx ./benchmarks/gateway.bench.ts",
     "bench:memory": "tsx --expose-gc ./benchmarks/memory.bench.ts",
-    "ci": "npm-run-all build quality test:ci bench"
+    "ci": "npm-run-all build quality test:ci bench --continue-on-error"
   },
   "keywords": [
     "typicord",

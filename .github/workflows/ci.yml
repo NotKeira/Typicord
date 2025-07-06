@@ -30,7 +30,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Run complete CI pipeline
-        run: pnpm ci
+        run: pnpm run ci
         env:
           SKIP_INTEGRATION_TESTS: true
 
