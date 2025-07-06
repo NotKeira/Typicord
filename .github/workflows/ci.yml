@@ -5,36 +5,9 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
-
 jobs:
-  lint-and-format:
-    name: Lint and Format Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22.14.0'
-
-      - name: Enable Corepack and install latest pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Run ESLint
-        run: pnpm lint
-
-      - name: Check Prettier formatting
-        run: pnpm format:check
-
-  test:
-    name: Test Suite
+  ci:
+    name: Complete CI Pipeline
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -56,77 +29,18 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Build project
-        run: pnpm build
-
-      - name: Run tests
-        run: pnpm test
+      - name: Run complete CI pipeline
+        run: pnpm ci
         env:
           SKIP_INTEGRATION_TESTS: true
 
-  benchmark:
-    name: Performance Benchmarks
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22.14.0'
-
-      - name: Enable Corepack and install latest pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Build project
-        run: pnpm build
-
-      - name: Run memory benchmarks
-        run: pnpm bench:memory
-
-      - name: Run performance benchmarks
-        run: timeout 30s pnpm bench:rest || true
-
-  build-and-typecheck:
-    name: Build and Type Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22.14.0'
-
-      - name: Enable Corepack and install latest pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Type check
-        run: pnpm tsc --noEmit
-
-      - name: Build project
-        run: pnpm build
-
       - name: Upload build artifacts
+        if: matrix.node-version == '22.14.0'
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: |
             dist/
-            typings/
           retention-days: 30
 
   security-scan:
@@ -139,7 +53,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22.14.0'
+          node-version: "22.14.0"
 
       - name: Enable Corepack and install latest pnpm
         run: |

@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   test:
@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Enable Corepack and Install pnpm
         run: |
@@ -26,17 +26,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Run linting
-        run: pnpm lint
-
-      - name: Check formatting
-        run: pnpm format:check
-
-      - name: Build project
-        run: pnpm build
-
-      - name: Run tests
-        run: pnpm test
+      - name: Run quality checks and tests
+        run: pnpm ci
         env:
           SKIP_INTEGRATION_TESTS: true
 
@@ -55,8 +46,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org"
 
       - name: Enable Corepack and Install pnpm
         run: |
@@ -80,11 +71,11 @@ jobs:
           prerelease: false
           body: |
             ## Changes in this Release
-            
+
             Please see the [CHANGELOG.md](CHANGELOG.md) for detailed information about changes in this release.
-            
+
             ## Installation
-            
+
             \`\`\`bash
             npm install typicord@${{ github.ref_name }}
             # or
@@ -109,7 +100,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Enable Corepack and Install pnpm
         run: |
@@ -123,14 +114,7 @@ jobs:
         run: pnpm build
 
       - name: Run full benchmark suite
-        run: |
-          echo "## Performance Benchmarks for ${{ github.ref_name }}" >> benchmark-results.md
-          echo "" >> benchmark-results.md
-          echo "### Memory Usage" >> benchmark-results.md
-          pnpm bench:memory >> benchmark-results.md
-          echo "" >> benchmark-results.md
-          echo "### REST Client Performance" >> benchmark-results.md
-          timeout 30s pnpm bench:rest >> benchmark-results.md || echo "Benchmark completed" >> benchmark-results.md
+        run: pnpm bench
 
       - name: Upload benchmark results
         uses: actions/upload-artifact@v4

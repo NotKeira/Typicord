@@ -2,7 +2,7 @@ name: Dependency Updates
 
 on:
   schedule:
-    - cron: '0 2 * * 0' # Weekly on Sundays at 2 AM UTC
+    - cron: "0 2 * * 0" # Weekly on Sundays at 2 AM UTC
   workflow_dispatch:
 
 jobs:
@@ -19,8 +19,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'pnpm'
+          node-version: "20"
+          cache: "pnpm"
 
       - name: Enable Corepack and install latest pnpm
         run: |
@@ -54,10 +54,7 @@ jobs:
 
       - name: Run tests after update
         if: steps.verify-changed-files.outputs.changed == 'true'
-        run: |
-          pnpm build
-          pnpm lint
-          pnpm test
+        run: pnpm ci
         env:
           SKIP_INTEGRATION_TESTS: true
 
@@ -66,8 +63,8 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'chore(deps): update dependencies'
-          title: 'chore(deps): weekly dependency updates'
+          commit-message: "chore(deps): update dependencies"
+          title: "chore(deps): weekly dependency updates"
           body: |
             ## Automated Dependency Updates
 
