@@ -24,7 +24,6 @@ jobs:
           corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Run linting
         run: pnpm lint
@@ -64,7 +63,6 @@ jobs:
           corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Build project
         run: pnpm build
@@ -117,7 +115,6 @@ jobs:
           corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Build project
         run: pnpm build
