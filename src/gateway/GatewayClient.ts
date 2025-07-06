@@ -191,7 +191,9 @@ export class GatewayClient {
         } else if (Buffer.isBuffer(data)) {
           jsonString = data.toString("utf8");
         } else {
-          throw new Error("[Gateway] Received unsupported data type from WebSocket");
+          throw new Error(
+            "[Gateway] Received unsupported data type from WebSocket"
+          );
         }
         const packet: GatewayPayload = JSON.parse(jsonString);
 
@@ -246,7 +248,7 @@ export class GatewayClient {
           case GatewayOpcodes.DISPATCH: {
             // This is where actual events come through
             const event = packet.t as keyof TypicordEvents;
-            
+
             const handlers: Partial<{
               [K in keyof TypicordEvents]: (data: TypicordEvents[K]) => void;
             }> = {
@@ -274,7 +276,10 @@ export class GatewayClient {
               },
               GUILD_CREATE: (data: any) => {
                 const guildId = data.id;
-                if (!this.readyReceived || !this.client.cache.guilds.has(guildId)) {
+                if (
+                  !this.readyReceived ||
+                  !this.client.cache.guilds.has(guildId)
+                ) {
                   // During startup or when joining a new guild
                   this.client.cache.guilds.set(guildId, data);
                   this.client.emit("GUILD_CREATE", data);
