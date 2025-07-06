@@ -5,11 +5,11 @@
  */
 export class ReconnectionManager {
   private attempts: number = 0;
-  private maxAttempts: number;
-  private baseDelay: number;
-  private maxDelay: number;
-  private jitter: boolean;
-  private reconnectCallback: () => void;
+  private readonly maxAttempts: number;
+  private readonly baseDelay: number;
+  private readonly maxDelay: number;
+  private readonly jitter: boolean;
+  private readonly reconnectCallback: () => void;
   private timeoutId: NodeJS.Timeout | null = null;
 
   /**
@@ -91,9 +91,6 @@ export class ReconnectionManager {
    * We successfully reconnected! Reset everything back to normal
    */
   public onConnectionSuccess(): void {
-    console.log(
-      "[ReconnectionManager] Connection successful, resetting backoff"
-    );
     this.attempts = 0;
     this.cancel();
   }
