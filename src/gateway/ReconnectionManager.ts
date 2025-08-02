@@ -1,3 +1,5 @@
+import { debug, DebugNamespace } from "@/debug";
+
 /**
  * Handles reconnection logic with exponential backoff - basically makes sure
  * we don't spam Discord's servers when our connection drops but still try
@@ -57,8 +59,9 @@ export class ReconnectionManager {
    */
   public scheduleReconnect(reason?: string): void {
     if (this.attempts >= this.maxAttempts) {
-      console.error(
-        `[ReconnectionManager] Hit max attempts (${this.maxAttempts}), giving up for now`
+      debug.error(
+        DebugNamespace.RECONNECTION,
+        `Hit max attempts (${this.maxAttempts}), giving up for now`
       );
       return;
     }
@@ -66,8 +69,9 @@ export class ReconnectionManager {
     const delay = this.calculateDelay();
     this.attempts++;
 
-    console.warn(
-      `[ReconnectionManager] Scheduling reconnection attempt ${this.attempts}/${this.maxAttempts} in ${delay}ms${
+    debug.warn(
+      DebugNamespace.RECONNECTION,
+      `Scheduling reconnection attempt ${this.attempts}/${this.maxAttempts} in ${delay}ms${
         reason ? ` (reason: ${reason})` : ""
       }`
     );
@@ -77,9 +81,10 @@ export class ReconnectionManager {
       try {
         this.reconnectCallback();
       } catch (error) {
-        console.error(
-          "[ReconnectionManager] Reconnection callback failed:",
-          error
+        debug.error(
+          DebugNamespace.RECONNECTION,
+          "Reconnection callback failed",
+          error as Error
         );
         // Try again if the callback itself fails
         this.scheduleReconnect("callback failed");

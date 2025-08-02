@@ -4,16 +4,17 @@ import type {
   GatewayPayload,
   HelloPayloadData,
 } from "@/types/gateway/payloads";
-import { GatewayEvents, GatewayOpcodes } from "./constants";
+import { GatewayOpcodes } from "./constants";
 import { HeartbeatManager } from "./HeartbeatManager";
 import { ReconnectionManager } from "./ReconnectionManager";
 import { User } from "@/structures/User";
-import type {
-  TypicordEvents,
-  MessageCreateEvent,
-} from "@/types/gateway/events";
-import { Message } from "@/structures/Message";
+import type { TypicordEvents, ReadyEvent } from "@/types/gateway/events";
 import { Client } from "@/client/Client";
+import { debug, DebugNamespace } from "@/debug";
+// Import our modular dispatch handler system
+import { dispatchHandlerRegistry } from "./DispatchHandlerRegistry";
+// Import dispatch handlers to register them
+import "./handlers/index";
 
 /**
  * The main gateway client - handles connecting to Discord's gateway,
@@ -24,13 +25,13 @@ export class GatewayClient {
   private readonly client: Client;
   private ws: WebSocket | null = null;
   private heartbeatManager: HeartbeatManager | null = null;
-  private readonly reconnectionManager: ReconnectionManager;
+  public readonly reconnectionManager: ReconnectionManager;
   private readonly cachedGuilds: Set<string> = new Set();
-  private readyReceived = false;
+  public readyReceived = false;
   // Session stuff for resuming connections - proper important this
-  private sessionId: string | null = null;
+  public sessionId: string | null = null;
   private sequenceNumber: number | null = null;
-  private resumeGatewayUrl: string | null = null;
+  public resumeGatewayUrl: string | null = null;
   private isReconnecting = false;
 
   /**
@@ -38,6 +39,7 @@ export class GatewayClient {
    * @param client The main Typicord client instance
    */
   constructor(client: Client) {
+    debug.log(DebugNamespace.GATEWAY, "Initializing GatewayClient");
     this.client = client;
     // Set up our reconnection manager with sensible defaults
     // 10 attempts max, starting at 1s delay, capping at 5 mins
@@ -50,22 +52,34 @@ export class GatewayClient {
         jitter: true,
       }
     );
+    debug.log(
+      DebugNamespace.GATEWAY,
+      "GatewayClient initialized with reconnection settings",
+      {
+        maxAttempts: 10,
+        baseDelay: 1000,
+        maxDelay: 300000,
+      }
+    );
   }
 
   /**
    * Extracts and sets the session ID from the READY event data.
    */
-  private handleSessionInfo(data: any): void {
+  private handleSessionInfo(data: ReadyEvent): void {
     if (typeof data === "object" && data && "session_id" in data) {
       this.sessionId = data.session_id;
-      console.log("[Gateway] Session established:", this.sessionId);
+      debug.info(
+        DebugNamespace.GATEWAY,
+        `Session established: ${this.sessionId}`
+      );
     }
   }
 
   /**
    * Extracts and sets the resume gateway URL from the READY event data.
    */
-  private handleResumeGatewayUrl(data: any): void {
+  private handleResumeGatewayUrl(data: ReadyEvent): void {
     if (typeof data === "object" && data && "resume_gateway_url" in data) {
       this.resumeGatewayUrl = data.resume_gateway_url;
     }
@@ -74,7 +88,7 @@ export class GatewayClient {
   /**
    * Sets up the client user and guilds from the READY event data.
    */
-  private setupClientUserAndGuilds(data: any): void {
+  private setupClientUserAndGuilds(data: ReadyEvent): void {
     if (typeof data === "object") {
       // Set user info
       if ("user" in data) {
@@ -110,6 +124,7 @@ export class GatewayClient {
    * Actually connects to Discord's gateway - this is where we establish the WebSocket connection
    */
   public connect(): void {
+    debug.info(DebugNamespace.GATEWAY, "Starting gateway connection");
     this.isReconnecting = false;
     this.createWebSocketConnection();
   }
@@ -119,13 +134,26 @@ export class GatewayClient {
    * This is way more efficient than starting from scratch every time
    */
   private attemptReconnect(): void {
+    debug.info(DebugNamespace.GATEWAY, "Attempting to reconnect to gateway");
     this.isReconnecting = true;
 
     if (this.canResume()) {
-      console.log("[Gateway] Attempting to resume session");
+      debug.log(DebugNamespace.GATEWAY, "Attempting to resume session", {
+        sessionId: this.sessionId,
+        sequenceNumber: this.sequenceNumber,
+        resumeUrl: this.resumeGatewayUrl,
+      });
       this.createWebSocketConnection(true);
     } else {
-      console.log("[Gateway] Creating new connection (cannot resume)");
+      debug.log(
+        DebugNamespace.GATEWAY,
+        "Creating new connection (cannot resume)",
+        {
+          hasSessionId: !!this.sessionId,
+          hasSequenceNumber: this.sequenceNumber !== null,
+          hasResumeUrl: !!this.resumeGatewayUrl,
+        }
+      );
       this.resetSessionData();
       this.createWebSocketConnection(false);
     }
@@ -158,8 +186,17 @@ export class GatewayClient {
    * @param resume Whether we're trying to resume an existing session or starting fresh
    */
   private createWebSocketConnection(resume: boolean = false): void {
+    debug.log(
+      DebugNamespace.GATEWAY,
+      `Creating WebSocket connection (resume: ${resume})`
+    );
+
     // Clean up any existing connection first
     if (this.ws) {
+      debug.log(
+        DebugNamespace.GATEWAY,
+        "Cleaning up existing WebSocket connection"
+      );
       this.ws.removeAllListeners();
       this.ws.terminate();
     }
@@ -172,11 +209,13 @@ export class GatewayClient {
         ? this.resumeGatewayUrl
         : "wss://gateway.discord.gg/?v=10&encoding=json";
 
+    debug.log(DebugNamespace.GATEWAY, `Connecting to: ${gatewayUrl}`);
     this.ws = new WebSocket(gatewayUrl);
 
     this.ws.on("open", () => {
-      console.log(
-        `[Gateway] ${resume ? "Reconnected" : "Connected"} to Discord Gateway`
+      debug.info(
+        DebugNamespace.GATEWAY,
+        `WebSocket connection ${resume ? "resumed" : "established"}`
       );
       if (!resume) {
         this.reconnectionManager.onConnectionSuccess();
@@ -197,16 +236,28 @@ export class GatewayClient {
         }
         const packet: GatewayPayload = JSON.parse(jsonString);
 
+        debug.trace(
+          DebugNamespace.GATEWAY,
+          `Received gateway packet - OP: ${packet.op}, Type: ${packet.t || "N/A"}`
+        );
+
         // Keep track of sequence numbers for resuming sessions later
         if (packet.s !== null && packet.s !== undefined) {
           this.sequenceNumber = packet.s;
+          debug.trace(
+            DebugNamespace.GATEWAY,
+            `Updated sequence number: ${this.sequenceNumber}`
+          );
         }
 
         // Handle different opcodes from Discord
         switch (packet.op) {
           case GatewayOpcodes.HELLO: {
             // First message from Discord - sets up heartbeat
-            console.log("[Gateway] Received HELLO");
+            debug.info(DebugNamespace.GATEWAY, "Received HELLO opcode", {
+              heartbeat_interval: (packet.d as HelloPayloadData)
+                .heartbeat_interval,
+            });
             const helloData = packet.d as HelloPayloadData;
             handleHello(this.ws!, helloData, this.client);
 
@@ -219,8 +270,10 @@ export class GatewayClient {
 
             // Send IDENTIFY or RESUME depending on if we're reconnecting
             if (resume && this.canResume()) {
+              debug.info(DebugNamespace.GATEWAY, "Sending RESUME payload");
               this.sendResume();
             } else {
+              debug.info(DebugNamespace.GATEWAY, "Sending IDENTIFY payload");
               // Send IDENTIFY to start a new session
               const identifyPayload = {
                 op: 2, // IDENTIFY opcode
@@ -241,6 +294,7 @@ export class GatewayClient {
 
           case GatewayOpcodes.HEARTBEAT_ACK: {
             // Discord confirmed our heartbeat
+            debug.trace(DebugNamespace.HEARTBEAT, "Received HEARTBEAT_ACK");
             this.heartbeatManager?.onHeartbeatAck();
             break;
           }
@@ -248,78 +302,49 @@ export class GatewayClient {
           case GatewayOpcodes.DISPATCH: {
             // This is where actual events come through
             const event = packet.t as keyof TypicordEvents;
+            debug.log(
+              DebugNamespace.EVENTS,
+              `Received DISPATCH event: ${event}`
+            );
 
-            const handlers: Partial<{
-              [K in keyof TypicordEvents]: (data: TypicordEvents[K]) => void;
-            }> = {
-              READY: data => {
-                this.handleSessionInfo(data);
-                this.handleResumeGatewayUrl(data);
-                this.setupClientUserAndGuilds(data);
-
-                this.readyReceived = true;
-                this.reconnectionManager.onConnectionSuccess();
-                this.client.emit(GatewayEvents.READY, data);
-              },
-              RESUMED: () => {
-                console.log("[Gateway] Session resumed successfully");
-                this.reconnectionManager.onConnectionSuccess();
-                // Don't emit READY again for resumed sessions - we're already ready!
-              },
-              MESSAGE_CREATE: data => {
-                // New message came in - wrap it in our Message class and emit it
-                const msg = new Message(
-                  this.client,
-                  data as MessageCreateEvent
-                );
-                this.client.emit(GatewayEvents.MESSAGE_CREATE, msg);
-              },
-              GUILD_CREATE: (data: any) => {
-                const guildId = data.id;
-                if (
-                  !this.readyReceived ||
-                  !this.client.cache.guilds.has(guildId)
-                ) {
-                  // During startup or when joining a new guild
-                  this.client.cache.guilds.set(guildId, data);
-                  this.client.emit("GUILD_CREATE", data);
-                }
-                // If we already know about this guild, ignore it
-              },
-            };
-
-            const handler = handlers[event];
-            if (handler) {
-              handler(packet.d as any);
-            } else {
-              console.log(`[Gateway] Unhandled dispatch event: ${packet.t}`);
-            }
+            // Use our modular dispatch handler system
+            dispatchHandlerRegistry.handleDispatch(
+              this.client,
+              event,
+              packet.d
+            );
             break;
           }
 
           default:
-            console.log(`[Gateway] Unknown opcode: ${packet.op}`);
+            debug.warn(DebugNamespace.GATEWAY, `Unknown opcode: ${packet.op}`);
         }
       } catch (error) {
-        console.error("[Gateway] Failed to parse message:", error);
+        debug.error(
+          DebugNamespace.GATEWAY,
+          "Failed to parse message",
+          error as Error
+        );
       }
     });
 
     this.ws.on("error", err => {
-      console.error("[Gateway] WebSocket error:", err);
+      debug.error(DebugNamespace.GATEWAY, "WebSocket error", err);
       this.handleConnectionLoss("websocket error");
     });
 
     this.ws.on("close", (code, reason) => {
-      console.warn(
-        `[Gateway] Connection closed: ${code} - ${reason.toString()}`
+      debug.warn(
+        DebugNamespace.GATEWAY,
+        `Connection closed: ${code} - ${reason.toString()}`
       );
       this.heartbeatManager?.stop();
 
       // Some close codes mean we shouldn't even try to reconnect
       if (this.shouldNotReconnect(code)) {
-        console.error(
-          `[Gateway] Non-recoverable close code ${code}. Not reconnecting.`
+        debug.error(
+          DebugNamespace.GATEWAY,
+          `Non-recoverable close code ${code}. Not reconnecting.`
         );
         return;
       }
@@ -337,7 +362,7 @@ export class GatewayClient {
       return; // Already dealing with a reconnection
     }
 
-    console.warn(`[Gateway] Connection lost: ${reason}`);
+    debug.warn(DebugNamespace.GATEWAY, `Connection lost: ${reason}`);
     this.reconnectionManager.scheduleReconnect(reason);
   }
 
@@ -346,7 +371,10 @@ export class GatewayClient {
    */
   private sendResume(): void {
     if (!this.ws || !this.sessionId || this.sequenceNumber === null) {
-      console.error("[Gateway] Cannot resume: missing session data");
+      debug.error(
+        DebugNamespace.GATEWAY,
+        "Cannot resume: missing session data"
+      );
       return;
     }
 
@@ -359,8 +387,9 @@ export class GatewayClient {
       },
     };
 
-    console.log(
-      `[Gateway] Sending RESUME payload (seq: ${this.sequenceNumber})`
+    debug.info(
+      DebugNamespace.GATEWAY,
+      `Sending RESUME payload (seq: ${this.sequenceNumber})`
     );
     this.ws.send(JSON.stringify(resumePayload));
   }
@@ -388,7 +417,7 @@ export class GatewayClient {
    * Properly shuts down the gateway connection - cleanup everything nicely
    */
   public disconnect(): void {
-    console.log("[Gateway] Disconnecting...");
+    debug.info(DebugNamespace.GATEWAY, "Disconnecting...");
     this.reconnectionManager.cancel();
     this.heartbeatManager?.stop();
 
@@ -399,5 +428,21 @@ export class GatewayClient {
     }
 
     this.resetSessionData();
+  }
+
+  /**
+   * Sends a raw payload to Discord - for advanced usage
+   * @param payload The payload to send
+   */
+  public sendRawPayload(payload: object): void {
+    if (this.ws && this.ws.readyState === 1) {
+      // WebSocket.OPEN
+      this.ws.send(JSON.stringify(payload));
+    } else {
+      debug.warn(
+        DebugNamespace.GATEWAY,
+        "Attempted to send payload while not connected"
+      );
+    }
   }
 }
