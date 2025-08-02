@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import "dotenv/config";
 import { RESTClient, RESTError } from "../src/client/RESTClient";
 
 const token = process.env.DISCORD_TOKEN || "BotTokenHere"; // Use a real token for live tests
@@ -69,14 +69,29 @@ async function testErrorHandling() {
   }
 }
 
-async function runAllTests() {
-  await testGetGateway();
-  const msg = await testPostMessage();
-  if (msg) {
-    await testPatchMessage(msg);
-    await testDeleteMessage(msg);
+async function runAllTests(): Promise<void> {
+  try {
+    await testGetGateway();
+    const msg = await testPostMessage();
+    if (msg) {
+      await testPatchMessage(msg);
+      await testDeleteMessage(msg);
+    }
+    await testErrorHandling();
+    console.log("✅ All RESTClient tests completed successfully!");
+  } catch (error) {
+    console.error("❌ RESTClient test suite failed:", error);
+    throw error; // Re-throw to be caught by main handler
   }
-  await testErrorHandling();
 }
 
-runAllTests();
+// Run all tests and handle the promise properly
+runAllTests()
+  .then(() => {
+    console.log("🎉 RESTClient test suite finished!");
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error("💥 RESTClient test suite failed:", error);
+    process.exit(1);
+  });
