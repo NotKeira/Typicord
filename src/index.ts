@@ -7,6 +7,12 @@ export * from "./gateway/ReconnectionManager";
 export * from "./gateway/constants";
 export * from "./gateway/handlers";
 export * from "./structures/Message";
+export * from "./structures/Guild";
+export * from "./structures/Channel";
+export * from "./structures/Role";
+export * from "./structures/ApplicationCommand";
+export * from "./structures/Interaction";
+export * from "./structures/ComponentBuilders";
 export * from "./structures/Embed";
 export * from "./structures/Emoji";
 export * from "./structures/User";
@@ -14,3 +20,6 @@ export * from "./cache/CacheManager";
 export * from "./cache/GuildCacheManager";
 export * from "./cache/UserCacheManager";
 export * from "./events/EventEmitter";
+
+// Export Events namespace
+export * as Events from "./events";

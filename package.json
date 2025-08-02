@@ -1,6 +1,6 @@
 {
   "name": "typicord",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Typicord is a TypeScript library for interacting with the Discord API, providing type definitions and utilities to simplify development.",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
