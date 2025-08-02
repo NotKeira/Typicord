@@ -1,0 +1,126 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.8.2] - 2025-08-03
+
+### Changed
+- Enhanced TypeScript configuration with stricter type checking
+- Updated tsup.config.ts for better build optimization and type generation
+- Improved benchmark files with proper typing and performance tests
+- Updated .gitignore for better file exclusion patterns
+- Enhanced pnpm workspace configuration
+- Updated generated typings structure
+
+### Removed
+- Removed obsolete TODO.md file
+
+## [1.8.1] - 2025-08-03
+
+### Added
+- Comprehensive documentation and example implementations
+- DEBUG.md with detailed debugging guide and environment variable usage
+- advanced-bot.ts example showcasing complex bot patterns
+- components-v2-demo.ts for Discord components interaction examples
+- debug-example.ts demonstrating debug system usage
+- simple-enhanced-bot.ts as improved basic bot template
+- Updated documentation structure for better developer experience
+
+## [1.8.0] - 2025-08-03
+
+### Added
+- Client.once() method for one-time event listening with automatic cleanup
+- Extended EventEmitter with once() functionality and proper listener management
+- emitRaw() internal method for gateway to emit raw Discord data
+- Automatic event data wrapping in Client.emit() for user-friendly API
+
+### Changed
+- Enhanced RESTClient with improved error handling and type safety
+- Updated Client import/export structure for better modularity
+
+## [1.7.0] - 2025-08-03
+
+### Added
+- Modular, scalable Gateway dispatch event handler system
+- DispatchHandlerRegistry for centralized event handler management
+- Individual handler files (ready.ts, messageCreate.ts, guildCreate.ts, etc.)
+- Dynamic handler registration via registerDispatchHandler()
+- Plugin-based architecture support with expandable registry
+- Strong TypeScript typing for known gateway events
+- Automatic handler lookup and invocation with error handling
+- Warning logs for unhandled events
+
+### Changed
+- Updated GatewayClient to use modular dispatch system instead of hardcoded handlers
+
+## [1.6.0] - 2025-08-03
+
+### Added
+- Dynamic event system with Events namespace export
+- Individual event files for all Discord Gateway events (READY, MESSAGE_CREATE, etc.)
+- Wrapper classes for each event type (ReadyEventData, MessageCreateEventData, etc.)
+- Events namespace for clean user API: `import { Events } from 'typicord'`
+- Structured event data access with getter methods and TypeScript safety
+
+### Changed
+- Updated main index.ts to export Events namespace
+
+## [1.5.0] - 2025-08-03
+
+### Added
+- Comprehensive TypeScript type safety overhaul
+- Complete type definitions for all Discord structures (guild, channel, user, message, etc.)
+- GuildMember type and proper guild structure types
+- Interaction, role, emoji, and REST API type definitions
+
+### Changed
+- Replaced all 'any' types with proper Discord API type definitions
+- Enhanced Message, Guild, Channel, and other structure classes with proper typing
+
+## [1.4.4] - 2025-08-03
+
+### Added
+- TYPI_DEBUG environment variable debug system
+- Namespace-based debug logging with conditional output
+- Support for TYPI_DEBUG=* for all namespaces or specific filtering
+- Gateway, events, heartbeat, and interaction debug namespaces
+- Structured logging for development and troubleshooting
+
+## Key Features Added in This Release Cycle
+
+### 🔧 Debug System
+- Environment variable-based debugging with `TYPI_DEBUG`
+- Namespace filtering for targeted debugging
+- Structured logging for better development experience
+
+### 🛡️ Type Safety
+- Complete elimination of 'any' types
+- Comprehensive Discord API type definitions
+- Full TypeScript safety across all structures
+
+### 🎯 Event System
+- Individual event files for each Discord Gateway event
+- Clean Events namespace export
+- User-friendly event data wrapper classes
+- Type-safe event handling
+
+### 🔌 Modular Architecture
+- Plugin-based gateway event handler system
+- Dynamic handler registration
+- Scalable dispatch system
+- Clean separation of concerns
+
+### 🚀 Enhanced Client
+- One-time event listening with `client.once()`
+- Automatic event data wrapping
+- Improved error handling
+- Better TypeScript integration
+
+### 📚 Documentation
+- Comprehensive debugging guide
+- Multiple bot examples
+- Component interaction demos
+- Developer-friendly documentation structure
