@@ -18,7 +18,7 @@
     "type": "git",
     "url": "https://git.keira.boo/Typicord.git"
   },
-  "license": "MIT",
+  "license": "Apache-2.0",
   "exports": {
     ".": {
       "import": {
@@ -37,10 +37,10 @@
     "clean": "rm -rf dist typicord-*.tgz",
     "prepublishOnly": "pnpm run build",
     "test": "npm-run-all --parallel test:unit test:integration",
-    "test:unit": "tsx ./tests/restclient.test.ts",
-    "test:integration": "tsx ./tests/reconnection.test.ts",
-    "test:bot": "tsx ./tests/bot.test.ts",
-    "test:ci": "npm-run-all test:unit test:integration --continue-on-error",
+    "test:unit": "SKIP_INTEGRATION_TESTS=true pnpm tsx ./tests/restclient.test.ts && pnpm tsx ./tests/agent-reuse.test.ts",
+    "test:integration": "SKIP_INTEGRATION_TESTS=true pnpm tsx ./tests/reconnection.test.ts",
+    "test:bot": "SKIP_INTEGRATION_TESTS=true pnpm tsx ./tests/bot.test.ts",
+    "test:ci": "SKIP_INTEGRATION_TESTS=true npm-run-all test:unit test:integration --continue-on-error",
     "lint": "eslint src/ tests/ examples/ benchmarks/",
     "lint:fix": "eslint src/ tests/ examples/ benchmarks/ --fix",
     "format": "prettier --write src/ tests/ examples/ benchmarks/",
@@ -48,10 +48,10 @@
     "quality": "npm-run-all --parallel lint format:check --continue-on-error",
     "quality:fix": "npm-run-all lint:fix format",
     "bench": "npm-run-all bench:rest bench:messages bench:gateway bench:memory --continue-on-error",
-    "bench:rest": "tsx ./benchmarks/rest-client.bench.ts",
-    "bench:messages": "tsx ./benchmarks/message-processing.bench.ts",
-    "bench:gateway": "tsx ./benchmarks/gateway.bench.ts",
-    "bench:memory": "tsx --expose-gc ./benchmarks/memory.bench.ts",
+    "bench:rest": "pnpm tsx ./benchmarks/rest-client.bench.ts",
+    "bench:messages": "pnpm tsx ./benchmarks/message-processing.bench.ts",
+    "bench:gateway": "pnpm tsx ./benchmarks/gateway.bench.ts",
+    "bench:memory": "pnpm tsx --expose-gc ./benchmarks/memory.bench.ts",
     "ci": "npm-run-all build quality test:ci bench --continue-on-error"
   },
   "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184",
