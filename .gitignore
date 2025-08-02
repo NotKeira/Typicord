@@ -35,7 +35,7 @@ desktop.ini
 # Test coverage
 coverage/
 tests/
-
+test-bot
 # Optional npm cache directory
 .npm
 

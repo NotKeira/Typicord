@@ -1,3 +1,6 @@
 onlyBuiltDependencies:
   - bufferutil
   - esbuild
+
+overrides:
+  typicord: link:../../../.local/share/pnpm/global/5/node_modules/typicord

@@ -1,3 +1,19 @@
+/**
+ * Gateway Performance Benchmarks - Optimized for Speed
+ *
+ * Tests core gateway operations including:
+ * - ReconnectionManager operations
+ * - HeartbeatManager lifecycle
+ * - JSON payload serialization/parsing (small/medium/large)
+ * - WebSocket message processing pipeline
+ *
+ * Optimizations applied:
+ * - Pre-created objects to avoid allocation overhead
+ * - Reduced sample sizes and max time per benchmark
+ * - Synchronous execution for faster completion
+ * - Fixed precision issues and unused variables
+ * - Streamlined payload sizes for realistic testing
+ */
 import Benchmark from "benchmark";
 import { ReconnectionManager } from "../src/gateway/ReconnectionManager";
 import { HeartbeatManager } from "../src/gateway/HeartbeatManager";
@@ -91,7 +107,7 @@ const largePayload = {
     guilds: Array(20) // Reduced from 50 for faster benchmarks
       .fill(null)
       .map((_, i) => ({
-        id: `12345678901234567${String(i).padStart(2, '0')}`, // Fixed precision issue
+        id: `12345678901234567${String(i).padStart(2, "0")}`, // Fixed precision issue
         name: `Guild ${i + 1}`,
         icon: "guild_icon_hash",
         permissions: "2147483647",
@@ -154,7 +170,7 @@ const rawMessage = JSON.stringify({
 suite.add("WebSocket message parse + validate", () => {
   const parsed = JSON.parse(rawMessage);
   const { op, s } = parsed;
-  
+
   // Basic validation that would happen in real usage
   if (typeof op === "number" && typeof s === "number") {
     // Message is valid - this would trigger event handling
@@ -168,7 +184,9 @@ suite
   .on("cycle", (event: any) => {
     const target = event.target;
     const opsPerSecond = Benchmark.formatNumber(target.hz.toFixed(0));
-    console.log(`${target.name}: ${opsPerSecond} ops/sec ±${(target.stats.rme || 0).toFixed(2)}%`);
+    console.log(
+      `${target.name}: ${opsPerSecond} ops/sec ±${(target.stats.rme || 0).toFixed(2)}%`
+    );
   })
   .on("complete", function (this: any) {
     console.log(`\n🏆 Fastest: ${this.filter("fastest").map("name")}`);

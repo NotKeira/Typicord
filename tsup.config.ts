@@ -20,5 +20,9 @@ export default defineConfig({
     if (options.format === "cjs") {
       options.outExtension = { ".js": ".cjs" };
     }
+    // For ESM, output .mjs extension
+    if (options.format === "esm") {
+      options.outExtension = { ".js": ".mjs" };
+    }
   },
 });
