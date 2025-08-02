@@ -1,3 +1,6 @@
+import { fetch as undiciFetch, Agent } from "undici";
+import { debug, DebugNamespace } from "@/debug";
+
 /**
  * What you need to configure the REST client
  */
@@ -17,15 +20,13 @@ export class RESTError extends Error {
   /** The HTTP status code (404, 403, etc.) */
   status: number;
   /** Whatever Discord sent back as the error response */
-  response: any;
-  constructor(status: number, message: string, response?: any) {
+  response: unknown;
+  constructor(status: number, message: string, response?: unknown) {
     super(message);
     this.status = status;
     this.response = response;
   }
 }
-
-import { fetch as undiciFetch, Agent } from "undici";
 
 /**
  * Handles making HTTP requests to Discord's REST API
@@ -56,10 +57,23 @@ export class RESTClient {
    * @param options Configuration - at minimum you need a token
    */
   constructor(options: RESTOptions) {
+    debug.log(DebugNamespace.REST, "Initializing RESTClient", {
+      version: options.version ?? 10,
+      baseURL: options.baseURL,
+    });
+
     this.token = options.token;
     this.version = options.version ?? 10;
     this.baseURL =
       options.baseURL ?? `https://discord.com/api/v${this.version}`;
+
+    debug.info(
+      DebugNamespace.REST,
+      `RESTClient configured for API v${this.version}`,
+      {
+        baseURL: this.baseURL,
+      }
+    );
 
     // Create a persistent agent for connection pooling
     this.agent = new Agent({
@@ -67,6 +81,11 @@ export class RESTClient {
       keepAliveMaxTimeout: 30000, // 30 seconds
       maxCachedSessions: 100, // cache up to 100 TLS sessions
     });
+
+    debug.log(
+      DebugNamespace.REST,
+      "HTTP Agent configured with connection pooling"
+    );
   }
 
   /**
@@ -75,12 +94,16 @@ export class RESTClient {
    * @param res The fetch Response object
    * @returns True if rate limited and retried, false otherwise
    */
-  private async handleRateLimit(endpoint: string, res: any) {
+  private async handleRateLimit(
+    endpoint: string,
+    res: { status: number; headers: { get(name: string): string | null } }
+  ): Promise<boolean> {
     if (res.status === 429) {
       const retryAfter = Number(res.headers.get("retry-after")) || 1;
       this.rateLimits.set(endpoint, Date.now() + retryAfter * 1000);
-      console.warn(
-        `[REST] Rate limited on ${endpoint}, retrying after ${retryAfter}s`
+      debug.warn(
+        DebugNamespace.REST,
+        `Rate limited on ${endpoint}, retrying after ${retryAfter}s`
       );
       await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
       return true;
@@ -108,14 +131,21 @@ export class RESTClient {
    * @returns The parsed JSON response
    * @throws RESTError on HTTP error or rate limit
    */
-  async request<T = any>(
+  async request<T = unknown>(
     method: string,
     endpoint: string,
-    body?: any,
+    body?: unknown,
     extraHeaders?: Record<string, string>,
     isForm?: boolean
   ): Promise<T> {
+    debug.log(DebugNamespace.REST, `Making ${method} request to ${endpoint}`, {
+      hasBody: !!body,
+      isForm: !!isForm,
+      extraHeaders: Object.keys(extraHeaders || {}),
+    });
+
     if (this.isRateLimited(endpoint)) {
+      debug.warn(DebugNamespace.REST, `Rate limited for endpoint: ${endpoint}`);
       throw new RESTError(429, `Rate limited for endpoint: ${endpoint}`);
     }
     const url = `${this.baseURL}${endpoint}`;
@@ -126,11 +156,11 @@ export class RESTClient {
       }) Node.js/${process.version}`,
       ...extraHeaders,
     };
-    let payload: any = undefined;
+    let payload: BodyInit | undefined = undefined;
     if (body) {
       if (isForm) {
         // Assume body is FormData
-        payload = body;
+        payload = body as FormData;
       } else {
         const newHeaders = { ...headers, "Content-Type": "application/json" };
         payload = JSON.stringify(body);
@@ -138,18 +168,38 @@ export class RESTClient {
       }
     }
     const start = Date.now();
+    debug.trace(DebugNamespace.REST, `Starting HTTP request to ${url}`);
+
     const res = await undiciFetch(url, {
       method,
       headers,
-      body: payload,
+      body: payload as any,
       dispatcher: this.agent, // Use our persistent agent
     });
     const latency = Date.now() - start;
+
+    debug.log(
+      DebugNamespace.REST,
+      `${method} ${endpoint} completed in ${latency}ms`,
+      {
+        status: res.status,
+        statusText: res.statusText,
+      }
+    );
+
     if (this.onAPILatency) this.onAPILatency(latency, method, endpoint);
     if (await this.handleRateLimit(endpoint, res)) {
+      debug.warn(
+        DebugNamespace.REST,
+        `Rate limited, retrying ${method} ${endpoint}`
+      );
       return this.request(method, endpoint, body, extraHeaders, isForm);
     }
     if (!res.ok) {
+      debug.error(
+        DebugNamespace.REST,
+        `HTTP error ${res.status} for ${method} ${endpoint}: ${res.statusText}`
+      );
       let errorData;
       try {
         errorData = await res.json();
@@ -179,7 +229,7 @@ export class RESTClient {
    * @param endpoint API endpoint
    * @param extraHeaders Additional headers (optional)
    */
-  get<T = any>(endpoint: string, extraHeaders?: Record<string, string>) {
+  get<T = unknown>(endpoint: string, extraHeaders?: Record<string, string>) {
     return this.request<T>("GET", endpoint, undefined, extraHeaders);
   }
 
@@ -190,9 +240,9 @@ export class RESTClient {
    * @param extraHeaders Additional headers (optional)
    * @param isForm Whether the body is FormData (optional)
    */
-  post<T = any>(
+  post<T = unknown>(
     endpoint: string,
-    body?: any,
+    body?: unknown,
     extraHeaders?: Record<string, string>,
     isForm?: boolean
   ) {
@@ -206,9 +256,9 @@ export class RESTClient {
    * @param extraHeaders Additional headers (optional)
    * @param isForm Whether the body is FormData (optional)
    */
-  patch<T = any>(
+  patch<T = unknown>(
     endpoint: string,
-    body?: any,
+    body?: unknown,
     extraHeaders?: Record<string, string>,
     isForm?: boolean
   ) {
@@ -222,9 +272,9 @@ export class RESTClient {
    * @param extraHeaders Additional headers (optional)
    * @param isForm Whether the body is FormData (optional)
    */
-  put<T = any>(
+  put<T = unknown>(
     endpoint: string,
-    body?: any,
+    body?: unknown,
     extraHeaders?: Record<string, string>,
     isForm?: boolean
   ) {
@@ -244,7 +294,7 @@ export class RESTClient {
    * @param endpoint API endpoint
    * @param extraHeaders Additional headers (optional)
    */
-  delete<T = any>(endpoint: string, extraHeaders?: Record<string, string>) {
+  delete<T = unknown>(endpoint: string, extraHeaders?: Record<string, string>) {
     return this.request<T>("DELETE", endpoint, undefined, extraHeaders);
   }
 }
