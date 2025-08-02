@@ -1,15 +1,15 @@
 {
   "name": "typicord",
-  "version": "1.0.3",
+  "version": "1.5.0",
   "description": "Typicord is a TypeScript library for interacting with the Discord API, providing type definitions and utilities to simplify development.",
   "main": "dist/index.cjs",
-  "module": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
+        "default": "./dist/index.mjs"
       },
       "require": {
         "types": "./dist/index.d.ts",
@@ -20,6 +20,7 @@
   },
   "scripts": {
     "build": "tsup",
+    "clean": "rm -rf dist typicord-*.tgz",
     "prepublishOnly": "pnpm run build",
     "test": "npm-run-all --parallel test:unit test:integration",
     "test:unit": "tsx ./tests/restclient.test.ts",
@@ -54,28 +55,28 @@
   "license": "MIT",
   "packageManager": "pnpm@10.12.4+sha512.5ea8b0deed94ed68691c9bad4c955492705c5eeb8a87ef86bc62c74a26b037b08ff9570f108b2e4dbd1dd1a9186fea925e527f141c648e85af45631074680184",
   "devDependencies": {
-    "@eslint/js": "^9.30.0",
+    "@eslint/js": "^9.32.0",
     "@types/benchmark": "^2.1.5",
-    "@types/node": "^22.15.31",
+    "@types/node": "^22.17.0",
     "@types/ws": "^8.18.1",
-    "@typescript-eslint/eslint-plugin": "^8.35.1",
-    "@typescript-eslint/parser": "^8.35.1",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
     "benchmark": "^2.1.4",
-    "eslint": "^9.30.0",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-prettier": "^5.5.1",
+    "eslint": "^9.32.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.3",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.6.2",
     "tsup": "^8.5.0",
     "tsx": "^4.20.3",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.35.1"
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.38.0"
   },
   "dependencies": {
-    "dotenv": "^17.0.0",
-    "globals": "^16.2.0",
-    "undici": "^7.11.0",
-    "ws": "^8.18.2"
+    "dotenv": "^17.2.1",
+    "globals": "^16.3.0",
+    "undici": "^7.13.0",
+    "ws": "^8.18.3"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.9"
