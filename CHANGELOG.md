@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.1] - 2025-08-03
+
+### Fixed
+- CI pipeline configuration issues with pnpm commands
+- ESLint configuration for benchmark files with proper TypeScript project inclusion
+- GitHub Actions workflows now use correct `pnpm run ci` instead of non-existent `pnpm ci`
+- Removed unsupported `--dry-run` flag from pnpm pack command
+- Removed `--frozen-lockfile` flags to avoid lockfile mismatch issues
+- Added proper ESLint rules for benchmark files (disabled no-unused-expressions and no-loss-of-precision)
+- Security improvements by removing Discord tokens from test files
+
+### Changed
+- Updated tsconfig.json to include benchmarks directory
+- Enhanced workflow reliability with proper dependency installation
+- Improved ESLint configuration for different file types (tests, examples, benchmarks)
+
 ## [1.9.0] - 2025-08-03
 
 ### Added
