@@ -15,10 +15,13 @@ export default [
     rules: {
       // Disable some overly strict rules for our use case
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_" },
+      ],
       "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/ban-ts-comment": "off",
-      
+
       // Encourage good practices
       "prefer-const": "error",
       "no-var": "error",
@@ -30,6 +33,17 @@ export default [
       // More relaxed rules for tests and examples
       "@typescript-eslint/no-unused-vars": "off",
       "no-console": "off",
+    },
+  },
+  {
+    files: ["benchmarks/**/*"],
+    rules: {
+      // More relaxed rules for benchmarks
+      "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-expressions": "off", // Allow benchmark expressions
+      "no-console": "off",
+      "no-loss-of-precision": "off", // Allow large numbers in performance benchmarks
     },
   },
   {

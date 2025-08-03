@@ -24,13 +24,15 @@ for (const benchmark of benchmarks) {
 
   try {
     // Add timeout to prevent hanging benchmarks
-    execSync(`timeout 30s tsx ${benchmarkPath}`, { 
+    execSync(`timeout 30s tsx ${benchmarkPath}`, {
       stdio: "inherit",
-      timeout: 35000 // 35 second timeout
+      timeout: 35000, // 35 second timeout
     });
   } catch (error: any) {
     if (error.status === 124) {
-      console.log(`⏱️  ${benchmark} timed out (this is normal for some benchmarks)`);
+      console.log(
+        `⏱️  ${benchmark} timed out (this is normal for some benchmarks)`
+      );
     } else {
       console.error(`❌ Failed to run ${benchmark}:`, error.message);
     }

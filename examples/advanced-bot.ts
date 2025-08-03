@@ -1,4 +1,10 @@
-import { Client, GatewayIntentBits, ApplicationCommandOptionType, ComponentType, ButtonStyle } from "typicord";
+import {
+  Client,
+  GatewayIntentBits,
+  ApplicationCommandOptionType,
+  ComponentType,
+  ButtonStyle,
+} from "typicord";
 
 // Helper functions to reduce cognitive complexity
 async function handlePingCommand(command: any, client: any) {

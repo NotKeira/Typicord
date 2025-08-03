@@ -4,11 +4,9 @@ if (process.env.SKIP_INTEGRATION_TESTS === "true") {
   process.exit(0);
 }
 
-import { GatewayClient } from "../src/gateway/GatewayClient";
 import { GatewayIntentBits, Client } from "../src/client/Client";
 
-const token =
-  "your-token";
+const token = "your-token";
 const intents =
   GatewayIntentBits.Guilds |
   GatewayIntentBits.GuildMembers |
@@ -71,7 +69,7 @@ client.on("MESSAGE_CREATE", async data => {
       const sent = Date.now();
       const reply = await msg.reply("Pinging...");
       const apiLatency = Date.now() - sent;
-      const wsLatency = client.gateway.getPing?.() ?? -1;
+      const wsLatency = client.gateway.getWebSocketLatency?.() ?? -1;
 
       await reply.edit(`🏓 Pong!
 API Latency: ${apiLatency}ms

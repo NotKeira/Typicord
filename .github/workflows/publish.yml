@@ -30,7 +30,7 @@ jobs:
           corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install
 
       - name: Run CI pipeline
         run: pnpm run ci
