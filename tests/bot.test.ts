@@ -8,7 +8,7 @@ import { GatewayClient } from "../src/gateway/GatewayClient";
 import { GatewayIntentBits, Client } from "../src/client/Client";
 
 const token =
-  "MTE0OTMzMzgyNjQ2MDQ1OTA4NA.G_bJBl.qX375QGTgGYSw1OarU9GPydI0GhLn9xMkg_70M";
+  "your-token";
 const intents =
   GatewayIntentBits.Guilds |
   GatewayIntentBits.GuildMembers |
