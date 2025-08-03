@@ -30,7 +30,7 @@ jobs:
           corepack prepare pnpm@latest --activate
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Run CI pipeline
         run: pnpm run ci
@@ -41,7 +41,7 @@ jobs:
         run: pnpm build
 
       - name: Verify package can be published
-        run: pnpm pack --dry-run
+        run: pnpm pack
 
       - name: Publish to npm
         run: pnpm publish --access public --provenance
@@ -64,6 +64,7 @@ jobs:
             ## Installation
             ```bash
             npm install typicord@${{ github.ref_name }}
+            pnpm install typicord@${{ github.ref_name }}
             ```
 
             ## What's Changed
