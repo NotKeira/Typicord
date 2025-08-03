@@ -5,6 +5,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2025-08-03
+
+### Added
+- Comprehensive example implementations demonstrating progressive complexity
+- Professional README with complete documentation overhaul
+- Automated npm publishing workflow with GitHub Actions
+- Apache 2.0 license migration for better patent protection
+- Improved test reliability with proper exit code handling
+
+### Changed
+- Migrated from MIT to Apache License 2.0 for enhanced legal protection
+- Updated all package scripts to use 'pnpm tsx' instead of direct tsx
+- Enhanced test files with proper Promise handling and graceful shutdown
+- Updated .gitignore to include test files in repository
+- Professional documentation structure with API reference and contribution guidelines
+
+### Added Examples
+- basic-bot.ts: Simple message handling with ping/echo commands
+- guild-management.ts: Guild events, caching, and server management
+- slash-commands.ts: Interaction handling and command responses
+- All examples include proper TypeScript typing and error handling
+
+### Infrastructure
+- GitHub Actions workflow for automated npm publishing on version tags
+- CI pipeline with build, quality checks, tests, and benchmarks
+- npm provenance for enhanced package security and transparency
+- Environment variable support for skipping integration tests in CI
+- Automatic GitHub release creation with changelog links
+
+### Documentation
+- Complete README overhaul with professional structure
+- Comprehensive API reference with code examples
+- Development setup instructions and contribution guidelines
+- Feature highlights and examples table with complexity ratings
+- Debug system documentation with environment variable usage
+
 ## [1.8.2] - 2025-08-03
 
 ### Changed
