@@ -1,0 +1,39 @@
+/**
+ * GUILD_SCHEDULED_EVENT_USER_REMOVE Event
+ *
+ * Sent when a user has unsubscribed from a guild scheduled event.
+ */
+
+export interface GuildScheduledEventUserRemoveData {
+  /** The id of the guild scheduled event */
+  guild_scheduled_event_id: string;
+  /** The id of the user */
+  user_id: string;
+  /** The id of the guild */
+  guild_id: string;
+}
+
+export class GuildScheduledEventUserRemoveEventData {
+  constructor(public data: GuildScheduledEventUserRemoveData) {}
+
+  /**
+   * The scheduled event ID
+   */
+  get guildScheduledEventId() {
+    return this.data.guild_scheduled_event_id;
+  }
+
+  /**
+   * The user ID who unsubscribed
+   */
+  get userId() {
+    return this.data.user_id;
+  }
+
+  /**
+   * The guild ID where the event is
+   */
+  get guildId() {
+    return this.data.guild_id;
+  }
+}
