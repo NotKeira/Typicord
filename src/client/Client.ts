@@ -2,13 +2,13 @@
 declare const __CLIENT_VERSION__: string;
 import { GatewayClient } from "@/gateway/GatewayClient";
 
-import { EventEmitter } from "@/events/EventEmitter";
+import { EnhancedClient } from "@/events/EnhancedClient";
 import { Message } from "@/structures/Message";
 import { Guild } from "@/structures/Guild";
 import { Channel } from "@/structures/Channel";
 import { User } from "@/structures/User";
 import { ApplicationCommandManager } from "@/structures/ApplicationCommand";
-import type { TypicordEvents } from "@/types/gateway/events";
+import type { ClientEvents } from "@/types/ClientEvents";
 import type { Message as GatewayMessage } from "@/types/gateway/structures/Message";
 import type { Channel as ChannelData } from "@/types/structures/channel";
 import { GuildCacheManager } from "@/cache/GuildCacheManager";
@@ -21,13 +21,35 @@ import { ResumedEventData } from "@/events/RESUMED";
 import { MessageCreateEventData } from "@/events/MESSAGE_CREATE";
 import { MessageUpdateEventData } from "@/events/MESSAGE_UPDATE";
 import { MessageDeleteEventData } from "@/events/MESSAGE_DELETE";
+import { MessageDeleteBulkEventData } from "@/events/MESSAGE_DELETE_BULK";
 import { GuildCreateEventData } from "@/events/GUILD_CREATE";
 import { GuildUpdateEventData } from "@/events/GUILD_UPDATE";
 import { GuildDeleteEventData } from "@/events/GUILD_DELETE";
+import { GuildMemberAddEventData } from "@/events/GUILD_MEMBER_ADD";
+import { GuildMemberUpdateEventData } from "@/events/GUILD_MEMBER_UPDATE";
+import { GuildMemberRemoveEventData } from "@/events/GUILD_MEMBER_REMOVE";
+import { GuildMembersChunkEventData } from "@/events/GUILD_MEMBERS_CHUNK";
+import { GuildRoleCreateEventData } from "@/events/GUILD_ROLE_CREATE";
+import { GuildRoleUpdateEventData } from "@/events/GUILD_ROLE_UPDATE";
+import { GuildRoleDeleteEventData } from "@/events/GUILD_ROLE_DELETE";
+import { GuildBanAddEventData } from "@/events/GUILD_BAN_ADD";
+import { GuildBanRemoveEventData } from "@/events/GUILD_BAN_REMOVE";
+import { GuildEmojisUpdateEventData } from "@/events/GUILD_EMOJIS_UPDATE";
+import { GuildStickersUpdateEventData } from "@/events/GUILD_STICKERS_UPDATE";
+import { GuildIntegrationsUpdateEventData } from "@/events/GUILD_INTEGRATIONS_UPDATE";
 import { ChannelCreateEventData } from "@/events/CHANNEL_CREATE";
 import { ChannelUpdateEventData } from "@/events/CHANNEL_UPDATE";
 import { ChannelDeleteEventData } from "@/events/CHANNEL_DELETE";
+import { ChannelPinsUpdateEventData } from "@/events/CHANNEL_PINS_UPDATE";
+import { ThreadCreateEventData } from "@/events/THREAD_CREATE";
+import { ThreadUpdateEventData } from "@/events/THREAD_UPDATE";
+import { ThreadDeleteEventData } from "@/events/THREAD_DELETE";
+import { ThreadListSyncEventData } from "@/events/THREAD_LIST_SYNC";
+import { ThreadMemberUpdateEventData } from "@/events/THREAD_MEMBER_UPDATE";
+import { ThreadMembersUpdateEventData } from "@/events/THREAD_MEMBERS_UPDATE";
 import { InteractionCreateEventData } from "@/events/INTERACTION_CREATE";
+import { InviteCreateEventData } from "@/events/INVITE_CREATE";
+import { InviteDeleteEventData } from "@/events/INVITE_DELETE";
 import { TypingStartEventData } from "@/events/TYPING_START";
 import { MessageReactionAddEventData } from "@/events/MESSAGE_REACTION_ADD";
 import { MessageReactionRemoveEventData } from "@/events/MESSAGE_REACTION_REMOVE";
@@ -35,13 +57,42 @@ import { MessageReactionRemoveAllEventData } from "@/events/MESSAGE_REACTION_REM
 import { MessageReactionRemoveEmojiEventData } from "@/events/MESSAGE_REACTION_REMOVE_EMOJI";
 import { PresenceUpdateEventData } from "@/events/PRESENCE_UPDATE";
 import { VoiceStateUpdateEventData } from "@/events/VOICE_STATE_UPDATE";
+import { VoiceServerUpdateEventData } from "@/events/VOICE_SERVER_UPDATE";
+import { WebhooksUpdateEventData } from "@/events/WEBHOOKS_UPDATE";
 import { UserUpdateEventData } from "@/events/USER_UPDATE";
+import { ApplicationCommandPermissionsUpdateEventData } from "@/events/APPLICATION_COMMAND_PERMISSIONS_UPDATE";
+// Auto Moderation Events
+import { AutoModerationRuleCreateEventData } from "@/events/AUTO_MODERATION_RULE_CREATE";
+import { AutoModerationRuleUpdateEventData } from "@/events/AUTO_MODERATION_RULE_UPDATE";
+import { AutoModerationRuleDeleteEventData } from "@/events/AUTO_MODERATION_RULE_DELETE";
+import { AutoModerationActionExecutionEventData } from "@/events/AUTO_MODERATION_ACTION_EXECUTION";
+// Stage Instance Events
+import { StageInstanceCreateEventData } from "@/events/STAGE_INSTANCE_CREATE";
+import { StageInstanceUpdateEventData } from "@/events/STAGE_INSTANCE_UPDATE";
+import { StageInstanceDeleteEventData } from "@/events/STAGE_INSTANCE_DELETE";
+// Guild Scheduled Events
+import { GuildScheduledEventCreateEventData } from "@/events/GUILD_SCHEDULED_EVENT_CREATE";
+import { GuildScheduledEventUpdateEventData } from "@/events/GUILD_SCHEDULED_EVENT_UPDATE";
+import { GuildScheduledEventDeleteEventData } from "@/events/GUILD_SCHEDULED_EVENT_DELETE";
+import { GuildScheduledEventUserAddEventData } from "@/events/GUILD_SCHEDULED_EVENT_USER_ADD";
+import { GuildScheduledEventUserRemoveEventData } from "@/events/GUILD_SCHEDULED_EVENT_USER_REMOVE";
+// Poll Events
+import { MessagePollVoteAddEventData } from "@/events/MESSAGE_POLL_VOTE_ADD";
+import { MessagePollVoteRemoveEventData } from "@/events/MESSAGE_POLL_VOTE_REMOVE";
+// Entitlement Events
+import { EntitlementCreateEventData } from "@/events/ENTITLEMENT_CREATE";
+import { EntitlementUpdateEventData } from "@/events/ENTITLEMENT_UPDATE";
+import { EntitlementDeleteEventData } from "@/events/ENTITLEMENT_DELETE";
+// Integration Events
+import { IntegrationCreateEventData } from "@/events/INTEGRATION_CREATE";
+import { IntegrationUpdateEventData } from "@/events/INTEGRATION_UPDATE";
+import { IntegrationDeleteEventData } from "@/events/INTEGRATION_DELETE";
 
 /**
  * The main Typicord client - this is what you'll be using to interact with Discord!
  * Handles connecting to the gateway, sending messages, and all that good stuff.
  */
-export class Client extends EventEmitter {
+export class Client extends EnhancedClient {
   /**
    * What version of Typicord this is
    */
@@ -119,9 +170,9 @@ export class Client extends EventEmitter {
     return this._gateway;
   }
 
-  public override on<K extends keyof TypicordEvents>(
+  public override on<K extends keyof ClientEvents>(
     event: K,
-    listener: (data: TypicordEvents[K]) => void
+    listener: (data: ClientEvents[K]) => void
   ): this {
     super.on(event, listener);
     return this;
@@ -132,104 +183,150 @@ export class Client extends EventEmitter {
    * @param event The event to listen for
    * @param listener The function to call when the event is emitted
    */
-  public once<K extends keyof TypicordEvents>(
+  public override once<K extends keyof ClientEvents>(
     event: K,
-    listener: (data: TypicordEvents[K]) => void
+    listener: (data: ClientEvents[K]) => void
   ): this {
     super.once(event, listener);
     return this;
   }
 
   /**
+   * Event handler mapping for efficient event processing
+   * @private
+   */
+  private readonly eventHandlers = new Map<string, (data: any) => any>([
+    ["READY", data => new ReadyEventData(data)],
+    ["RESUMED", () => new ResumedEventData()],
+    [
+      "MESSAGE_CREATE",
+      data => {
+        const message = new Message(this, data);
+        return new MessageCreateEventData(message);
+      },
+    ],
+    ["MESSAGE_UPDATE", data => new MessageUpdateEventData(data)],
+    ["MESSAGE_DELETE", data => new MessageDeleteEventData(data)],
+    ["MESSAGE_DELETE_BULK", data => new MessageDeleteBulkEventData(data)],
+    ["GUILD_CREATE", data => new GuildCreateEventData(data)],
+    ["GUILD_UPDATE", data => new GuildUpdateEventData(data)],
+    ["GUILD_DELETE", data => new GuildDeleteEventData(data)],
+    ["CHANNEL_CREATE", data => new ChannelCreateEventData(data)],
+    ["CHANNEL_UPDATE", data => new ChannelUpdateEventData(data)],
+    ["CHANNEL_DELETE", data => new ChannelDeleteEventData(data)],
+    ["CHANNEL_PINS_UPDATE", data => new ChannelPinsUpdateEventData(data)],
+    ["INTERACTION_CREATE", data => new InteractionCreateEventData(data)],
+    ["TYPING_START", data => new TypingStartEventData(data)],
+    ["MESSAGE_REACTION_ADD", data => new MessageReactionAddEventData(data)],
+    [
+      "MESSAGE_REACTION_REMOVE",
+      data => new MessageReactionRemoveEventData(data),
+    ],
+    [
+      "MESSAGE_REACTION_REMOVE_ALL",
+      data => new MessageReactionRemoveAllEventData(data),
+    ],
+    [
+      "MESSAGE_REACTION_REMOVE_EMOJI",
+      data => new MessageReactionRemoveEmojiEventData(data),
+    ],
+    ["PRESENCE_UPDATE", data => new PresenceUpdateEventData(data)],
+    ["VOICE_STATE_UPDATE", data => new VoiceStateUpdateEventData(data)],
+    ["VOICE_SERVER_UPDATE", data => new VoiceServerUpdateEventData(data)],
+    ["USER_UPDATE", data => new UserUpdateEventData(data)],
+    [
+      "APPLICATION_COMMAND_PERMISSIONS_UPDATE",
+      data => new ApplicationCommandPermissionsUpdateEventData(data),
+    ],
+    ["GUILD_MEMBER_ADD", data => new GuildMemberAddEventData(data)],
+    ["GUILD_MEMBER_UPDATE", data => new GuildMemberUpdateEventData(data)],
+    ["GUILD_MEMBER_REMOVE", data => new GuildMemberRemoveEventData(data)],
+    ["GUILD_MEMBERS_CHUNK", data => new GuildMembersChunkEventData(data)],
+    ["GUILD_ROLE_CREATE", data => new GuildRoleCreateEventData(data)],
+    ["GUILD_ROLE_UPDATE", data => new GuildRoleUpdateEventData(data)],
+    ["GUILD_ROLE_DELETE", data => new GuildRoleDeleteEventData(data)],
+    ["GUILD_BAN_ADD", data => new GuildBanAddEventData(data)],
+    ["GUILD_BAN_REMOVE", data => new GuildBanRemoveEventData(data)],
+    ["GUILD_EMOJIS_UPDATE", data => new GuildEmojisUpdateEventData(data)],
+    ["GUILD_STICKERS_UPDATE", data => new GuildStickersUpdateEventData(data)],
+    [
+      "GUILD_INTEGRATIONS_UPDATE",
+      data => new GuildIntegrationsUpdateEventData(data),
+    ],
+    ["THREAD_CREATE", data => new ThreadCreateEventData(data)],
+    ["THREAD_UPDATE", data => new ThreadUpdateEventData(data)],
+    ["THREAD_DELETE", data => new ThreadDeleteEventData(data)],
+    ["THREAD_LIST_SYNC", data => new ThreadListSyncEventData(data)],
+    ["THREAD_MEMBER_UPDATE", data => new ThreadMemberUpdateEventData(data)],
+    ["THREAD_MEMBERS_UPDATE", data => new ThreadMembersUpdateEventData(data)],
+    ["INVITE_CREATE", data => new InviteCreateEventData(data)],
+    ["INVITE_DELETE", data => new InviteDeleteEventData(data)],
+    ["WEBHOOKS_UPDATE", data => new WebhooksUpdateEventData(data)],
+    [
+      "AUTO_MODERATION_RULE_CREATE",
+      data => new AutoModerationRuleCreateEventData(data),
+    ],
+    [
+      "AUTO_MODERATION_RULE_UPDATE",
+      data => new AutoModerationRuleUpdateEventData(data),
+    ],
+    [
+      "AUTO_MODERATION_RULE_DELETE",
+      data => new AutoModerationRuleDeleteEventData(data),
+    ],
+    [
+      "AUTO_MODERATION_ACTION_EXECUTION",
+      data => new AutoModerationActionExecutionEventData(data),
+    ],
+    ["STAGE_INSTANCE_CREATE", data => new StageInstanceCreateEventData(data)],
+    ["STAGE_INSTANCE_UPDATE", data => new StageInstanceUpdateEventData(data)],
+    ["STAGE_INSTANCE_DELETE", data => new StageInstanceDeleteEventData(data)],
+    [
+      "GUILD_SCHEDULED_EVENT_CREATE",
+      data => new GuildScheduledEventCreateEventData(data),
+    ],
+    [
+      "GUILD_SCHEDULED_EVENT_UPDATE",
+      data => new GuildScheduledEventUpdateEventData(data),
+    ],
+    [
+      "GUILD_SCHEDULED_EVENT_DELETE",
+      data => new GuildScheduledEventDeleteEventData(data),
+    ],
+    [
+      "GUILD_SCHEDULED_EVENT_USER_ADD",
+      data => new GuildScheduledEventUserAddEventData(data),
+    ],
+    [
+      "GUILD_SCHEDULED_EVENT_USER_REMOVE",
+      data => new GuildScheduledEventUserRemoveEventData(data),
+    ],
+    ["MESSAGE_POLL_VOTE_ADD", data => new MessagePollVoteAddEventData(data)],
+    [
+      "MESSAGE_POLL_VOTE_REMOVE",
+      data => new MessagePollVoteRemoveEventData(data),
+    ],
+    ["ENTITLEMENT_CREATE", data => new EntitlementCreateEventData(data)],
+    ["ENTITLEMENT_UPDATE", data => new EntitlementUpdateEventData(data)],
+    ["ENTITLEMENT_DELETE", data => new EntitlementDeleteEventData(data)],
+    ["INTEGRATION_CREATE", data => new IntegrationCreateEventData(data)],
+    ["INTEGRATION_UPDATE", data => new IntegrationUpdateEventData(data)],
+    ["INTEGRATION_DELETE", data => new IntegrationDeleteEventData(data)],
+  ]);
+
+  /**
    * Internal emit method for raw gateway data that needs to be wrapped
    * @internal This method is used internally by the gateway client
    */
   public emitRaw(event: string, data: any): void {
-    // For most events, we wrap the raw data in a user-friendly event data class
-    // This provides a clean API for users: client.on('READY', (event: Events.Ready) => {})
-    let wrappedData: any;
-
-    switch (event) {
-      case "READY":
-        wrappedData = new ReadyEventData(data as any);
-        break;
-      case "RESUMED":
-        wrappedData = new ResumedEventData();
-        break;
-      case "MESSAGE_CREATE": {
-        // First create Message instance, then wrap in MessageCreateEventData
-        const message = new Message(this, data as any);
-        wrappedData = new MessageCreateEventData(message);
-        break;
-      }
-      case "MESSAGE_UPDATE":
-        wrappedData = new MessageUpdateEventData(data as any);
-        break;
-      case "MESSAGE_DELETE":
-        wrappedData = new MessageDeleteEventData(data as any);
-        break;
-      case "GUILD_CREATE":
-        wrappedData = new GuildCreateEventData(data as any);
-        break;
-      case "GUILD_UPDATE":
-        wrappedData = new GuildUpdateEventData(data as any);
-        break;
-      case "GUILD_DELETE":
-        wrappedData = new GuildDeleteEventData(data as any);
-        break;
-      case "CHANNEL_CREATE":
-        wrappedData = new ChannelCreateEventData(data as any);
-        break;
-      case "CHANNEL_UPDATE":
-        wrappedData = new ChannelUpdateEventData(data as any);
-        break;
-      case "CHANNEL_DELETE":
-        wrappedData = new ChannelDeleteEventData(data as any);
-        break;
-      case "INTERACTION_CREATE":
-        wrappedData = new InteractionCreateEventData(data as any);
-        break;
-      case "TYPING_START":
-        wrappedData = new TypingStartEventData(data as any);
-        break;
-      case "MESSAGE_REACTION_ADD":
-        wrappedData = new MessageReactionAddEventData(data as any);
-        break;
-      case "MESSAGE_REACTION_REMOVE":
-        wrappedData = new MessageReactionRemoveEventData(data as any);
-        break;
-      case "MESSAGE_REACTION_REMOVE_ALL":
-        wrappedData = new MessageReactionRemoveAllEventData(data as any);
-        break;
-      case "MESSAGE_REACTION_REMOVE_EMOJI":
-        wrappedData = new MessageReactionRemoveEmojiEventData(data as any);
-        break;
-      case "PRESENCE_UPDATE":
-        wrappedData = new PresenceUpdateEventData(data as any);
-        break;
-      case "VOICE_STATE_UPDATE":
-        wrappedData = new VoiceStateUpdateEventData(data as any);
-        break;
-      case "USER_UPDATE":
-        wrappedData = new UserUpdateEventData(data as any);
-        break;
-      default:
-        // For any events we don't explicitly handle, pass through as-is
-        wrappedData = data;
-    }
+    // Use event handler mapping for efficient processing
+    const handler = this.eventHandlers.get(event);
+    const wrappedData = handler ? handler(data) : data;
 
     (super.emit as any)(event, wrappedData);
   }
 
   /**
-   * Override emit to ensure proper typing for user-facing API
-   */
-  public override emit<K extends keyof TypicordEvents>(
-    event: K,
-    data: TypicordEvents[K]
-  ): void {
-    super.emit(event, data);
-  } /**
    * Sends a message to a channel - the bread and butter of Discord bots!
    * @param channelId Where to send the message
    * @param content What to say
