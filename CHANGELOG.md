@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-08-05
+
+### Added
+- **Enhanced Event System**: Complete Discord.js-like event handling with TypeScript support
+  - `TypedEventEmitter` class with `on()`, `once()`, `off()`, `waitFor()` methods
+  - `EnhancedClient` base class with static `once()` method
+  - `ClientEvents` interface extending TypicordEvents with client lifecycle events
+- **Comprehensive Gateway Events**: Support for all modern Discord gateway events
+  - Auto moderation events (rule create/update/delete, action execution)
+  - Stage instance events (create/update/delete) 
+  - Guild scheduled events (create/update/delete/user_add/user_remove)
+  - Thread events (create/update/delete/list_sync/member_update/members_update)
+  - Poll events (vote_add/vote_remove)
+  - Entitlement events (create/update/delete)
+  - Integration events (create/update/delete)
+  - Guild management events (ban_add/remove, member_*, role_*, emojis_update, stickers_update)
+  - Channel & messaging events (pins_update, delete_bulk)
+  - Invite events (create/delete)
+  - Voice & webhook events (server_update, webhooks_update)
+  - Application command permission updates
+- **Advanced Utility Structures**: Production-ready utility classes
+  - `AdvancedCache`: TTL-based caching with LRU eviction and memory management
+  - `AuditLogger`: Comprehensive audit logging with filtering, search, and export
+  - `FileUploadManager`: File attachment handling with Discord API integration
+  - `MetricsCollector`: Performance monitoring with Prometheus export support
+  - `PermissionCalculator`: Discord permission utilities with bitfield operations
+  - `RateLimiter`: Advanced rate limiting for Discord API compliance
+  - `WebhookManager`: Complete webhook management with execution and editing
+
+### Changed
+- **BREAKING**: Client now extends `EnhancedClient` instead of basic EventEmitter
+- Refactored `emitRaw` method with efficient event mapping (replaces large switch statement)
+- Enhanced gateway handlers with better connection handling and reliability
+- Improved component builders with additional Discord component support
+- Enhanced embed structure with more customization options
+- Updated CI workflow for automated publishing
+- Better error handling and TypeScript support across all components
+
+### Fixed
+- Resolved linting warnings in Client.ts (reduced switch statement complexity)
+- Removed unnecessary type assertions throughout codebase
+- Improved memory management in event handling
+
 ## [1.9.2] - 2025-08-05
 
 ### Added
