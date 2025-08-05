@@ -60,7 +60,7 @@ export class EventEmitter {
 
     // Call once listeners and then remove them
     if (this.onceListeners[event]) {
-      const onceListeners = this.onceListeners[event]!;
+      const onceListeners = this.onceListeners[event];
       onceListeners.forEach(listener => listener(data));
       // Clear the once listeners after calling them
       this.onceListeners[event] = [];

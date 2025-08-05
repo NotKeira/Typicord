@@ -6,7 +6,6 @@
  */
 
 export class ResumedEventData {
-  constructor() {}
 
   /**
    * Returns the event name

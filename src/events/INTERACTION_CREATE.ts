@@ -17,6 +17,13 @@ export class InteractionCreateEventData {
   }
 
   /**
+   * Interaction name
+   */
+  get name() {
+    return this.data.data?.name;
+  }
+
+  /**
    * Interaction ID
    */
   get id() {
