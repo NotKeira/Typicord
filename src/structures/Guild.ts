@@ -12,6 +12,84 @@ interface Channel {
 }
 
 /**
+ * Represents a guild member
+ */
+export interface GuildMember {
+  /** The user this guild member represents */
+  user?: User;
+  /** This user's guild nickname */
+  nick?: string | null;
+  /** The member's guild avatar hash */
+  avatar?: string | null;
+  /** Array of role object IDs */
+  roles: string[];
+  /** When the user joined the guild */
+  joined_at: string;
+  /** When the user started boosting the guild */
+  premium_since?: string | null;
+  /** Whether the user is deafened in voice channels */
+  deaf: boolean;
+  /** Whether the user is muted in voice channels */
+  mute: boolean;
+  /** Guild member flags represented as a bit set */
+  flags: number;
+  /** Whether the user has not yet passed the guild's Membership Screening requirements */
+  pending?: boolean;
+  /** Total permissions of the member in the channel, including overwrites, returned when in the interaction object */
+  permissions?: string;
+  /** When the user's timeout will expire and the user will be able to communicate in the guild again */
+  communication_disabled_until?: string | null;
+}
+
+/**
+ * Represents a guild welcome screen
+ */
+export interface WelcomeScreen {
+  /** The server description shown in the welcome screen */
+  description: string | null;
+  /** The channels shown in the welcome screen, up to 5 */
+  welcome_channels: WelcomeScreenChannel[];
+}
+
+/**
+ * Represents a welcome screen channel
+ */
+export interface WelcomeScreenChannel {
+  /** The channel's ID */
+  channel_id: string;
+  /** The description shown for the channel */
+  description: string;
+  /** The emoji ID, if the emoji is custom */
+  emoji_id?: string | null;
+  /** The emoji name if custom, the unicode character if standard, or null if no emoji is set */
+  emoji_name?: string | null;
+}
+
+/**
+ * Represents a guild sticker
+ */
+export interface Sticker {
+  /** ID of the sticker */
+  id: string;
+  /** For guild stickers, the Discord name of a unicode emoji representing the sticker's expression */
+  name: string;
+  /** Description of the sticker */
+  description: string | null;
+  /** Autocomplete/suggestion tags for the sticker (max 200 characters) */
+  tags: string;
+  /** The type of sticker format */
+  format_type: number;
+  /** Whether this guild sticker can be used, may be false due to loss of Server Boosts */
+  available?: boolean;
+  /** ID of the guild that owns this sticker */
+  guild_id?: string;
+  /** The user that uploaded the guild sticker */
+  user?: User;
+  /** The standard sticker's sort order within its pack */
+  sort_value?: number;
+}
+
+/**
  * Discord guild structure data from the API
  */
 export interface GuildData {

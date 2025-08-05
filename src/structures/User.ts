@@ -1,4 +1,20 @@
-import type { User as RawUser } from "../types/structures/User";
+import type { User as RawUser } from "../types/structures/user";
+
+/**
+ * Represents a partial user object
+ */
+export interface PartialUser {
+  /** The user's ID */
+  id: string;
+  /** The user's username */
+  username?: string;
+  /** The user's 4-digit discord-tag */
+  discriminator?: string;
+  /** The user's display name */
+  global_name?: string | null;
+  /** The user's avatar hash */
+  avatar?: string | null;
+}
 
 export class User {
   constructor(public data: RawUser) {}
