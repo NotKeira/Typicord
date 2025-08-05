@@ -5,7 +5,7 @@
 import type { Embed as RawEmbed } from "../types/structures/Embed";
 
 export class Embed {
-  private data: RawEmbed;
+  private readonly data: RawEmbed;
 
   /**
    * Creates a new embed builder
@@ -82,7 +82,7 @@ export class Embed {
    * Adds a field to the embed (name: value pairs)
    */
   addField(name: string, value: string, inline = false): this {
-    if (!this.data.fields) this.data.fields = [];
+    this.data.fields ??= [];
     this.data.fields.push({ name, value, inline });
     return this;
   }

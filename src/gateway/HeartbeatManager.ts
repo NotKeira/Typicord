@@ -6,13 +6,13 @@ import { GatewayOpcodes } from "./constants";
  * Also tracks latency so we know how fast our connection is
  */
 export class HeartbeatManager {
-  private ws: WebSocket;
-  private interval: number;
+  private readonly ws: WebSocket;
+  private readonly interval: number;
   private timeoutId: NodeJS.Timeout | null = null;
   private lastAck = true;
   private lastHeartbeat: number = 0;
   private latency: number = 0;
-  private onMissedHeartbeat: () => void;
+  private readonly onMissedHeartbeat: () => void;
 
   constructor(ws: WebSocket, interval: number, onMissedHeartbeat: () => void) {
     this.ws = ws;

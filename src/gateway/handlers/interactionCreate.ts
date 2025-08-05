@@ -28,7 +28,7 @@ export const handleInteractionCreate: DispatchHandler<RawInteractionData> = (
   });
 
   // Emit the INTERACTION_CREATE event to user listeners (Client will wrap this in InteractionCreateEventData)
-  (client as any).emitRaw("INTERACTION_CREATE", data);
+  client.emitRaw("INTERACTION_CREATE", data);
 };
 
 // Register this handler with the dispatch registry

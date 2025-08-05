@@ -14,7 +14,7 @@ import {
  * Builder for creating button components
  */
 export class ButtonBuilder {
-  private data: Partial<ButtonComponent> = {
+  private readonly data: Partial<ButtonComponent> = {
     type: ComponentType.BUTTON,
   };
 
@@ -98,7 +98,7 @@ export class ButtonBuilder {
  * Builder for creating string select menu components
  */
 export class StringSelectMenuBuilder {
-  private data: Partial<SelectMenuComponent> = {
+  private readonly data: Partial<SelectMenuComponent> = {
     type: ComponentType.STRING_SELECT,
     options: [],
   };
@@ -184,7 +184,7 @@ export class StringSelectMenuBuilder {
  * Builder for creating user select menu components
  */
 export class UserSelectMenuBuilder {
-  private data: Partial<SelectMenuComponent> = {
+  private readonly data: Partial<SelectMenuComponent> = {
     type: ComponentType.USER_SELECT,
   };
 
@@ -233,7 +233,7 @@ export class UserSelectMenuBuilder {
    */
   public toJSON(): SelectMenuComponent {
     if (!this.data.custom_id) {
-      throw new Error("Select menu custom ID is required");
+      throw new Error("User select menu custom ID is required");
     }
 
     return this.data as SelectMenuComponent;
@@ -244,7 +244,7 @@ export class UserSelectMenuBuilder {
  * Builder for creating role select menu components
  */
 export class RoleSelectMenuBuilder {
-  private data: Partial<SelectMenuComponent> = {
+  private readonly data: Partial<SelectMenuComponent> = {
     type: ComponentType.ROLE_SELECT,
   };
 
@@ -293,7 +293,7 @@ export class RoleSelectMenuBuilder {
    */
   public toJSON(): SelectMenuComponent {
     if (!this.data.custom_id) {
-      throw new Error("Select menu custom ID is required");
+      throw new Error("Role select menu custom ID is required");
     }
 
     return this.data as SelectMenuComponent;
@@ -304,7 +304,7 @@ export class RoleSelectMenuBuilder {
  * Builder for creating channel select menu components
  */
 export class ChannelSelectMenuBuilder {
-  private data: Partial<SelectMenuComponent> = {
+  private readonly data: Partial<SelectMenuComponent> = {
     type: ComponentType.CHANNEL_SELECT,
   };
 
@@ -361,7 +361,7 @@ export class ChannelSelectMenuBuilder {
    */
   public toJSON(): SelectMenuComponent {
     if (!this.data.custom_id) {
-      throw new Error("Select menu custom ID is required");
+      throw new Error("Channel select menu custom ID is required");
     }
 
     return this.data as SelectMenuComponent;
@@ -372,7 +372,7 @@ export class ChannelSelectMenuBuilder {
  * Builder for creating mentionable select menu components
  */
 export class MentionableSelectMenuBuilder {
-  private data: Partial<SelectMenuComponent> = {
+  private readonly data: Partial<SelectMenuComponent> = {
     type: ComponentType.MENTIONABLE_SELECT,
   };
 
@@ -421,7 +421,7 @@ export class MentionableSelectMenuBuilder {
    */
   public toJSON(): SelectMenuComponent {
     if (!this.data.custom_id) {
-      throw new Error("Select menu custom ID is required");
+      throw new Error("Mentionable select menu custom ID is required");
     }
 
     return this.data as SelectMenuComponent;
@@ -432,7 +432,7 @@ export class MentionableSelectMenuBuilder {
  * Builder for creating text input components
  */
 export class TextInputBuilder {
-  private data: Partial<TextInputComponent> = {
+  private readonly data: Partial<TextInputComponent> = {
     type: ComponentType.TEXT_INPUT,
   };
 
@@ -613,7 +613,7 @@ export class ActionRowBuilder {
  * Builder for creating modals
  */
 export class ModalBuilder {
-  private data: {
+  private readonly data: {
     custom_id?: string;
     title?: string;
     components: ActionRowComponent[];

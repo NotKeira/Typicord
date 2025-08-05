@@ -19,10 +19,10 @@ export const handleResumed: DispatchHandler<void> = (client, _data) => {
   debug.info(DebugNamespace.GATEWAY, "Session resumed successfully");
 
   // Notify reconnection manager of successful connection
-  (client as any).gateway.reconnectionManager.onConnectionSuccess();
+  client.gateway.reconnectionManager.onConnectionSuccess();
 
   // Emit the RESUMED event to user listeners (Client will wrap this in ResumedEventData)
-  (client as any).emitRaw("RESUMED", undefined);
+  client.emitRaw("RESUMED", undefined);
 };
 
 // Register this handler with the dispatch registry

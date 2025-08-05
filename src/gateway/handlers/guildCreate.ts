@@ -24,7 +24,7 @@ export const handleGuildCreate: DispatchHandler<Guild> = (client, data) => {
   });
 
   const guildId = data.id;
-  const readyReceived = (client as any).gateway.readyReceived;
+  const readyReceived = client.gateway.readyReceived;
 
   if (!readyReceived || !client.cache.guilds.has(guildId)) {
     // During startup or when joining a new guild
@@ -32,7 +32,7 @@ export const handleGuildCreate: DispatchHandler<Guild> = (client, data) => {
     debug.log(DebugNamespace.EVENTS, `Cached guild: ${data.name} (${guildId})`);
 
     // Emit the GUILD_CREATE event to user listeners (Client will wrap this in GuildCreateEventData)
-    (client as any).emitRaw("GUILD_CREATE", data);
+    client.emitRaw("GUILD_CREATE", data);
   } else {
     // If we already know about this guild, ignore it
     debug.trace(

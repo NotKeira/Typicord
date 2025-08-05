@@ -25,7 +25,7 @@ export const handleMessageCreate: DispatchHandler<Message> = (client, data) => {
   });
 
   // Emit the MESSAGE_CREATE event to user listeners (Client will wrap this in MessageCreateEventData)
-  (client as any).emitRaw("MESSAGE_CREATE", data);
+  client.emitRaw("MESSAGE_CREATE", data);
 };
 
 // Register this handler with the dispatch registry

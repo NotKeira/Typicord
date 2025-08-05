@@ -28,12 +28,12 @@ export const handleReady: DispatchHandler<ReadyEvent> = (client, data) => {
       `Session established: ${data.session_id}`
     );
     // Store session info in gateway client (we'll need to expose this)
-    (client as any).gateway.sessionId = data.session_id;
+    client.gateway.sessionId = data.session_id;
   }
 
   // Extract and store resume gateway URL
   if (data.resume_gateway_url) {
-    (client as any).gateway.resumeGatewayUrl = data.resume_gateway_url;
+    client.gateway.resumeGatewayUrl = data.resume_gateway_url;
   }
 
   // Set up client user information
@@ -57,11 +57,11 @@ export const handleReady: DispatchHandler<ReadyEvent> = (client, data) => {
   }
 
   // Mark as ready and notify reconnection manager
-  (client as any).gateway.readyReceived = true;
-  (client as any).gateway.reconnectionManager.onConnectionSuccess();
+  client.gateway.readyReceived = true;
+  client.gateway.reconnectionManager.onConnectionSuccess();
 
   // Emit the READY event to user listeners (Client will wrap this in ReadyEventData)
-  (client as any).emitRaw("READY", data);
+  client.emitRaw("READY", data);
 };
 
 // Register this handler with the dispatch registry
