@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.2] - 2025-08-05
+
+### Added
+- Comprehensive type definitions directly in structure files for better accessibility
+- `PartialUser` interface in User structure
+- `GuildMember`, `WelcomeScreen`, `WelcomeScreenChannel`, and `Sticker` interfaces in Guild structure
+- `ThreadMetadata`, `ThreadMember`, `ForumTag`, `DefaultReaction`, and `PermissionOverwrite` interfaces in Channel structure
+- `MessageReference`, `MessageActivity`, `Attachment`, and `MessageType` enum in Message structure
+- `InteractionCallbackType` enum, `AllowedMentions`, and `ApplicationCommandOptionChoice` interfaces in Interaction structure
+
+### Changed
+- Reorganised main export structure with clear section comments (Clients, Gateway, Event, Structures, Cache)
+- Updated type exports to use structure files instead of separate type files
+- Improved overall export organisation and readability
+- Consolidated all important type definitions within their respective structure files
+
+### Fixed
+- Missing `GuildMember` type export that was preventing proper TypeScript usage
+- Export conflicts by moving type definitions to structure files
+- Eliminated need for separate type imports by consolidating everything in structures
+
+This release significantly improves the developer experience by making all types directly available
+from their respective structure imports, eliminating the confusion around missing exports like `GuildMember`.
+
 ## [1.9.1] - 2025-08-03
 
 ### Fixed
@@ -61,7 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Enhanced TypeScript configuration with stricter type checking
-- Updated tsup.config.ts for better build optimization and type generation
+- Updated tsup.config.ts for better build optimisation and type generation
 - Improved benchmark files with proper typing and performance tests
 - Updated .gitignore for better file exclusion patterns
 - Enhanced pnpm workspace configuration
@@ -97,7 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Modular, scalable Gateway dispatch event handler system
-- DispatchHandlerRegistry for centralized event handler management
+- DispatchHandlerRegistry for centralised event handler management
 - Individual handler files (ready.ts, messageCreate.ts, guildCreate.ts, etc.)
 - Dynamic handler registration via registerDispatchHandler()
 - Plugin-based architecture support with expandable registry
