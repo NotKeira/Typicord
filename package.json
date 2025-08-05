@@ -34,7 +34,7 @@
   },
   "scripts": {
     "build": "tsup",
-    "clean": "rm -rf dist typicord-*.tgz",
+    "clean": "rm -rf dist typicord-*.tgz dist",
     "prepublishOnly": "pnpm run build",
     "test": "npm-run-all --parallel test:unit test:integration",
     "test:unit": "SKIP_INTEGRATION_TESTS=true pnpm tsx ./tests/restclient.test.ts && pnpm tsx ./tests/agent-reuse.test.ts",
