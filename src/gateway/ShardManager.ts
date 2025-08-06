@@ -82,7 +82,10 @@ export class ShardManager extends EventEmitter {
     });
   }
 
-  private getStats() {
+  /**
+   * Get shard manager statistics
+   */
+  public getStats(): ShardManagerStats {
     const stats: ShardManagerStats = {
       totalShards: this.shards.size,
       connectedShards: 0,
@@ -149,5 +152,138 @@ export class ShardManager extends EventEmitter {
     for (const shard of this.shards.values()) {
       shard.disconnect();
     }
+  }
+
+  /**
+   * Spawn shards
+   */
+  public async spawn(): Promise<void> {
+    const shardIds =
+      this.options.shardIds.length > 0
+        ? this.options.shardIds
+        : Array.from({ length: this.options.shardCount }, (_, i) => i);
+
+    debug.info(DebugNamespace.GATEWAY, `Spawning ${shardIds.length} shards`, {
+      shardIds,
+    });
+
+    this.spawnQueue.push(...shardIds);
+    await this.processSpawnQueue();
+  }
+
+  /**
+   * Process the spawn queue
+   */
+  private async processSpawnQueue(): Promise<void> {
+    if (this.isSpawning || this.spawnQueue.length === 0) {
+      return;
+    }
+
+    (this as any).isSpawning = true;
+
+    try {
+      while (this.spawnQueue.length > 0) {
+        const shardId = this.spawnQueue.shift()!;
+        await this.spawnShard(shardId);
+
+        if (this.spawnQueue.length > 0) {
+          await new Promise(resolve =>
+            setTimeout(resolve, this.options.shardSpawnDelay)
+          );
+        }
+      }
+    } finally {
+      (this as any).isSpawning = false;
+    }
+  }
+
+  /**
+   * Spawn a single shard
+   */
+  private async spawnShard(shardId: number): Promise<void> {
+    if (this.shards.has(shardId)) {
+      throw new Error(`Shard ${shardId} already exists`);
+    }
+
+    debug.info(DebugNamespace.GATEWAY, `Spawning shard ${shardId}`);
+
+    const shard = new Shard({
+      id: shardId,
+      token: this.options.token,
+      intents: this.options.intents,
+      totalShards: this.options.totalShards,
+      largeThreshold: this.options.largeThreshold,
+      compress: this.options.compress,
+      maxReconnectAttempts: this.options.maxReconnectAttempts,
+      reconnectDelay: this.options.reconnectDelay,
+      maxReconnectDelay: this.options.maxReconnectDelay,
+    });
+
+    this.shards.set(shardId, shard);
+
+    // Forward shard events
+    shard.on("ready", () => this.emit("shardReady", shardId));
+    shard.on("disconnect", () => this.emit("shardDisconnect", shardId));
+    shard.on("reconnect", () => this.emit("shardReconnect", shardId));
+    shard.on("error", error => this.emit("shardError", shardId, error));
+    shard.on("packet", packet => this.emit("packet", shardId, packet));
+
+    if (this.options.autoRespawn) {
+      shard.on("disconnect", () => {
+        if (shard.status === ShardStatus.DESTROYED) return;
+        debug.warn(DebugNamespace.GATEWAY, `Auto-respawning shard ${shardId}`);
+        setTimeout(() => shard.connect(), this.options.reconnectDelay);
+      });
+    }
+
+    await shard.connect();
+  }
+
+  /**
+   * Destroy a shard
+   */
+  public destroyShard(shardId: number): void {
+    const shard = this.shards.get(shardId);
+    if (!shard) {
+      throw new Error(`Shard ${shardId} does not exist`);
+    }
+
+    debug.info(DebugNamespace.GATEWAY, `Destroying shard ${shardId}`);
+
+    shard.destroy();
+    this.shards.delete(shardId);
+
+    this.emit("shardDestroy", shardId);
+  }
+
+  /**
+   * Destroy all shards
+   */
+  public destroy(): void {
+    debug.info(DebugNamespace.GATEWAY, "Destroying all shards");
+
+    for (const [shardId] of this.shards) {
+      this.destroyShard(shardId);
+    }
+  }
+
+  /**
+   * Broadcast data to all shards
+   */
+  public broadcast(data: any): number {
+    let sentCount = 0;
+
+    for (const shard of this.shards.values()) {
+      if (shard.status === ShardStatus.READY) {
+        shard.sendRawPayload(data);
+        sentCount++;
+      }
+    }
+
+    debug.info(
+      DebugNamespace.GATEWAY,
+      `Broadcasted data to ${sentCount} shards`
+    );
+    return sentCount;
   }
 }
