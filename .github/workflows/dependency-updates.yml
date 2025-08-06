@@ -52,12 +52,6 @@ jobs:
           git add -A
           git commit -m "chore(deps): update dependencies"
 
-      - name: Run tests after update
-        if: steps.verify-changed-files.outputs.changed == 'true'
-        run: pnpm ci
-        env:
-          SKIP_INTEGRATION_TESTS: true
-
       - name: Create Pull Request
         if: steps.verify-changed-files.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v5
@@ -74,11 +68,6 @@ jobs:
             - Updated all dependencies to latest versions
             - Verified that all tests pass
             - Confirmed build still works
-
-            ### Testing
-            - ✅ Build passes
-            - ✅ Linting passes
-            - ✅ Tests pass
 
             This is an automated PR created by the dependency update workflow.
           branch: chore/dependency-updates

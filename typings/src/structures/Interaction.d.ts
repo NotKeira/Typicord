@@ -4,6 +4,43 @@ import type { Channel } from "./Channel";
 import { User } from "./User";
 import { Message } from "./Message";
 /**
+ * Interaction callback types
+ */
+export declare enum InteractionCallbackType {
+    PONG = 1,
+    CHANNEL_MESSAGE_WITH_SOURCE = 4,
+    DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE = 5,
+    DEFERRED_UPDATE_MESSAGE = 6,
+    UPDATE_MESSAGE = 7,
+    APPLICATION_COMMAND_AUTOCOMPLETE_RESULT = 8,
+    MODAL = 9,
+    PREMIUM_REQUIRED = 10
+}
+/**
+ * Allowed mentions structure
+ */
+export interface AllowedMentions {
+    /** An array of allowed mention types to parse from the content */
+    parse?: ("roles" | "users" | "everyone")[];
+    /** Array of role_ids to mention (Maximum of 100) */
+    roles?: string[];
+    /** Array of user_ids to mention (Maximum of 100) */
+    users?: string[];
+    /** For replies, whether to mention the author of the message being replied to (default false) */
+    replied_user?: boolean;
+}
+/**
+ * Application command option choice
+ */
+export interface ApplicationCommandOptionChoice {
+    /** 1-100 character choice name */
+    name: string;
+    /** Localization dictionary for the name field */
+    name_localizations?: Record<string, string> | null;
+    /** Value for the choice, up to 100 characters if string */
+    value: string | number;
+}
+/**
  * Interaction types
  */
 export declare enum InteractionType {

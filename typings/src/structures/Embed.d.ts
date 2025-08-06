@@ -4,7 +4,7 @@
  */
 import type { Embed as RawEmbed } from "../types/structures/Embed";
 export declare class Embed {
-    private data;
+    private readonly data;
     /**
      * Creates a new embed builder
      * @param data Existing embed data if you want to start with something

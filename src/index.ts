@@ -17,6 +17,7 @@ export * as Events from "./events";
 /** Structures */
 export * from "./structures/Message";
 export * from "./structures/Guild";
+export * from "./structures/GuildMember";
 export * from "./structures/Channel";
 export * from "./structures/Role";
 export * from "./structures/ApplicationCommand";
@@ -25,9 +26,6 @@ export * from "./structures/ComponentBuilders";
 export * from "./structures/Embed";
 export * from "./structures/Emoji";
 export * from "./structures/User";
-export * from "./structures/Guild";
-export * from "./structures/Channel";
-export * from "./structures/Message";
 
 /** Cache */
 export * from "./cache/CacheManager";

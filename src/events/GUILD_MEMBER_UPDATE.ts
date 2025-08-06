@@ -4,28 +4,37 @@
  * Emitted when a guild member is updated (e.g., nickname changed, roles changed).
  */
 
-import type { GuildMember } from "@/structures/Guild";
+import type { GuildMember as RawGuildMember } from "@/types/structures/guild";
+import { GuildMember } from "@/structures/GuildMember";
+import type { RESTClient } from "@/client/RESTClient";
 
-export interface GuildMemberUpdateEventData extends GuildMember {
+export interface GuildMemberUpdateEventData extends RawGuildMember {
   /** The guild ID where the member was updated */
   guild_id: string;
 }
 
 export class GuildMemberUpdateData {
-  constructor(public data: GuildMemberUpdateEventData) {}
+  private readonly _member: GuildMember;
 
-  /**
-   * The updated guild member data
-   */
-  get member() {
-    return this.data;
+  constructor(
+    public data: GuildMemberUpdateEventData,
+    client?: RESTClient
+  ) {
+    this._member = new GuildMember(data, client);
   }
 
   /**
-   * The user object for the member
+   * The updated guild member with full class methods
+   */
+  get member(): GuildMember {
+    return this._member;
+  }
+
+  /**
+   * The user object for the member with full User class functionality
    */
   get user() {
-    return this.data.user;
+    return this._member.user;
   }
 
   /**
@@ -39,14 +48,14 @@ export class GuildMemberUpdateData {
    * The member's nickname in the guild
    */
   get nick() {
-    return this.data.nick;
+    return this._member.nickname;
   }
 
   /**
    * The member's guild avatar hash
    */
   get avatar() {
-    return this.data.avatar;
+    return this._member.data.avatar;
   }
 
   /**

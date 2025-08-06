@@ -4,7 +4,7 @@
  * Sent when anyone is added to or removed from a thread.
  */
 
-import type { ThreadMember } from "@/structures/Channel";
+import type { ThreadMember } from "@/types/structures/channel";
 
 export interface ThreadMembersUpdateEventData {
   /** The id of the thread */

@@ -28,25 +28,6 @@ export default [
     },
   },
   {
-    files: ["tests/**/*", "examples/**/*"],
-    rules: {
-      // More relaxed rules for tests and examples
-      "@typescript-eslint/no-unused-vars": "off",
-      "no-console": "off",
-    },
-  },
-  {
-    files: ["benchmarks/**/*"],
-    rules: {
-      // More relaxed rules for benchmarks
-      "@typescript-eslint/no-unused-vars": "off",
-      "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/no-unused-expressions": "off", // Allow benchmark expressions
-      "no-console": "off",
-      "no-loss-of-precision": "off", // Allow large numbers in performance benchmarks
-    },
-  },
-  {
     ignores: [
       "dist/**",
       "typings/**",

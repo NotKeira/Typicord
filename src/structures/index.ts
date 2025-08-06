@@ -4,6 +4,7 @@ export { Channel } from "./Channel";
 export { Embed } from "./Embed";
 export { Emoji } from "./Emoji";
 export { Guild } from "./Guild";
+export { GuildMember } from "./GuildMember";
 export { Interaction } from "./Interaction";
 export { Message } from "./Message";
 export { Role } from "./Role";

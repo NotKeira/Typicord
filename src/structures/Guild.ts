@@ -1,7 +1,7 @@
 import type { Client } from "@/client/Client";
+import { User } from "./User";
 import type { Role } from "@/types/structures/role";
 import type { Emoji } from "@/types/structures/emoji";
-import type { User } from "@/types/structures/user";
 
 // Forward declaration to avoid circular dependency
 interface Channel {
@@ -12,9 +12,10 @@ interface Channel {
 }
 
 /**
- * Represents a guild member
+ * Represents a guild member (interface for compatibility)
+ * @deprecated Use the GuildMember class instead
  */
-export interface GuildMember {
+export interface LegacyGuildMember {
   /** The user this guild member represents */
   user?: User;
   /** This user's guild nickname */
@@ -261,27 +262,18 @@ export class Guild {
    */
   public async fetchMembers(
     options: { limit?: number; after?: string } = {}
-  ): Promise<
-    Array<{
-      user?: User;
-      nick?: string | null;
-      avatar?: string | null;
-      roles: string[];
-      joined_at: string;
-      premium_since?: string | null;
-      deaf: boolean;
-      mute: boolean;
-      flags: number;
-      pending?: boolean;
-      permissions?: string;
-      communication_disabled_until?: string | null;
-    }>
-  > {
+  ): Promise<import("./GuildMember").GuildMember[]> {
+    const { GuildMember } = await import("./GuildMember");
     const query = new URLSearchParams();
     if (options.limit) query.set("limit", options.limit.toString());
     if (options.after) query.set("after", options.after);
 
-    return this.client.rest.get(`/guilds/${this.id}/members?${query}`);
+    const membersData = await this.client.rest.get(
+      `/guilds/${this.id}/members?${query}`
+    );
+    return (membersData as any[]).map(
+      memberData => new GuildMember(memberData, this.client.rest)
+    );
   }
 
   /**

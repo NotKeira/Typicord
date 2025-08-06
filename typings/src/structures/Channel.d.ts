@@ -1,5 +1,75 @@
 import type { Client } from "@/client/Client";
 import { Message } from "./Message";
+import type { GuildMember } from "./Guild";
+/**
+ * Thread metadata information
+ */
+export interface ThreadMetadata {
+    /** Whether the thread is archived */
+    archived: boolean;
+    /** Duration in minutes to automatically archive the thread after recent activity */
+    auto_archive_duration: number;
+    /** Timestamp when the thread's archive status was last changed */
+    archive_timestamp: string;
+    /** Whether the thread is locked */
+    locked: boolean;
+    /** Whether non-moderators can add other non-moderators to a thread */
+    invitable?: boolean;
+    /** Timestamp when the thread was created */
+    create_timestamp?: string | null;
+}
+/**
+ * Thread member information
+ */
+export interface ThreadMember {
+    /** ID of the thread */
+    id?: string;
+    /** ID of the user */
+    user_id?: string;
+    /** Time the current user last joined the thread */
+    join_timestamp: string;
+    /** Any user-thread settings, currently only used for notifications */
+    flags: number;
+    /** Additional information about the user */
+    member?: GuildMember;
+}
+/**
+ * Forum tag information
+ */
+export interface ForumTag {
+    /** The id of the tag */
+    id: string;
+    /** The name of the tag (0-20 characters) */
+    name: string;
+    /** Whether this tag can only be added to or removed from threads by a member with the MANAGE_THREADS permission */
+    moderated: boolean;
+    /** The id of a guild's custom emoji */
+    emoji_id?: string | null;
+    /** The unicode character of the emoji */
+    emoji_name?: string | null;
+}
+/**
+ * Default reaction for forum channels
+ */
+export interface DefaultReaction {
+    /** The id of a guild's custom emoji */
+    emoji_id?: string | null;
+    /** The unicode character of the emoji */
+    emoji_name?: string | null;
+}
+/**
+ * Permission overwrite information
+ */
+export interface PermissionOverwrite {
+    /** Role or user id */
+    id: string;
+    /** Either 0 (role) or 1 (member) */
+    type: number;
+    /** Permission bit set */
+    allow: string;
+    /** Permission bit set */
+    deny: string;
+}
 /**
  * Discord channel types
  */

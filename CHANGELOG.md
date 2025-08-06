@@ -5,6 +5,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.1] - 2025-08-07
+
+### Fixed
+- Fixed TypeScript build errors related to incorrect type imports
+- Resolved `GuildMember` import issue in `GUILD_MEMBERS_CHUNK.ts` - now correctly imports from `@/structures/GuildMember`
+- Fixed type compatibility issues in thread-related events by using proper type imports:
+  - `THREAD_CREATE.ts`: Changed to import `ThreadMember` from `@/types/structures/channel`
+  - `THREAD_LIST_SYNC.ts`: Fixed imports and corrected property access from `parentId` to `parent_id`
+  - `THREAD_MEMBERS_UPDATE.ts`: Updated to use correct `ThreadMember` type import
+- Resolved DTS build errors caused by mixing class imports with interface types
+- Ensured consistent type usage across event handlers for better type safety
+
+## [3.2.0] - 2025-08-07
+
+### Added
+- **Enhanced Event System**: Event data now provides full class functionality instead of raw interfaces
+- **Complete User Class**: Added all missing User methods including `avatarDecorationURL`, `bannerURL`, `createDM`, `deleteDM`, `displayAvatarURL`, `equals`, `fetch`, `fetchFlags`, `send`, `toJSON`, `toString`, `valueOf`
+- **New GuildMember Class**: Full-featured GuildMember wrapper with methods for member management, role operations, timeouts, kicks, bans, and voice control
+- **Improved Type System**: Resolved User type conflicts between different interface definitions
+- **Event Data Enhancement**: Updated GUILD_MEMBER_ADD, GUILD_MEMBER_UPDATE, and MESSAGE_CREATE events to return class instances with full method access
+
+### Fixed
+- Fixed type conflicts where `User$1` and `User$2` errors occurred in event handlers
+- Resolved event system returning raw interfaces instead of class instances
+- Fixed missing methods in User class that users expected from event data
+- Corrected GuildMember event data to provide access to full User class functionality
+
+### Changed
+- **Breaking**: Event data objects now return class instances instead of raw interfaces
+- `member.user` in events now provides full User class with all methods
+- `message.author` now provides full User class functionality
+- Enhanced all guild member events to use proper GuildMember class wrapper
+
+### Removed
+- Removed example bots and test files to clean up repository for production use
+- Cleaned up development artifacts and benchmarks
+
 ## [3.1.2] - 2025-08-06
 
 ### Fixed

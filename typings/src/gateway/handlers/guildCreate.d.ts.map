@@ -1,0 +1,1 @@
+{"version":3,"file":"guildCreate.d.ts","sourceRoot":"","sources":["../../../../src/gateway/handlers/guildCreate.ts"],"names":[],"mappings":"AAAA;;;;;GAKG;AAGH,OAAO,EAEL,KAAK,eAAe,EACrB,MAAM,4BAA4B,CAAC;AACpC,OAAO,KAAK,EAAE,KAAK,EAAE,MAAM,0BAA0B,CAAC;AAEtD;;;;GAIG;AACH,eAAO,MAAM,iBAAiB,EAAE,eAAe,CAAC,KAAK,CAuBpD,CAAC"}

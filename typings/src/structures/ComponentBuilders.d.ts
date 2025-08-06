@@ -3,7 +3,7 @@ import { ButtonStyle, TextInputStyle, SelectMenuOption, ButtonComponent, SelectM
  * Builder for creating button components
  */
 export declare class ButtonBuilder {
-    private data;
+    private readonly data;
     /**
      * Sets the button style
      */
@@ -41,7 +41,7 @@ export declare class ButtonBuilder {
  * Builder for creating string select menu components
  */
 export declare class StringSelectMenuBuilder {
-    private data;
+    private readonly data;
     /**
      * Sets the select menu custom ID
      */
@@ -79,7 +79,7 @@ export declare class StringSelectMenuBuilder {
  * Builder for creating user select menu components
  */
 export declare class UserSelectMenuBuilder {
-    private data;
+    private readonly data;
     /**
      * Sets the select menu custom ID
      */
@@ -109,7 +109,7 @@ export declare class UserSelectMenuBuilder {
  * Builder for creating role select menu components
  */
 export declare class RoleSelectMenuBuilder {
-    private data;
+    private readonly data;
     /**
      * Sets the select menu custom ID
      */
@@ -139,7 +139,7 @@ export declare class RoleSelectMenuBuilder {
  * Builder for creating channel select menu components
  */
 export declare class ChannelSelectMenuBuilder {
-    private data;
+    private readonly data;
     /**
      * Sets the select menu custom ID
      */
@@ -173,7 +173,7 @@ export declare class ChannelSelectMenuBuilder {
  * Builder for creating mentionable select menu components
  */
 export declare class MentionableSelectMenuBuilder {
-    private data;
+    private readonly data;
     /**
      * Sets the select menu custom ID
      */
@@ -203,7 +203,7 @@ export declare class MentionableSelectMenuBuilder {
  * Builder for creating text input components
  */
 export declare class TextInputBuilder {
-    private data;
+    private readonly data;
     /**
      * Sets the text input custom ID
      */
@@ -263,7 +263,7 @@ export declare class ActionRowBuilder {
  * Builder for creating modals
  */
 export declare class ModalBuilder {
-    private data;
+    private readonly data;
     /**
      * Sets the modal custom ID
      */

@@ -1,11 +1,12 @@
-import { GatewayClient } from "@/gateway/GatewayClient";
-import { EventEmitter } from "@/events/EventEmitter";
+import { ShardManager } from "@/gateway/ShardManager";
+import { RateLimitManager } from "@/client/RateLimitManager";
+import { EnhancedClient } from "@/events/EnhancedClient";
 import { Message } from "@/structures/Message";
 import { Guild } from "@/structures/Guild";
 import { Channel } from "@/structures/Channel";
 import { User } from "@/structures/User";
 import { ApplicationCommandManager } from "@/structures/ApplicationCommand";
-import type { TypicordEvents } from "@/types/gateway/events";
+import type { ClientEvents } from "@/types/ClientEvents";
 import { GuildCacheManager } from "@/cache/GuildCacheManager";
 import { UserCacheManager } from "@/cache/UserCacheManager";
 import { RESTClient } from "@/client/RESTClient";
@@ -13,7 +14,7 @@ import { RESTClient } from "@/client/RESTClient";
  * The main Typicord client - this is what you'll be using to interact with Discord!
  * Handles connecting to the gateway, sending messages, and all that good stuff.
  */
-export declare class Client extends EventEmitter {
+export declare class Client extends EnhancedClient {
     /**
      * What version of Typicord this is
      */
@@ -28,13 +29,19 @@ export declare class Client extends EventEmitter {
     user: import("@/structures/User").User | null;
     guilds: any[];
     commands: ApplicationCommandManager | null;
-    private readonly _gateway;
+    private readonly _shardManager;
+    private readonly _rateLimitManager;
     /**
      * Creates a new Typicord client instance
      * @param token Your bot's token from Discord
      * @param intents What events you want to receive (use GatewayIntentBits)
+     * @param options Optional client configuration
      */
-    constructor(token: string, intents: number);
+    constructor(token: string, intents: number, options?: {
+        shardCount?: number;
+        shardIds?: number[];
+        totalShards?: number;
+    });
     /**
      * Actually connects to Discord - this starts everything up!
      */
@@ -54,10 +61,30 @@ export declare class Client extends EventEmitter {
      */
     destroy(): void;
     /**
-     * Gets our gateway client for advanced usage
+     * Gets our shard manager for advanced usage
      */
-    get gateway(): GatewayClient;
-    on<K extends keyof TypicordEvents>(event: K, listener: (data: TypicordEvents[K]) => void): this;
+    get shards(): ShardManager;
+    /**
+     * Gets the rate limit manager for advanced usage
+     */
+    get rateLimits(): RateLimitManager;
+    on<K extends keyof ClientEvents>(event: K, listener: (data: ClientEvents[K]) => void): this;
+    /**
+     * Listens for an event once - the listener is removed after the first emission
+     * @param event The event to listen for
+     * @param listener The function to call when the event is emitted
+     */
+    once<K extends keyof ClientEvents>(event: K, listener: (data: ClientEvents[K]) => void): this;
+    /**
+     * Event handler mapping for efficient event processing
+     * @private
+     */
+    private readonly eventHandlers;
+    /**
+     * Internal emit method for raw gateway data that needs to be wrapped
+     * @internal This method is used internally by the gateway client
+     */
+    emitRaw(event: string, data: any): void;
     /**
      * Sends a message to a channel - the bread and butter of Discord bots!
      * @param channelId Where to send the message

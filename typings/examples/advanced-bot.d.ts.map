@@ -1,1 +1,1 @@
-{"version":3,"file":"advanced-bot.d.ts","sourceRoot":"","sources":["../../examples/advanced-bot.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAqB,MAAM,QAAQ,CAAC;AA0GnD,iBAAe,iBAAiB,oBA8R/B;AAOD,OAAO,EAAE,iBAAiB,EAAE,CAAC"}
+{"version":3,"file":"advanced-bot.d.ts","sourceRoot":"","sources":["../../examples/advanced-bot.ts"],"names":[],"mappings":"AA8GA,iBAAe,iBAAiB,iBA8R/B;AAOD,OAAO,EAAE,iBAAiB,EAAE,CAAC"}

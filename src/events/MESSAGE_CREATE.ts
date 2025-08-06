@@ -1,4 +1,5 @@
 import { RESTClient } from "@/client/RESTClient";
+import { User } from "@/structures/User";
 import type { Message as GatewayMessage } from "@/types/gateway/structures/Message";
 
 /**
@@ -9,12 +10,15 @@ import type { Message as GatewayMessage } from "@/types/gateway/structures/Messa
  */
 export class MessageCreateData {
   private readonly _client?: RESTClient;
+  private readonly _author: User;
 
   constructor(
     public readonly message: GatewayMessage,
     client?: RESTClient
   ) {
     this._client = client;
+    // Create User instance with full functionality
+    this._author = new User(message.author as any, client);
   }
 
   // Convenience getters for common message properties
@@ -22,8 +26,8 @@ export class MessageCreateData {
     return this.message.content;
   }
 
-  get author() {
-    return this.message.author;
+  get author(): User {
+    return this._author;
   }
 
   get channelId(): string {

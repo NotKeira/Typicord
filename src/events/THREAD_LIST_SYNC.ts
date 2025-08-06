@@ -4,7 +4,7 @@
  * Sent when gaining access to a channel, contains all active threads in that channel.
  */
 
-import type { Channel, ThreadMember } from "@/structures/Channel";
+import type { Channel, ThreadMember } from "@/types/structures/channel";
 
 export interface ThreadListSyncEventData {
   /** The guild id */
@@ -80,7 +80,7 @@ export class ThreadListSyncData {
    * Get threads for a specific parent channel
    */
   getThreadsForChannel(channelId: string) {
-    return this.data.threads.filter(thread => thread.parentId === channelId);
+    return this.data.threads.filter(thread => thread.parent_id === channelId);
   }
 
   /**

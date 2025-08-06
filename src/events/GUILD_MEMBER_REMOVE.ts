@@ -5,31 +5,35 @@
  * Enhanced with Discord bot utility methods for logging and response.
  */
 
-import type { User } from "@/types/structures/user";
+import type { User as RawUser } from "@/types/structures/user";
+import { User } from "@/structures/User";
 import type { RESTClient } from "@/client/RESTClient";
 
 export interface GuildMemberRemoveEventData {
   /** The guild ID where the member was removed */
   guild_id: string;
   /** The user that was removed */
-  user: User;
+  user: RawUser;
 }
 
 export class GuildMemberRemoveData {
   private readonly _client?: RESTClient;
+  private readonly _user: User;
 
   constructor(
     public data: GuildMemberRemoveEventData,
     client?: RESTClient
   ) {
     this._client = client;
+    // Create User instance with full functionality
+    this._user = new User(data.user, client);
   }
 
   /**
-   * The user that was removed from the guild
+   * The user that was removed from the guild (with full User class functionality)
    */
-  get user() {
-    return this.data.user;
+  get user(): User {
+    return this._user;
   }
 
   /**
@@ -43,28 +47,28 @@ export class GuildMemberRemoveData {
    * The user's ID
    */
   get userId() {
-    return this.data.user.id;
+    return this._user.id;
   }
 
   /**
    * The user's username
    */
   get username() {
-    return this.data.user.username;
+    return this._user.name;
   }
 
   /**
    * The user's discriminator
    */
   get discriminator() {
-    return this.data.user.discriminator;
+    return this._user.discriminator;
   }
 
   /**
    * The user's display name
    */
   get displayName() {
-    return this.data.user.global_name || this.data.user.username;
+    return this._user.data.global_name || this._user.name;
   }
 
   /**

@@ -4,13 +4,13 @@ import WebSocket from "ws";
  * Also tracks latency so we know how fast our connection is
  */
 export declare class HeartbeatManager {
-    private ws;
-    private interval;
+    private readonly ws;
+    private readonly interval;
     private timeoutId;
     private lastAck;
     private lastHeartbeat;
     private latency;
-    private onMissedHeartbeat;
+    private readonly onMissedHeartbeat;
     constructor(ws: WebSocket, interval: number, onMissedHeartbeat: () => void);
     /**
      * Gets the current WebSocket latency - how long it takes for Discord

@@ -9,11 +9,22 @@ export declare class EventEmitter {
      */
     private listeners;
     /**
+     * One-time event listeners that get removed after first emission
+     */
+    private onceListeners;
+    /**
      * Registers a function to be called when an event happens
      * @param event What event to listen for
      * @param listener Function to call when the event fires
      */
     on<K extends keyof TypicordEvents>(event: K, listener: (data: TypicordEvents[K]) => void): void;
+    /**
+     * Registers a function to be called once when an event happens
+     * The listener is automatically removed after the first emission
+     * @param event What event to listen for
+     * @param listener Function to call when the event fires
+     */
+    once<K extends keyof TypicordEvents>(event: K, listener: (data: TypicordEvents[K]) => void): void;
     /**
      * Fires an event, calling all registered listeners
      * @param event What event happened

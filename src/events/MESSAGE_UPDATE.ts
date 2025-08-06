@@ -5,15 +5,36 @@
  */
 
 import type { Message } from "@/types/gateway/structures/Message";
+import { User } from "@/structures/User";
+import type { RESTClient } from "@/client/RESTClient";
 
 export class MessageUpdateData {
-  constructor(public data: Partial<Message>) {}
+  private readonly _author?: User;
+  private readonly _client?: RESTClient;
+
+  constructor(
+    public data: Partial<Message>,
+    client?: RESTClient
+  ) {
+    this._client = client;
+    // Create User instance if author data exists
+    if (this.data.author) {
+      this._author = new User(this.data.author as any, client);
+    }
+  }
 
   /**
    * The updated message data (partial)
    */
   get message() {
     return this.data;
+  }
+
+  /**
+   * The author of the message with full User class functionality
+   */
+  get author(): User | undefined {
+    return this._author;
   }
 
   /**

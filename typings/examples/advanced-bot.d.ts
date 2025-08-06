@@ -1,4 +1,3 @@
-import { Client } from "../src";
-declare function createAdvancedBot(): Promise<Client>;
+declare function createAdvancedBot(): Promise<any>;
 export { createAdvancedBot };
 //# sourceMappingURL=advanced-bot.d.ts.map

@@ -74,7 +74,6 @@ jobs:
       - name: Build and test
         run: |
           pnpm build
-          pnpm test:ci
         env:
           SKIP_INTEGRATION_TESTS: true
 

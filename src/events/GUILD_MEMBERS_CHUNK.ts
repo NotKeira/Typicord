@@ -4,7 +4,7 @@
  * Sent in response to Guild Request Members.
  */
 
-import type { GuildMember } from "@/structures/Guild";
+import type { GuildMember } from "@/structures/GuildMember";
 
 export interface GuildMembersChunkEventData {
   /** ID of the guild */

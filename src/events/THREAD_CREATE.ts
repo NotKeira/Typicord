@@ -5,8 +5,7 @@
  * or when the current user is added to a thread.
  */
 
-import type { Channel } from "@/types/structures/channel";
-import type { ThreadMember } from "@/structures/Channel";
+import type { Channel, ThreadMember } from "@/types/structures/channel";
 
 export interface ThreadCreateEventData extends Channel {
   /** Whether this thread was newly created */

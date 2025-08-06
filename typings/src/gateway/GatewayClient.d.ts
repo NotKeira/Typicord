@@ -1,4 +1,6 @@
+import { ReconnectionManager } from "./ReconnectionManager";
 import { Client } from "@/client/Client";
+import "./handlers/index";
 /**
  * The main gateway client - handles connecting to Discord's gateway,
  * managing events, and keeping our cache up to date. This is where all
@@ -8,12 +10,12 @@ export declare class GatewayClient {
     private readonly client;
     private ws;
     private heartbeatManager;
-    private readonly reconnectionManager;
+    readonly reconnectionManager: ReconnectionManager;
     private readonly cachedGuilds;
-    private readyReceived;
-    private sessionId;
+    readyReceived: boolean;
+    sessionId: string | null;
     private sequenceNumber;
-    private resumeGatewayUrl;
+    resumeGatewayUrl: string | null;
     private isReconnecting;
     /**
      * Sets up a new gateway client - this is what connects us to Discord's servers
@@ -88,6 +90,6 @@ export declare class GatewayClient {
      * Sends a raw payload to Discord - for advanced usage
      * @param payload The payload to send
      */
-    sendRawPayload(payload: any): void;
+    sendRawPayload(payload: object): void;
 }
 //# sourceMappingURL=GatewayClient.d.ts.map

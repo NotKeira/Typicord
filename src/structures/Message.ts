@@ -1,8 +1,8 @@
 import type { Client } from "@/client/Client";
+import { User } from "./User";
 import type { Message as GatewayMessage } from "@/types/gateway/structures/Message";
 import type { Embed, MessageComponent } from "@/types/structures/message";
 import type { AllowedMentions } from "@/types/structures/rest";
-import type { User } from "@/types/structures/user";
 import type { Channel } from "@/types/structures/channel";
 
 /**
@@ -95,7 +95,7 @@ export class Message {
   public channel_id: string; // Discord uses snake_case, keeping both for compatibility
   public guildId?: string;
   public content: string;
-  public author: GatewayMessage["author"];
+  public author: User;
   public raw: GatewayMessage;
   public timestamp: string;
   public editedTimestamp: string | null;
@@ -109,7 +109,8 @@ export class Message {
     this.channel_id = data.channel_id;
     this.guildId = data.guild_id;
     this.content = data.content;
-    this.author = data.author;
+    // Create User instance with full functionality
+    this.author = new User(data.author as any, client.rest);
     this.raw = data;
     this.timestamp = data.timestamp;
     this.editedTimestamp = data.edited_timestamp || null;

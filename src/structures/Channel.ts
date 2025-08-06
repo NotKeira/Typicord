@@ -2,8 +2,7 @@ import type { Client } from "@/client/Client";
 import { Message } from "./Message";
 import type { Message as GatewayMessage } from "@/types/gateway/structures/Message";
 import type { Channel as IChannel } from "@/types/structures/channel";
-import type { GuildMember } from "./Guild";
-
+import type { GuildMember } from "./GuildMember";
 /**
  * Thread metadata information
  */

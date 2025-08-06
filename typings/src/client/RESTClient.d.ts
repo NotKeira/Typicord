@@ -1,3 +1,4 @@
+import type { RateLimitManager } from "./RateLimitManager";
 /**
  * What you need to configure the REST client
  */
@@ -8,6 +9,8 @@ export interface RESTOptions {
     version?: number;
     /** Custom API base URL if you need it (probably don't) */
     baseURL?: string;
+    /** Optional rate limit manager for advanced rate limiting */
+    rateLimitManager?: RateLimitManager;
 }
 /**
  * When Discord's API returns an error, we wrap it in this
@@ -16,8 +19,8 @@ export declare class RESTError extends Error {
     /** The HTTP status code (404, 403, etc.) */
     status: number;
     /** Whatever Discord sent back as the error response */
-    response: any;
-    constructor(status: number, message: string, response?: any);
+    response: unknown;
+    constructor(status: number, message: string, response?: unknown);
 }
 /**
  * Handles making HTTP requests to Discord's REST API
@@ -35,6 +38,8 @@ export declare class RESTClient {
     /** Reusable HTTP agent for connection pooling and better performance */
     private readonly agent;
     private readonly rateLimits;
+    /** Advanced rate limiting manager */
+    private readonly rateLimitManager?;
     /** Optional callback to track how long API requests take */
     onAPILatency?: APILatencyCallback;
     /**
@@ -65,13 +70,14 @@ export declare class RESTClient {
      * @returns The parsed JSON response
      * @throws RESTError on HTTP error or rate limit
      */
-    request<T = any>(method: string, endpoint: string, body?: any, extraHeaders?: Record<string, string>, isForm?: boolean): Promise<T>;
+    request<T = unknown>(method: string, endpoint: string, body?: unknown, extraHeaders?: Record<string, string>, isForm?: boolean): Promise<T>;
+    private makeRequest;
     /**
      * Make a GET request to the Discord API.
      * @param endpoint API endpoint
      * @param extraHeaders Additional headers (optional)
      */
-    get<T = any>(endpoint: string, extraHeaders?: Record<string, string>): Promise<T>;
+    get<T = unknown>(endpoint: string, extraHeaders?: Record<string, string>): Promise<T>;
     /**
      * Make a POST request to the Discord API.
      * @param endpoint API endpoint
@@ -79,7 +85,7 @@ export declare class RESTClient {
      * @param extraHeaders Additional headers (optional)
      * @param isForm Whether the body is FormData (optional)
      */
-    post<T = any>(endpoint: string, body?: any, extraHeaders?: Record<string, string>, isForm?: boolean): Promise<T>;
+    post<T = unknown>(endpoint: string, body?: unknown, extraHeaders?: Record<string, string>, isForm?: boolean): Promise<T>;
     /**
      * Make a PATCH request to the Discord API.
      * @param endpoint API endpoint
@@ -87,7 +93,7 @@ export declare class RESTClient {
      * @param extraHeaders Additional headers (optional)
      * @param isForm Whether the body is FormData (optional)
      */
-    patch<T = any>(endpoint: string, body?: any, extraHeaders?: Record<string, string>, isForm?: boolean): Promise<T>;
+    patch<T = unknown>(endpoint: string, body?: unknown, extraHeaders?: Record<string, string>, isForm?: boolean): Promise<T>;
     /**
      * Make a PUT request to the Discord API.
      * @param endpoint API endpoint
@@ -95,7 +101,7 @@ export declare class RESTClient {
      * @param extraHeaders Additional headers (optional)
      * @param isForm Whether the body is FormData (optional)
      */
-    put<T = any>(endpoint: string, body?: any, extraHeaders?: Record<string, string>, isForm?: boolean): Promise<T>;
+    put<T = unknown>(endpoint: string, body?: unknown, extraHeaders?: Record<string, string>, isForm?: boolean): Promise<T>;
     /**
      * Clean up the REST client and close any open connections
      * Call this when you're done with the client to free up resources
@@ -106,6 +112,6 @@ export declare class RESTClient {
      * @param endpoint API endpoint
      * @param extraHeaders Additional headers (optional)
      */
-    delete<T = any>(endpoint: string, extraHeaders?: Record<string, string>): Promise<T>;
+    delete<T = unknown>(endpoint: string, extraHeaders?: Record<string, string>): Promise<T>;
 }
 //# sourceMappingURL=RESTClient.d.ts.map
