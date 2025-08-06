@@ -2,6 +2,7 @@
 declare const __CLIENT_VERSION__: string;
 import { ShardManager } from "@/gateway/ShardManager";
 import { RateLimitManager } from "@/client/RateLimitManager";
+import { dispatchHandlerRegistry } from "@/gateway/DispatchHandlerRegistry";
 
 import { EnhancedClient } from "@/events/EnhancedClient";
 import { Message } from "@/structures/Message";
@@ -146,6 +147,14 @@ export class Client extends EnhancedClient {
       guilds: new GuildCacheManager(),
       users: new UserCacheManager(),
     };
+
+    // Set up event forwarding from ShardManager to Client
+    this._shardManager.on("packet", (shardId: number, packet: any) => {
+      if (packet.op === 0 && packet.t) {
+        // This is a DISPATCH event (op 0) with an event type (t)
+        dispatchHandlerRegistry.handleDispatch(this, packet.t, packet.d);
+      }
+    });
   }
 
   /**
