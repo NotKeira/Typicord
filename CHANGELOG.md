@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.2] - 2025-08-06
+
+### Fixed
+- Fixed duplicate `getStats` methods in ShardManager causing TypeScript compilation errors
+- Completed shard-to-client event communication pipeline
+- Added proper gateway packet processing in Client class
+- Resolved build errors and ensured clean TypeScript compilation
+
+### Added
+- Added `handleGatewayPacket` method for processing Discord gateway events
+- Enhanced event forwarding from shards through ShardManager to Client
+- Added debug logging for shard event processing
+
 ## [3.1.1] - 2025-08-06
 
 ### Added
