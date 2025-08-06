@@ -12,82 +12,82 @@
 // Import all event classes
 export { ReadyData as Ready } from "./READY";
 export { ResumedData as Resumed } from "./RESUMED";
-export { ApplicationCommandPermissionsUpdateEventData as ApplicationCommandPermissionsUpdate } from "./APPLICATION_COMMAND_PERMISSIONS_UPDATE";
+export { ApplicationCommandPermissionsUpdateData as ApplicationCommandPermissionsUpdate } from "./APPLICATION_COMMAND_PERMISSIONS_UPDATE";
 export { MessageCreateData as MessageCreate } from "./MESSAGE_CREATE";
-export { MessageUpdateEventData as MessageUpdate } from "./MESSAGE_UPDATE";
-export { MessageDeleteEventData as MessageDelete } from "./MESSAGE_DELETE";
-export { MessageDeleteBulkEventData as MessageDeleteBulk } from "./MESSAGE_DELETE_BULK";
+export { MessageUpdateData as MessageUpdate } from "./MESSAGE_UPDATE";
+export { MessageDeleteData as MessageDelete } from "./MESSAGE_DELETE";
+export { MessageDeleteBulkData as MessageDeleteBulk } from "./MESSAGE_DELETE_BULK";
 export { GuildCreateData as GuildCreate } from "./GUILD_CREATE";
-export { GuildUpdateEventData as GuildUpdate } from "./GUILD_UPDATE";
-export { GuildDeleteEventData as GuildDelete } from "./GUILD_DELETE";
+export { GuildUpdateData as GuildUpdate } from "./GUILD_UPDATE";
+export { GuildDeleteData as GuildDelete } from "./GUILD_DELETE";
 export { GuildMemberAddData as GuildMemberAdd } from "./GUILD_MEMBER_ADD";
-export { GuildMemberUpdateEventData as GuildMemberUpdate } from "./GUILD_MEMBER_UPDATE";
+export { GuildMemberUpdateData as GuildMemberUpdate } from "./GUILD_MEMBER_UPDATE";
 export { GuildMemberRemoveData as GuildMemberRemove } from "./GUILD_MEMBER_REMOVE";
-export { GuildMembersChunkEventData as GuildMembersChunk } from "./GUILD_MEMBERS_CHUNK";
-export { GuildRoleCreateEventData as GuildRoleCreate } from "./GUILD_ROLE_CREATE";
-export { GuildRoleUpdateEventData as GuildRoleUpdate } from "./GUILD_ROLE_UPDATE";
-export { GuildRoleDeleteEventData as GuildRoleDelete } from "./GUILD_ROLE_DELETE";
-export { GuildRoleRemoveEventData as GuildRoleRemove } from "./GUILD_ROLE_REMOVE";
-export { GuildBanAddEventData as GuildBanAdd } from "./GUILD_BAN_ADD";
-export { GuildBanRemoveEventData as GuildBanRemove } from "./GUILD_BAN_REMOVE";
-export { GuildEmojisUpdateEventData as GuildEmojisUpdate } from "./GUILD_EMOJIS_UPDATE";
-export { GuildStickersUpdateEventData as GuildStickersUpdate } from "./GUILD_STICKERS_UPDATE";
-export { GuildIntegrationsUpdateEventData as GuildIntegrationsUpdate } from "./GUILD_INTEGRATIONS_UPDATE";
-export { ChannelCreateEventData as ChannelCreate } from "./CHANNEL_CREATE";
-export { ChannelUpdateEventData as ChannelUpdate } from "./CHANNEL_UPDATE";
-export { ChannelDeleteEventData as ChannelDelete } from "./CHANNEL_DELETE";
-export { ChannelPinsUpdateEventData as ChannelPinsUpdate } from "./CHANNEL_PINS_UPDATE";
-export { ThreadCreateEventData as ThreadCreate } from "./THREAD_CREATE";
-export { ThreadUpdateEventData as ThreadUpdate } from "./THREAD_UPDATE";
-export { ThreadDeleteEventData as ThreadDelete } from "./THREAD_DELETE";
-export { ThreadListSyncEventData as ThreadListSync } from "./THREAD_LIST_SYNC";
-export { ThreadMemberUpdateEventData as ThreadMemberUpdate } from "./THREAD_MEMBER_UPDATE";
-export { ThreadMembersUpdateEventData as ThreadMembersUpdate } from "./THREAD_MEMBERS_UPDATE";
+export { GuildMembersChunkData as GuildMembersChunk } from "./GUILD_MEMBERS_CHUNK";
+export { GuildRoleCreateData as GuildRoleCreate } from "./GUILD_ROLE_CREATE";
+export { GuildRoleUpdateData as GuildRoleUpdate } from "./GUILD_ROLE_UPDATE";
+export { GuildRoleDeleteData as GuildRoleDelete } from "./GUILD_ROLE_DELETE";
+export { GuildRoleRemoveData as GuildRoleRemove } from "./GUILD_ROLE_REMOVE";
+export { GuildBanAddData as GuildBanAdd } from "./GUILD_BAN_ADD";
+export { GuildBanRemoveData as GuildBanRemove } from "./GUILD_BAN_REMOVE";
+export { GuildEmojisUpdateData as GuildEmojisUpdate } from "./GUILD_EMOJIS_UPDATE";
+export { GuildStickersUpdateData as GuildStickersUpdate } from "./GUILD_STICKERS_UPDATE";
+export { GuildIntegrationsUpdateData as GuildIntegrationsUpdate } from "./GUILD_INTEGRATIONS_UPDATE";
+export { ChannelCreateData as ChannelCreate } from "./CHANNEL_CREATE";
+export { ChannelUpdateData as ChannelUpdate } from "./CHANNEL_UPDATE";
+export { ChannelDeleteData as ChannelDelete } from "./CHANNEL_DELETE";
+export { ChannelPinsUpdateData as ChannelPinsUpdate } from "./CHANNEL_PINS_UPDATE";
+export { ThreadCreateData as ThreadCreate } from "./THREAD_CREATE";
+export { ThreadUpdateData as ThreadUpdate } from "./THREAD_UPDATE";
+export { ThreadDeleteData as ThreadDelete } from "./THREAD_DELETE";
+export { ThreadListSyncData as ThreadListSync } from "./THREAD_LIST_SYNC";
+export { ThreadMemberUpdateData as ThreadMemberUpdate } from "./THREAD_MEMBER_UPDATE";
+export { ThreadMembersUpdateData as ThreadMembersUpdate } from "./THREAD_MEMBERS_UPDATE";
 export { InteractionCreateData as InteractionCreate } from "./INTERACTION_CREATE";
-export { InviteCreateEventData as InviteCreate } from "./INVITE_CREATE";
-export { InviteDeleteEventData as InviteDelete } from "./INVITE_DELETE";
-export { TypingStartEventData as TypingStart } from "./TYPING_START";
-export { MessageReactionAddEventData as MessageReactionAdd } from "./MESSAGE_REACTION_ADD";
-export { MessageReactionRemoveEventData as MessageReactionRemove } from "./MESSAGE_REACTION_REMOVE";
-export { MessageReactionRemoveAllEventData as MessageReactionRemoveAll } from "./MESSAGE_REACTION_REMOVE_ALL";
-export { MessageReactionRemoveEmojiEventData as MessageReactionRemoveEmoji } from "./MESSAGE_REACTION_REMOVE_EMOJI";
-export { PresenceUpdateEventData as PresenceUpdate } from "./PRESENCE_UPDATE";
-export { VoiceStateUpdateEventData as VoiceStateUpdate } from "./VOICE_STATE_UPDATE";
-export { VoiceServerUpdateEventData as VoiceServerUpdate } from "./VOICE_SERVER_UPDATE";
-export { WebhooksUpdateEventData as WebhooksUpdate } from "./WEBHOOKS_UPDATE";
-export { UserUpdateEventData as UserUpdate } from "./USER_UPDATE";
+export { InviteCreateData as InviteCreate } from "./INVITE_CREATE";
+export { InviteDeleteData as InviteDelete } from "./INVITE_DELETE";
+export { TypingStartData as TypingStart } from "./TYPING_START";
+export { MessageReactionAddData as MessageReactionAdd } from "./MESSAGE_REACTION_ADD";
+export { MessageReactionRemoveData as MessageReactionRemove } from "./MESSAGE_REACTION_REMOVE";
+export { MessageReactionRemoveAllData as MessageReactionRemoveAll } from "./MESSAGE_REACTION_REMOVE_ALL";
+export { MessageReactionRemoveEmojiData as MessageReactionRemoveEmoji } from "./MESSAGE_REACTION_REMOVE_EMOJI";
+export { PresenceUpdateData as PresenceUpdate } from "./PRESENCE_UPDATE";
+export { VoiceStateUpdateData as VoiceStateUpdate } from "./VOICE_STATE_UPDATE";
+export { VoiceServerUpdateData as VoiceServerUpdate } from "./VOICE_SERVER_UPDATE";
+export { WebhooksUpdateData as WebhooksUpdate } from "./WEBHOOKS_UPDATE";
+export { UserUpdateData as UserUpdate } from "./USER_UPDATE";
 
 // Auto Moderation Events
-export { AutoModerationRuleCreateEventData as AutoModerationRuleCreate } from "./AUTO_MODERATION_RULE_CREATE";
-export { AutoModerationRuleUpdateEventData as AutoModerationRuleUpdate } from "./AUTO_MODERATION_RULE_UPDATE";
-export { AutoModerationRuleDeleteEventData as AutoModerationRuleDelete } from "./AUTO_MODERATION_RULE_DELETE";
-export { AutoModerationActionExecutionEventData as AutoModerationActionExecution } from "./AUTO_MODERATION_ACTION_EXECUTION";
+export { AutoModerationRuleCreateData as AutoModerationRuleCreate } from "./AUTO_MODERATION_RULE_CREATE";
+export { AutoModerationRuleUpdateData as AutoModerationRuleUpdate } from "./AUTO_MODERATION_RULE_UPDATE";
+export { AutoModerationRuleDeleteData as AutoModerationRuleDelete } from "./AUTO_MODERATION_RULE_DELETE";
+export { AutoModerationActionExecutionData as AutoModerationActionExecution } from "./AUTO_MODERATION_ACTION_EXECUTION";
 
 // Stage Instance Events
-export { StageInstanceCreateEventData as StageInstanceCreate } from "./STAGE_INSTANCE_CREATE";
-export { StageInstanceUpdateEventData as StageInstanceUpdate } from "./STAGE_INSTANCE_UPDATE";
-export { StageInstanceDeleteEventData as StageInstanceDelete } from "./STAGE_INSTANCE_DELETE";
+export { StageInstanceCreateData as StageInstanceCreate } from "./STAGE_INSTANCE_CREATE";
+export { StageInstanceUpdateData as StageInstanceUpdate } from "./STAGE_INSTANCE_UPDATE";
+export { StageInstanceDeleteData as StageInstanceDelete } from "./STAGE_INSTANCE_DELETE";
 
 // Guild Scheduled Events
-export { GuildScheduledEventCreateEventData as GuildScheduledEventCreate } from "./GUILD_SCHEDULED_EVENT_CREATE";
-export { GuildScheduledEventUpdateEventData as GuildScheduledEventUpdate } from "./GUILD_SCHEDULED_EVENT_UPDATE";
-export { GuildScheduledEventDeleteEventData as GuildScheduledEventDelete } from "./GUILD_SCHEDULED_EVENT_DELETE";
-export { GuildScheduledEventUserAddEventData as GuildScheduledEventUserAdd } from "./GUILD_SCHEDULED_EVENT_USER_ADD";
-export { GuildScheduledEventUserRemoveEventData as GuildScheduledEventUserRemove } from "./GUILD_SCHEDULED_EVENT_USER_REMOVE";
+export { GuildScheduledEventCreateData as GuildScheduledEventCreate } from "./GUILD_SCHEDULED_EVENT_CREATE";
+export { GuildScheduledEventUpdateData as GuildScheduledEventUpdate } from "./GUILD_SCHEDULED_EVENT_UPDATE";
+export { GuildScheduledEventDeleteData as GuildScheduledEventDelete } from "./GUILD_SCHEDULED_EVENT_DELETE";
+export { GuildScheduledEventUserAddData as GuildScheduledEventUserAdd } from "./GUILD_SCHEDULED_EVENT_USER_ADD";
+export { GuildScheduledEventUserRemoveData as GuildScheduledEventUserRemove } from "./GUILD_SCHEDULED_EVENT_USER_REMOVE";
 
 // Poll Events
-export { MessagePollVoteAddEventData as MessagePollVoteAdd } from "./MESSAGE_POLL_VOTE_ADD";
-export { MessagePollVoteRemoveEventData as MessagePollVoteRemove } from "./MESSAGE_POLL_VOTE_REMOVE";
+export { MessagePollVoteAddData as MessagePollVoteAdd } from "./MESSAGE_POLL_VOTE_ADD";
+export { MessagePollVoteRemoveData as MessagePollVoteRemove } from "./MESSAGE_POLL_VOTE_REMOVE";
 
 // Entitlement Events (Monetization)
-export { EntitlementCreateEventData as EntitlementCreate } from "./ENTITLEMENT_CREATE";
-export { EntitlementUpdateEventData as EntitlementUpdate } from "./ENTITLEMENT_UPDATE";
-export { EntitlementDeleteEventData as EntitlementDelete } from "./ENTITLEMENT_DELETE";
+export { EntitlementCreateData as EntitlementCreate } from "./ENTITLEMENT_CREATE";
+export { EntitlementUpdateData as EntitlementUpdate } from "./ENTITLEMENT_UPDATE";
+export { EntitlementDeleteData as EntitlementDelete } from "./ENTITLEMENT_DELETE";
 
 // Integration Events
-export { IntegrationCreateEventData as IntegrationCreate } from "./INTEGRATION_CREATE";
-export { IntegrationUpdateEventData as IntegrationUpdate } from "./INTEGRATION_UPDATE";
-export { IntegrationDeleteEventData as IntegrationDelete } from "./INTEGRATION_DELETE";
+export { IntegrationCreateData as IntegrationCreate } from "./INTEGRATION_CREATE";
+export { IntegrationUpdateData as IntegrationUpdate } from "./INTEGRATION_UPDATE";
+export { IntegrationDeleteData as IntegrationDelete } from "./INTEGRATION_DELETE";
 
 // Export all event data interfaces as well
 export type { ReadyEvent } from "./READY";
