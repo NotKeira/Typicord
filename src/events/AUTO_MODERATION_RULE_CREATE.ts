@@ -4,7 +4,7 @@
  * Sent when an auto moderation rule is created.
  */
 
-export interface AutoModerationRuleCreateData {
+export interface AutoModerationRuleCreateEventData {
   /** The id of the rule */
   id: string;
   /** The guild ID */
@@ -54,8 +54,8 @@ export interface AutoModerationRuleCreateData {
   exempt_channels: string[];
 }
 
-export class AutoModerationRuleCreateEventData {
-  constructor(public data: AutoModerationRuleCreateData) {}
+export class AutoModerationRuleCreateData {
+  constructor(public data: AutoModerationRuleCreateEventData) {}
 
   /**
    * The rule ID

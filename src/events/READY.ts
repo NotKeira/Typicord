@@ -7,7 +7,7 @@
 
 import type { ReadyEvent } from "@/types/gateway/events";
 
-export class ReadyEventData {
+export class ReadyData {
   constructor(public data: ReadyEvent) {}
 
   /**

@@ -4,7 +4,7 @@
  * Sent when a user removes their vote from a poll.
  */
 
-export interface MessagePollVoteRemoveData {
+export interface MessagePollVoteRemoveEventData {
   /** The id of the user */
   user_id: string;
   /** The id of the channel */
@@ -17,8 +17,8 @@ export interface MessagePollVoteRemoveData {
   answer_id: number;
 }
 
-export class MessagePollVoteRemoveEventData {
-  constructor(public data: MessagePollVoteRemoveData) {}
+export class MessagePollVoteRemoveData {
+  constructor(public data: MessagePollVoteRemoveEventData) {}
 
   /**
    * The user who removed their vote

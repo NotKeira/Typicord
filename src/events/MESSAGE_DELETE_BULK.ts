@@ -4,7 +4,7 @@
  * Sent when multiple messages are deleted at once.
  */
 
-export interface MessageDeleteBulkData {
+export interface MessageDeleteBulkEventData {
   /** IDs of the deleted messages */
   ids: string[];
   /** ID of the channel */
@@ -13,8 +13,8 @@ export interface MessageDeleteBulkData {
   guild_id?: string;
 }
 
-export class MessageDeleteBulkEventData {
-  constructor(public data: MessageDeleteBulkData) {}
+export class MessageDeleteBulkData {
+  constructor(public data: MessageDeleteBulkEventData) {}
 
   /**
    * Array of deleted message IDs

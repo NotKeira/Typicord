@@ -6,15 +6,15 @@
 
 import type { Role } from "@/types/structures/role";
 
-export interface GuildRoleUpdateData {
+export interface GuildRoleUpdateEventData {
   /** The guild ID where the role was updated */
   guild_id: string;
   /** The updated role */
   role: Role;
 }
 
-export class GuildRoleUpdateEventData {
-  constructor(public data: GuildRoleUpdateData) {}
+export class GuildRoleUpdateData {
+  constructor(public data: GuildRoleUpdateEventData) {}
 
   /**
    * The updated role

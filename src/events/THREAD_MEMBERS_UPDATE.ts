@@ -6,7 +6,7 @@
 
 import type { ThreadMember } from "@/structures/Channel";
 
-export interface ThreadMembersUpdateData {
+export interface ThreadMembersUpdateEventData {
   /** The id of the thread */
   id: string;
   /** The guild id */
@@ -19,8 +19,8 @@ export interface ThreadMembersUpdateData {
   removed_member_ids?: string[];
 }
 
-export class ThreadMembersUpdateEventData {
-  constructor(public data: ThreadMembersUpdateData) {}
+export class ThreadMembersUpdateData {
+  constructor(public data: ThreadMembersUpdateEventData) {}
 
   /**
    * The thread ID

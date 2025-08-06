@@ -4,7 +4,7 @@
  * Sent when a stage instance has been updated.
  */
 
-export interface StageInstanceUpdateData {
+export interface StageInstanceUpdateEventData {
   /** The id of this stage instance */
   id: string;
   /** The guild id of the associated stage channel */
@@ -21,8 +21,8 @@ export interface StageInstanceUpdateData {
   guild_scheduled_event_id?: string | null;
 }
 
-export class StageInstanceUpdateEventData {
-  constructor(public data: StageInstanceUpdateData) {}
+export class StageInstanceUpdateData {
+  constructor(public data: StageInstanceUpdateEventData) {}
 
   /**
    * The stage instance ID

@@ -2,17 +2,26 @@
  * GUILD_MEMBER_ADD Event
  *
  * Emitted when a new member joins a guild.
+ * Enhanced with Discord bot utility methods for member management.
  */
 
 import type { GuildMember } from "@/structures/Guild";
+import type { RESTClient } from "@/client/RESTClient";
 
-export interface GuildMemberAddData extends GuildMember {
+export interface GuildMemberAddEventData extends GuildMember {
   /** The guild ID where the member joined */
   guild_id: string;
 }
 
-export class GuildMemberAddEventData {
-  constructor(public data: GuildMemberAddData) {}
+export class GuildMemberAddData {
+  private readonly _client?: RESTClient;
+
+  constructor(
+    public data: GuildMemberAddEventData,
+    client?: RESTClient
+  ) {
+    this._client = client;
+  }
 
   /**
    * The guild member data
@@ -103,5 +112,222 @@ export class GuildMemberAddEventData {
    */
   get displayName() {
     return this.data.nick || this.data.user?.username || "Unknown User";
+  }
+
+  // Discord bot utility methods for member management
+
+  /**
+   * Send a direct message to the new member
+   */
+  async dmMember(content: string, options: any = {}): Promise<any> {
+    if (!this._client || !this.user) {
+      throw new Error("REST client not available or user data missing");
+    }
+
+    // Create DM channel
+    const dmChannel: any = await this._client.post("/users/@me/channels", {
+      recipient_id: this.user.id,
+    });
+
+    // Send message
+    return this._client.post(`/channels/${dmChannel.id}/messages`, {
+      content,
+      ...options,
+    });
+  }
+
+  /**
+   * Add a role to the new member
+   */
+  async addRole(roleId: string, reason?: string): Promise<void> {
+    if (!this._client || !this.user) {
+      throw new Error("REST client not available or user data missing");
+    }
+
+    await this._client.put(
+      `/guilds/${this.guildId}/members/${this.user.id}/roles/${roleId}`,
+      {},
+      reason ? { "X-Audit-Log-Reason": reason } : undefined
+    );
+  }
+
+  /**
+   * Remove a role from the member
+   */
+  async removeRole(roleId: string, reason?: string): Promise<void> {
+    if (!this._client || !this.user) {
+      throw new Error("REST client not available or user data missing");
+    }
+
+    await this._client.delete(
+      `/guilds/${this.guildId}/members/${this.user.id}/roles/${roleId}`,
+      reason ? { "X-Audit-Log-Reason": reason } : undefined
+    );
+  }
+
+  /**
+   * Set the member's nickname
+   */
+  async setNickname(nickname: string | null, reason?: string): Promise<void> {
+    if (!this._client || !this.user) {
+      throw new Error("REST client not available or user data missing");
+    }
+
+    await this._client.patch(
+      `/guilds/${this.guildId}/members/${this.user.id}`,
+      { nick: nickname },
+      reason ? { "X-Audit-Log-Reason": reason } : undefined
+    );
+  }
+
+  /**
+   * Timeout the member
+   */
+  async timeout(duration: number, reason?: string): Promise<void> {
+    if (!this._client || !this.user) {
+      throw new Error("REST client not available or user data missing");
+    }
+
+    const timeoutUntil = new Date(Date.now() + duration * 1000).toISOString();
+
+    await this._client.patch(
+      `/guilds/${this.guildId}/members/${this.user.id}`,
+      {
+        communication_disabled_until: timeoutUntil,
+      },
+      reason ? { "X-Audit-Log-Reason": reason } : undefined
+    );
+  }
+
+  /**
+   * Kick the member
+   */
+  async kick(reason?: string): Promise<void> {
+    if (!this._client || !this.user) {
+      throw new Error("REST client not available or user data missing");
+    }
+
+    await this._client.delete(
+      `/guilds/${this.guildId}/members/${this.user.id}`,
+      reason ? { "X-Audit-Log-Reason": reason } : undefined
+    );
+  }
+
+  /**
+   * Ban the member
+   */
+  async ban(reason?: string, deleteMessageDays?: number): Promise<void> {
+    if (!this._client || !this.user) {
+      throw new Error("REST client not available or user data missing");
+    }
+
+    const body: any = {};
+    if (deleteMessageDays !== undefined) {
+      body.delete_message_days = deleteMessageDays;
+    }
+
+    await this._client.put(
+      `/guilds/${this.guildId}/bans/${this.user.id}`,
+      body,
+      reason ? { "X-Audit-Log-Reason": reason } : undefined
+    );
+  }
+
+  /**
+   * Move member to a voice channel
+   */
+  async moveToVoiceChannel(
+    channelId: string | null,
+    reason?: string
+  ): Promise<void> {
+    if (!this._client || !this.user) {
+      throw new Error("REST client not available or user data missing");
+    }
+
+    await this._client.patch(
+      `/guilds/${this.guildId}/members/${this.user.id}`,
+      { channel_id: channelId },
+      reason ? { "X-Audit-Log-Reason": reason } : undefined
+    );
+  }
+
+  /**
+   * Mute/unmute member in voice
+   */
+  async setVoiceMute(mute: boolean, reason?: string): Promise<void> {
+    if (!this._client || !this.user) {
+      throw new Error("REST client not available or user data missing");
+    }
+
+    await this._client.patch(
+      `/guilds/${this.guildId}/members/${this.user.id}`,
+      { mute },
+      reason ? { "X-Audit-Log-Reason": reason } : undefined
+    );
+  }
+
+  /**
+   * Deafen/undeafen member in voice
+   */
+  async setVoiceDeafen(deaf: boolean, reason?: string): Promise<void> {
+    if (!this._client || !this.user) {
+      throw new Error("REST client not available or user data missing");
+    }
+
+    await this._client.patch(
+      `/guilds/${this.guildId}/members/${this.user.id}`,
+      { deaf },
+      reason ? { "X-Audit-Log-Reason": reason } : undefined
+    );
+  }
+
+  /**
+   * Get the guild this member joined
+   */
+  async getGuild(): Promise<any> {
+    if (!this._client) {
+      throw new Error("REST client not available");
+    }
+
+    return this._client.get(`/guilds/${this.guildId}`);
+  }
+
+  /**
+   * Check if member has a specific role
+   */
+  hasRole(roleId: string): boolean {
+    return this.roles.includes(roleId);
+  }
+
+  /**
+   * Check if member is a bot
+   */
+  isBot(): boolean {
+    return this.user?.bot === true;
+  }
+
+  /**
+   * Check if member is boosting the server
+   */
+  isBoosting(): boolean {
+    return !!this.data.premium_since;
+  }
+
+  /**
+   * Get member's account creation date
+   */
+  getAccountCreatedAt(): Date {
+    if (!this.user) throw new Error("User data not available");
+
+    // Discord snowflake timestamp extraction
+    const timestamp = (BigInt(this.user.id) >> 22n) + 1420070400000n;
+    return new Date(Number(timestamp));
+  }
+
+  /**
+   * Get how long ago the account was created
+   */
+  getAccountAge(): number {
+    return Date.now() - this.getAccountCreatedAt().getTime();
   }
 }

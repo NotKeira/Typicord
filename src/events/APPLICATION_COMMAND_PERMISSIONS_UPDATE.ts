@@ -13,7 +13,7 @@ export interface ApplicationCommandPermission {
   permission: boolean;
 }
 
-export interface ApplicationCommandPermissionsUpdateData {
+export interface ApplicationCommandPermissionsUpdateEventData {
   /** ID of the command or the application ID */
   id: string;
   /** ID of the application the command belongs to */
@@ -24,8 +24,8 @@ export interface ApplicationCommandPermissionsUpdateData {
   permissions: ApplicationCommandPermission[];
 }
 
-export class ApplicationCommandPermissionsUpdateEventData {
-  constructor(public data: ApplicationCommandPermissionsUpdateData) {}
+export class ApplicationCommandPermissionsUpdateData {
+  constructor(public data: ApplicationCommandPermissionsUpdateEventData) {}
 
   /**
    * ID of the command or application

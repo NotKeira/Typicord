@@ -4,7 +4,7 @@
  * Sent when an entitlement is updated.
  */
 
-export interface EntitlementUpdateData {
+export interface EntitlementUpdateEventData {
   /** ID of the entitlement */
   id: string;
   /** ID of the SKU */
@@ -27,8 +27,8 @@ export interface EntitlementUpdateData {
   consumed?: boolean;
 }
 
-export class EntitlementUpdateEventData {
-  constructor(public data: EntitlementUpdateData) {}
+export class EntitlementUpdateData {
+  constructor(public data: EntitlementUpdateEventData) {}
 
   /**
    * The entitlement ID

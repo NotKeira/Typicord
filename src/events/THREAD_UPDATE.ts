@@ -6,10 +6,10 @@
 
 import type { Channel } from "@/types/structures/channel";
 
-export type ThreadUpdateData = Channel;
+export type ThreadUpdateEventData = Channel;
 
-export class ThreadUpdateEventData {
-  constructor(public data: ThreadUpdateData) {}
+export class ThreadUpdateData {
+  constructor(public data: ThreadUpdateEventData) {}
 
   /**
    * The thread (channel) that was updated

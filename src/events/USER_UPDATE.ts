@@ -6,7 +6,7 @@
 
 import type { User } from "@/types/structures/user";
 
-export class UserUpdateEventData {
+export class UserUpdateData {
   constructor(public data: User) {}
 
   /**

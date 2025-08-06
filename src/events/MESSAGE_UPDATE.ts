@@ -6,7 +6,7 @@
 
 import type { Message } from "@/types/gateway/structures/Message";
 
-export class MessageUpdateEventData {
+export class MessageUpdateData {
   constructor(public data: Partial<Message>) {}
 
   /**

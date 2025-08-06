@@ -10,19 +10,19 @@
  */
 
 // Import all event classes
-export { ReadyEventData as Ready } from "./READY";
-export { ResumedEventData as Resumed } from "./RESUMED";
+export { ReadyData as Ready } from "./READY";
+export { ResumedData as Resumed } from "./RESUMED";
 export { ApplicationCommandPermissionsUpdateEventData as ApplicationCommandPermissionsUpdate } from "./APPLICATION_COMMAND_PERMISSIONS_UPDATE";
-export { MessageCreateEventData as MessageCreate } from "./MESSAGE_CREATE";
+export { MessageCreateData as MessageCreate } from "./MESSAGE_CREATE";
 export { MessageUpdateEventData as MessageUpdate } from "./MESSAGE_UPDATE";
 export { MessageDeleteEventData as MessageDelete } from "./MESSAGE_DELETE";
 export { MessageDeleteBulkEventData as MessageDeleteBulk } from "./MESSAGE_DELETE_BULK";
-export { GuildCreateEventData as GuildCreate } from "./GUILD_CREATE";
+export { GuildCreateData as GuildCreate } from "./GUILD_CREATE";
 export { GuildUpdateEventData as GuildUpdate } from "./GUILD_UPDATE";
 export { GuildDeleteEventData as GuildDelete } from "./GUILD_DELETE";
-export { GuildMemberAddEventData as GuildMemberAdd } from "./GUILD_MEMBER_ADD";
+export { GuildMemberAddData as GuildMemberAdd } from "./GUILD_MEMBER_ADD";
 export { GuildMemberUpdateEventData as GuildMemberUpdate } from "./GUILD_MEMBER_UPDATE";
-export { GuildMemberRemoveEventData as GuildMemberRemove } from "./GUILD_MEMBER_REMOVE";
+export { GuildMemberRemoveData as GuildMemberRemove } from "./GUILD_MEMBER_REMOVE";
 export { GuildMembersChunkEventData as GuildMembersChunk } from "./GUILD_MEMBERS_CHUNK";
 export { GuildRoleCreateEventData as GuildRoleCreate } from "./GUILD_ROLE_CREATE";
 export { GuildRoleUpdateEventData as GuildRoleUpdate } from "./GUILD_ROLE_UPDATE";
@@ -43,7 +43,7 @@ export { ThreadDeleteEventData as ThreadDelete } from "./THREAD_DELETE";
 export { ThreadListSyncEventData as ThreadListSync } from "./THREAD_LIST_SYNC";
 export { ThreadMemberUpdateEventData as ThreadMemberUpdate } from "./THREAD_MEMBER_UPDATE";
 export { ThreadMembersUpdateEventData as ThreadMembersUpdate } from "./THREAD_MEMBERS_UPDATE";
-export { InteractionCreateEventData as InteractionCreate } from "./INTERACTION_CREATE";
+export { InteractionCreateData as InteractionCreate } from "./INTERACTION_CREATE";
 export { InviteCreateEventData as InviteCreate } from "./INVITE_CREATE";
 export { InviteDeleteEventData as InviteDelete } from "./INVITE_DELETE";
 export { TypingStartEventData as TypingStart } from "./TYPING_START";

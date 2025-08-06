@@ -6,7 +6,7 @@
 
 import type { PresenceUpdateEvent } from "@/types/gateway/events";
 
-export class PresenceUpdateEventData {
+export class PresenceUpdateData {
   constructor(public data: PresenceUpdateEvent) {}
 
   /**

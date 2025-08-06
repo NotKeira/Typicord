@@ -4,7 +4,7 @@
  * Sent when an auto moderation rule is triggered and an action is executed.
  */
 
-export interface AutoModerationActionExecutionData {
+export interface AutoModerationActionExecutionEventData {
   /** The guild ID where the action was executed */
   guild_id: string;
   /** The action which was executed */
@@ -41,8 +41,8 @@ export interface AutoModerationActionExecutionData {
   matched_content?: string | null;
 }
 
-export class AutoModerationActionExecutionEventData {
-  constructor(public data: AutoModerationActionExecutionData) {}
+export class AutoModerationActionExecutionData {
+  constructor(public data: AutoModerationActionExecutionEventData) {}
 
   /**
    * The guild ID where the action was executed

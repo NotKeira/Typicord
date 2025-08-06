@@ -6,7 +6,7 @@
 
 import type { GuildMember } from "@/structures/Guild";
 
-export interface GuildMembersChunkData {
+export interface GuildMembersChunkEventData {
   /** ID of the guild */
   guild_id: string;
   /** Set of guild members */
@@ -23,8 +23,8 @@ export interface GuildMembersChunkData {
   nonce?: string;
 }
 
-export class GuildMembersChunkEventData {
-  constructor(public data: GuildMembersChunkData) {}
+export class GuildMembersChunkData {
+  constructor(public data: GuildMembersChunkEventData) {}
 
   /**
    * The guild ID this chunk is for

@@ -6,7 +6,7 @@
 
 import type { Channel, ThreadMember } from "@/structures/Channel";
 
-export interface ThreadListSyncData {
+export interface ThreadListSyncEventData {
   /** The guild id */
   guild_id: string;
   /** The parent channel ids whose threads are being synced. If omitted, then threads were synced for the entire guild. This array may contain channel_ids that have no active threads as well, so you know to clear that data. */
@@ -17,8 +17,8 @@ export interface ThreadListSyncData {
   members: ThreadMember[];
 }
 
-export class ThreadListSyncEventData {
-  constructor(public data: ThreadListSyncData) {}
+export class ThreadListSyncData {
+  constructor(public data: ThreadListSyncEventData) {}
 
   /**
    * The guild ID where threads were synced

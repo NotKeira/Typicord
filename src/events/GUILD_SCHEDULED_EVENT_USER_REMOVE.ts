@@ -4,7 +4,7 @@
  * Sent when a user has unsubscribed from a guild scheduled event.
  */
 
-export interface GuildScheduledEventUserRemoveData {
+export interface GuildScheduledEventUserRemoveEventData {
   /** The id of the guild scheduled event */
   guild_scheduled_event_id: string;
   /** The id of the user */
@@ -13,8 +13,8 @@ export interface GuildScheduledEventUserRemoveData {
   guild_id: string;
 }
 
-export class GuildScheduledEventUserRemoveEventData {
-  constructor(public data: GuildScheduledEventUserRemoveData) {}
+export class GuildScheduledEventUserRemoveData {
+  constructor(public data: GuildScheduledEventUserRemoveEventData) {}
 
   /**
    * The scheduled event ID

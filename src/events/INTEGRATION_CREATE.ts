@@ -4,7 +4,7 @@
  * Sent when an integration is created.
  */
 
-export interface IntegrationCreateData {
+export interface IntegrationCreateEventData {
   /** Integration id */
   id: string;
   /** Integration name */
@@ -118,8 +118,8 @@ export interface IntegrationCreateData {
   guild_id: string;
 }
 
-export class IntegrationCreateEventData {
-  constructor(public data: IntegrationCreateData) {}
+export class IntegrationCreateData {
+  constructor(public data: IntegrationCreateEventData) {}
 
   /**
    * The integration ID

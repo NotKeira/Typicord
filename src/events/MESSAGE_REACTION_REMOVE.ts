@@ -6,7 +6,7 @@
 
 import type { MessageReactionEvent } from "@/types/gateway/events";
 
-export class MessageReactionRemoveEventData {
+export class MessageReactionRemoveData {
   constructor(public data: MessageReactionEvent) {}
 
   /**

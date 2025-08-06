@@ -4,7 +4,7 @@
  * Sent when an entitlement is deleted.
  */
 
-export interface EntitlementDeleteData {
+export interface EntitlementDeleteEventData {
   /** ID of the entitlement */
   id: string;
   /** ID of the SKU */
@@ -27,8 +27,8 @@ export interface EntitlementDeleteData {
   consumed?: boolean;
 }
 
-export class EntitlementDeleteEventData {
-  constructor(public data: EntitlementDeleteData) {}
+export class EntitlementDeleteData {
+  constructor(public data: EntitlementDeleteEventData) {}
 
   /**
    * The entitlement ID

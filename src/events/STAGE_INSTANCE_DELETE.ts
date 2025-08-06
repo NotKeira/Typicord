@@ -4,7 +4,7 @@
  * Sent when a stage instance has been deleted (i.e. the stage has been closed).
  */
 
-export interface StageInstanceDeleteData {
+export interface StageInstanceDeleteEventData {
   /** The id of this stage instance */
   id: string;
   /** The guild id of the associated stage channel */
@@ -21,8 +21,8 @@ export interface StageInstanceDeleteData {
   guild_scheduled_event_id?: string | null;
 }
 
-export class StageInstanceDeleteEventData {
-  constructor(public data: StageInstanceDeleteData) {}
+export class StageInstanceDeleteData {
+  constructor(public data: StageInstanceDeleteEventData) {}
 
   /**
    * The stage instance ID

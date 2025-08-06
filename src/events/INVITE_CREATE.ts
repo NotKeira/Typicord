@@ -6,7 +6,7 @@
 
 import type { User } from "@/types/structures/user";
 
-export interface InviteCreateData {
+export interface InviteCreateEventData {
   /** Channel the invite is for */
   channel_id: string;
   /** Unique invite code */
@@ -31,8 +31,8 @@ export interface InviteCreateData {
   uses: number;
 }
 
-export class InviteCreateEventData {
-  constructor(public data: InviteCreateData) {}
+export class InviteCreateData {
+  constructor(public data: InviteCreateEventData) {}
 
   /**
    * The channel ID this invite is for

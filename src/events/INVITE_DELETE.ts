@@ -4,7 +4,7 @@
  * Sent when an invite is deleted.
  */
 
-export interface InviteDeleteData {
+export interface InviteDeleteEventData {
   /** Channel of the invite */
   channel_id: string;
   /** Guild of the invite */
@@ -13,8 +13,8 @@ export interface InviteDeleteData {
   code: string;
 }
 
-export class InviteDeleteEventData {
-  constructor(public data: InviteDeleteData) {}
+export class InviteDeleteData {
+  constructor(public data: InviteDeleteEventData) {}
 
   /**
    * The channel ID the invite was for

@@ -6,15 +6,15 @@
 
 import type { User } from "@/types/structures/user";
 
-export interface GuildBanRemoveData {
+export interface GuildBanRemoveEventData {
   /** ID of the guild */
   guild_id: string;
   /** User who was unbanned */
   user: User;
 }
 
-export class GuildBanRemoveEventData {
-  constructor(public data: GuildBanRemoveData) {}
+export class GuildBanRemoveData {
+  constructor(public data: GuildBanRemoveEventData) {}
 
   /**
    * The guild ID where the unban occurred

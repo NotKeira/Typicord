@@ -6,7 +6,7 @@
 
 import type { GuildMember } from "@/types/structures/guild";
 
-export interface TypingStartData {
+export interface TypingStartEventData {
   channel_id: string;
   user_id: string;
   timestamp: number;
@@ -14,8 +14,8 @@ export interface TypingStartData {
   member?: GuildMember;
 }
 
-export class TypingStartEventData {
-  constructor(public data: TypingStartData) {}
+export class TypingStartData {
+  constructor(public data: TypingStartEventData) {}
 
   /**
    * Channel ID where typing started

@@ -6,7 +6,7 @@
 
 import type { User } from "@/structures/User";
 
-export interface GuildScheduledEventCreateData {
+export interface GuildScheduledEventCreateEventData {
   /** The id of the scheduled event */
   id: string;
   /** The guild id which the scheduled event belongs to */
@@ -44,8 +44,8 @@ export interface GuildScheduledEventCreateData {
   image?: string | null;
 }
 
-export class GuildScheduledEventCreateEventData {
-  constructor(public data: GuildScheduledEventCreateData) {}
+export class GuildScheduledEventCreateData {
+  constructor(public data: GuildScheduledEventCreateEventData) {}
 
   /**
    * The scheduled event ID

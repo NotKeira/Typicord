@@ -4,14 +4,14 @@
  * Emitted when all reactions are removed from a message.
  */
 
-export interface MessageReactionRemoveAllData {
+export interface MessageReactionRemoveAllEventData {
   channel_id: string;
   message_id: string;
   guild_id?: string;
 }
 
-export class MessageReactionRemoveAllEventData {
-  constructor(public data: MessageReactionRemoveAllData) {}
+export class MessageReactionRemoveAllData {
+  constructor(public data: MessageReactionRemoveAllEventData) {}
 
   /**
    * Channel ID where all reactions were removed

@@ -6,15 +6,15 @@
 
 import type { Emoji } from "@/types/structures/emoji";
 
-export interface GuildEmojisUpdateData {
+export interface GuildEmojisUpdateEventData {
   /** ID of the guild */
   guild_id: string;
   /** Array of emojis */
   emojis: Emoji[];
 }
 
-export class GuildEmojisUpdateEventData {
-  constructor(public data: GuildEmojisUpdateData) {}
+export class GuildEmojisUpdateData {
+  constructor(public data: GuildEmojisUpdateEventData) {}
 
   /**
    * The guild ID where emojis were updated

@@ -4,7 +4,7 @@
  * Sent when a message is pinned or unpinned in a text channel.
  */
 
-export interface ChannelPinsUpdateData {
+export interface ChannelPinsUpdateEventData {
   /** ID of the guild */
   guild_id?: string;
   /** ID of the channel */
@@ -13,8 +13,8 @@ export interface ChannelPinsUpdateData {
   last_pin_timestamp?: string | null;
 }
 
-export class ChannelPinsUpdateEventData {
-  constructor(public data: ChannelPinsUpdateData) {}
+export class ChannelPinsUpdateData {
+  constructor(public data: ChannelPinsUpdateEventData) {}
 
   /**
    * The guild ID where pins were updated

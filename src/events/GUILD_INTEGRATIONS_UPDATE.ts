@@ -4,13 +4,13 @@
  * Sent when a guild integration is updated.
  */
 
-export interface GuildIntegrationsUpdateData {
+export interface GuildIntegrationsUpdateEventData {
   /** ID of the guild whose integrations were updated */
   guild_id: string;
 }
 
-export class GuildIntegrationsUpdateEventData {
-  constructor(public data: GuildIntegrationsUpdateData) {}
+export class GuildIntegrationsUpdateData {
+  constructor(public data: GuildIntegrationsUpdateEventData) {}
 
   /**
    * The guild ID where integrations were updated

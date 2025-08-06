@@ -4,7 +4,7 @@
  * Sent when a stage instance is created (i.e. the stage is now "live").
  */
 
-export interface StageInstanceCreateData {
+export interface StageInstanceCreateEventData {
   /** The id of this stage instance */
   id: string;
   /** The guild id of the associated stage channel */
@@ -21,8 +21,8 @@ export interface StageInstanceCreateData {
   guild_scheduled_event_id?: string | null;
 }
 
-export class StageInstanceCreateEventData {
-  constructor(public data: StageInstanceCreateData) {}
+export class StageInstanceCreateData {
+  constructor(public data: StageInstanceCreateEventData) {}
 
   /**
    * The stage instance ID

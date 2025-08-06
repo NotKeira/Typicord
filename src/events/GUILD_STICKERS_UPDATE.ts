@@ -6,15 +6,15 @@
 
 import type { Sticker } from "@/structures/Guild";
 
-export interface GuildStickersUpdateData {
+export interface GuildStickersUpdateEventData {
   /** ID of the guild */
   guild_id: string;
   /** Array of stickers */
   stickers: Sticker[];
 }
 
-export class GuildStickersUpdateEventData {
-  constructor(public data: GuildStickersUpdateData) {}
+export class GuildStickersUpdateData {
+  constructor(public data: GuildStickersUpdateEventData) {}
 
   /**
    * The guild ID where stickers were updated

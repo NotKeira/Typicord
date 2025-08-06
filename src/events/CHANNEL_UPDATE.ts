@@ -6,7 +6,7 @@
 
 import type { Channel } from "@/types/structures/channel";
 
-export class ChannelUpdateEventData {
+export class ChannelUpdateData {
   constructor(public data: Channel) {}
 
   /**

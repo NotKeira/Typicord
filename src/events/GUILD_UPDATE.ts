@@ -6,7 +6,7 @@
 
 import type { Guild } from "@/types/structures/guild";
 
-export class GuildUpdateEventData {
+export class GuildUpdateData {
   constructor(public data: Guild) {}
 
   /**

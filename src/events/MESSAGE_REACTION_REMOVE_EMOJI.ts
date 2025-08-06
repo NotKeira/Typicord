@@ -4,15 +4,15 @@
  * Emitted when all reactions of a specific emoji are removed from a message.
  */
 
-export interface MessageReactionRemoveEmojiData {
+export interface MessageReactionRemoveEmojiEventData {
   channel_id: string;
   message_id: string;
   emoji: { id: string | null; name: string };
   guild_id?: string;
 }
 
-export class MessageReactionRemoveEmojiEventData {
-  constructor(public data: MessageReactionRemoveEmojiData) {}
+export class MessageReactionRemoveEmojiData {
+  constructor(public data: MessageReactionRemoveEmojiEventData) {}
 
   /**
    * Channel ID where the emoji reactions were removed

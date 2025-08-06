@@ -4,14 +4,14 @@
  * Emitted when a message is deleted.
  */
 
-export interface MessageDeleteData {
+export interface MessageDeleteEventData {
   id: string;
   channel_id: string;
   guild_id?: string;
 }
 
-export class MessageDeleteEventData {
-  constructor(public data: MessageDeleteData) {}
+export class MessageDeleteData {
+  constructor(public data: MessageDeleteEventData) {}
 
   /**
    * The ID of the deleted message

@@ -4,7 +4,7 @@
  * Sent when a user votes on a poll.
  */
 
-export interface MessagePollVoteAddData {
+export interface MessagePollVoteAddEventData {
   /** The id of the user */
   user_id: string;
   /** The id of the channel */
@@ -17,8 +17,8 @@ export interface MessagePollVoteAddData {
   answer_id: number;
 }
 
-export class MessagePollVoteAddEventData {
-  constructor(public data: MessagePollVoteAddData) {}
+export class MessagePollVoteAddData {
+  constructor(public data: MessagePollVoteAddEventData) {}
 
   /**
    * The user who voted

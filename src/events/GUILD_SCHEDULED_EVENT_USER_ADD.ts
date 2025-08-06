@@ -4,7 +4,7 @@
  * Sent when a user has subscribed to a guild scheduled event.
  */
 
-export interface GuildScheduledEventUserAddData {
+export interface GuildScheduledEventUserAddEventData {
   /** The id of the guild scheduled event */
   guild_scheduled_event_id: string;
   /** The id of the user */
@@ -13,8 +13,8 @@ export interface GuildScheduledEventUserAddData {
   guild_id: string;
 }
 
-export class GuildScheduledEventUserAddEventData {
-  constructor(public data: GuildScheduledEventUserAddData) {}
+export class GuildScheduledEventUserAddData {
+  constructor(public data: GuildScheduledEventUserAddEventData) {}
 
   /**
    * The scheduled event ID

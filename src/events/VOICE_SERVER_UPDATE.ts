@@ -4,7 +4,7 @@
  * Sent when a guild's voice server is updated.
  */
 
-export interface VoiceServerUpdateData {
+export interface VoiceServerUpdateEventData {
   /** Voice connection token */
   token: string;
   /** Guild this voice server update is for */
@@ -13,8 +13,8 @@ export interface VoiceServerUpdateData {
   endpoint: string | null;
 }
 
-export class VoiceServerUpdateEventData {
-  constructor(public data: VoiceServerUpdateData) {}
+export class VoiceServerUpdateData {
+  constructor(public data: VoiceServerUpdateEventData) {}
 
   /**
    * Voice connection token

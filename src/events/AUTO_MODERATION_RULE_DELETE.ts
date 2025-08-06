@@ -4,7 +4,7 @@
  * Sent when an auto moderation rule is deleted.
  */
 
-export interface AutoModerationRuleDeleteData {
+export interface AutoModerationRuleDeleteEventData {
   /** The id of the rule */
   id: string;
   /** The guild ID */
@@ -54,8 +54,8 @@ export interface AutoModerationRuleDeleteData {
   exempt_channels: string[];
 }
 
-export class AutoModerationRuleDeleteEventData {
-  constructor(public data: AutoModerationRuleDeleteData) {}
+export class AutoModerationRuleDeleteData {
+  constructor(public data: AutoModerationRuleDeleteEventData) {}
 
   /**
    * The rule ID

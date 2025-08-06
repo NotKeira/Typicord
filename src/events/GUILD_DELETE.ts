@@ -4,13 +4,13 @@
  * Emitted when the bot leaves a guild or when a guild becomes unavailable.
  */
 
-export interface GuildDeleteData {
+export interface GuildDeleteEventData {
   id: string;
   unavailable?: boolean;
 }
 
-export class GuildDeleteEventData {
-  constructor(public data: GuildDeleteData) {}
+export class GuildDeleteData {
+  constructor(public data: GuildDeleteEventData) {}
 
   /**
    * The guild ID

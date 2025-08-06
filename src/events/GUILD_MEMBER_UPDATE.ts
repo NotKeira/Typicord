@@ -6,13 +6,13 @@
 
 import type { GuildMember } from "@/structures/Guild";
 
-export interface GuildMemberUpdateData extends GuildMember {
+export interface GuildMemberUpdateEventData extends GuildMember {
   /** The guild ID where the member was updated */
   guild_id: string;
 }
 
-export class GuildMemberUpdateEventData {
-  constructor(public data: GuildMemberUpdateData) {}
+export class GuildMemberUpdateData {
+  constructor(public data: GuildMemberUpdateEventData) {}
 
   /**
    * The updated guild member data

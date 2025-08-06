@@ -4,15 +4,15 @@
  * Sent when a guild channel's webhook is created, updated, or deleted.
  */
 
-export interface WebhooksUpdateData {
+export interface WebhooksUpdateEventData {
   /** ID of the guild */
   guild_id: string;
   /** ID of the channel */
   channel_id: string;
 }
 
-export class WebhooksUpdateEventData {
-  constructor(public data: WebhooksUpdateData) {}
+export class WebhooksUpdateData {
+  constructor(public data: WebhooksUpdateEventData) {}
 
   /**
    * The guild ID where webhooks were updated

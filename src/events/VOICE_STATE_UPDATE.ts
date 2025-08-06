@@ -6,7 +6,7 @@
 
 import type { VoiceStateUpdateEvent } from "@/types/gateway/events";
 
-export class VoiceStateUpdateEventData {
+export class VoiceStateUpdateData {
   constructor(public data: VoiceStateUpdateEvent) {}
 
   /**

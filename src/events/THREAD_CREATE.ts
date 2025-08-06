@@ -8,15 +8,15 @@
 import type { Channel } from "@/types/structures/channel";
 import type { ThreadMember } from "@/structures/Channel";
 
-export interface ThreadCreateData extends Channel {
+export interface ThreadCreateEventData extends Channel {
   /** Whether this thread was newly created */
   newly_created?: boolean;
   /** Thread member object for the current user if added to existing thread */
   member?: ThreadMember;
 }
 
-export class ThreadCreateEventData {
-  constructor(public data: ThreadCreateData) {}
+export class ThreadCreateData {
+  constructor(public data: ThreadCreateEventData) {}
 
   /**
    * The thread (channel) that was created

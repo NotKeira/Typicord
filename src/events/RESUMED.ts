@@ -5,8 +5,7 @@
  * This event has no data payload.
  */
 
-export class ResumedEventData {
-
+export class ResumedData {
   /**
    * Returns the event name
    */

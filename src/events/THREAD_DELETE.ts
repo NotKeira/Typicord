@@ -4,7 +4,7 @@
  * Sent when a thread relevant to the current user is deleted.
  */
 
-export interface ThreadDeleteData {
+export interface ThreadDeleteEventData {
   /** The thread's ID */
   id: string;
   /** The guild ID */
@@ -15,8 +15,8 @@ export interface ThreadDeleteData {
   type: number;
 }
 
-export class ThreadDeleteEventData {
-  constructor(public data: ThreadDeleteData) {}
+export class ThreadDeleteData {
+  constructor(public data: ThreadDeleteEventData) {}
 
   /**
    * The deleted thread's ID

@@ -4,7 +4,7 @@
  * Sent when an integration is deleted.
  */
 
-export interface IntegrationDeleteData {
+export interface IntegrationDeleteEventData {
   /** Integration id */
   id: string;
   /** The guild id */
@@ -13,8 +13,8 @@ export interface IntegrationDeleteData {
   application_id?: string;
 }
 
-export class IntegrationDeleteEventData {
-  constructor(public data: IntegrationDeleteData) {}
+export class IntegrationDeleteData {
+  constructor(public data: IntegrationDeleteEventData) {}
 
   /**
    * The integration ID that was deleted

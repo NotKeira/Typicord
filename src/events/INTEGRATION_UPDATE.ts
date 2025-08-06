@@ -4,7 +4,7 @@
  * Sent when an integration is updated.
  */
 
-export interface IntegrationUpdateData {
+export interface IntegrationUpdateEventData {
   /** Integration id */
   id: string;
   /** Integration name */
@@ -73,8 +73,8 @@ export interface IntegrationUpdateData {
   guild_id: string;
 }
 
-export class IntegrationUpdateEventData {
-  constructor(public data: IntegrationUpdateData) {}
+export class IntegrationUpdateData {
+  constructor(public data: IntegrationUpdateEventData) {}
 
   /**
    * The integration ID

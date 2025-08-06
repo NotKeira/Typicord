@@ -4,7 +4,7 @@
  * Sent when the thread member object for the current user is updated.
  */
 
-export interface ThreadMemberUpdateData {
+export interface ThreadMemberUpdateEventData {
   /** The id of the thread */
   id?: string;
   /** The id of the user */
@@ -50,8 +50,8 @@ export interface ThreadMemberUpdateData {
   guild_id: string;
 }
 
-export class ThreadMemberUpdateEventData {
-  constructor(public data: ThreadMemberUpdateData) {}
+export class ThreadMemberUpdateData {
+  constructor(public data: ThreadMemberUpdateEventData) {}
 
   /**
    * The thread ID

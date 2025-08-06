@@ -4,7 +4,7 @@
  * Sent when an entitlement is created.
  */
 
-export interface EntitlementCreateData {
+export interface EntitlementCreateEventData {
   /** ID of the entitlement */
   id: string;
   /** ID of the SKU */
@@ -27,8 +27,8 @@ export interface EntitlementCreateData {
   consumed?: boolean;
 }
 
-export class EntitlementCreateEventData {
-  constructor(public data: EntitlementCreateData) {}
+export class EntitlementCreateData {
+  constructor(public data: EntitlementCreateEventData) {}
 
   /**
    * The entitlement ID
