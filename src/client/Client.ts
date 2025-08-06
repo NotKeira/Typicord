@@ -1,6 +1,7 @@
 // This is replaced at build time by tsup
 declare const __CLIENT_VERSION__: string;
-import { GatewayClient } from "@/gateway/GatewayClient";
+import { ShardManager } from "@/gateway/ShardManager";
+import { RateLimitManager } from "@/client/RateLimitManager";
 
 import { EnhancedClient } from "@/events/EnhancedClient";
 import { Message } from "@/structures/Message";
@@ -16,77 +17,77 @@ import { UserCacheManager } from "@/cache/UserCacheManager";
 import { RESTClient } from "@/client/RESTClient";
 
 // Import all event data classes
-import { ReadyEventData } from "@/events/READY";
-import { ResumedEventData } from "@/events/RESUMED";
-import { MessageCreateEventData } from "@/events/MESSAGE_CREATE";
-import { MessageUpdateEventData } from "@/events/MESSAGE_UPDATE";
-import { MessageDeleteEventData } from "@/events/MESSAGE_DELETE";
-import { MessageDeleteBulkEventData } from "@/events/MESSAGE_DELETE_BULK";
-import { GuildCreateEventData } from "@/events/GUILD_CREATE";
-import { GuildUpdateEventData } from "@/events/GUILD_UPDATE";
-import { GuildDeleteEventData } from "@/events/GUILD_DELETE";
-import { GuildMemberAddEventData } from "@/events/GUILD_MEMBER_ADD";
-import { GuildMemberUpdateEventData } from "@/events/GUILD_MEMBER_UPDATE";
-import { GuildMemberRemoveEventData } from "@/events/GUILD_MEMBER_REMOVE";
-import { GuildMembersChunkEventData } from "@/events/GUILD_MEMBERS_CHUNK";
-import { GuildRoleCreateEventData } from "@/events/GUILD_ROLE_CREATE";
-import { GuildRoleUpdateEventData } from "@/events/GUILD_ROLE_UPDATE";
-import { GuildRoleDeleteEventData } from "@/events/GUILD_ROLE_DELETE";
-import { GuildBanAddEventData } from "@/events/GUILD_BAN_ADD";
-import { GuildBanRemoveEventData } from "@/events/GUILD_BAN_REMOVE";
-import { GuildEmojisUpdateEventData } from "@/events/GUILD_EMOJIS_UPDATE";
-import { GuildStickersUpdateEventData } from "@/events/GUILD_STICKERS_UPDATE";
-import { GuildIntegrationsUpdateEventData } from "@/events/GUILD_INTEGRATIONS_UPDATE";
-import { ChannelCreateEventData } from "@/events/CHANNEL_CREATE";
-import { ChannelUpdateEventData } from "@/events/CHANNEL_UPDATE";
-import { ChannelDeleteEventData } from "@/events/CHANNEL_DELETE";
-import { ChannelPinsUpdateEventData } from "@/events/CHANNEL_PINS_UPDATE";
-import { ThreadCreateEventData } from "@/events/THREAD_CREATE";
-import { ThreadUpdateEventData } from "@/events/THREAD_UPDATE";
-import { ThreadDeleteEventData } from "@/events/THREAD_DELETE";
-import { ThreadListSyncEventData } from "@/events/THREAD_LIST_SYNC";
-import { ThreadMemberUpdateEventData } from "@/events/THREAD_MEMBER_UPDATE";
-import { ThreadMembersUpdateEventData } from "@/events/THREAD_MEMBERS_UPDATE";
-import { InteractionCreateEventData } from "@/events/INTERACTION_CREATE";
-import { InviteCreateEventData } from "@/events/INVITE_CREATE";
-import { InviteDeleteEventData } from "@/events/INVITE_DELETE";
-import { TypingStartEventData } from "@/events/TYPING_START";
-import { MessageReactionAddEventData } from "@/events/MESSAGE_REACTION_ADD";
-import { MessageReactionRemoveEventData } from "@/events/MESSAGE_REACTION_REMOVE";
-import { MessageReactionRemoveAllEventData } from "@/events/MESSAGE_REACTION_REMOVE_ALL";
-import { MessageReactionRemoveEmojiEventData } from "@/events/MESSAGE_REACTION_REMOVE_EMOJI";
-import { PresenceUpdateEventData } from "@/events/PRESENCE_UPDATE";
-import { VoiceStateUpdateEventData } from "@/events/VOICE_STATE_UPDATE";
-import { VoiceServerUpdateEventData } from "@/events/VOICE_SERVER_UPDATE";
-import { WebhooksUpdateEventData } from "@/events/WEBHOOKS_UPDATE";
-import { UserUpdateEventData } from "@/events/USER_UPDATE";
-import { ApplicationCommandPermissionsUpdateEventData } from "@/events/APPLICATION_COMMAND_PERMISSIONS_UPDATE";
+import { ReadyData } from "@/events/READY";
+import { ResumedData } from "@/events/RESUMED";
+import { MessageCreateData } from "@/events/MESSAGE_CREATE";
+import { MessageUpdateData } from "@/events/MESSAGE_UPDATE";
+import { MessageDeleteData } from "@/events/MESSAGE_DELETE";
+import { MessageDeleteBulkData } from "@/events/MESSAGE_DELETE_BULK";
+import { GuildCreateData } from "@/events/GUILD_CREATE";
+import { GuildUpdateData } from "@/events/GUILD_UPDATE";
+import { GuildDeleteData } from "@/events/GUILD_DELETE";
+import { GuildMemberAddData } from "@/events/GUILD_MEMBER_ADD";
+import { GuildMemberUpdateData } from "@/events/GUILD_MEMBER_UPDATE";
+import { GuildMemberRemoveData } from "@/events/GUILD_MEMBER_REMOVE";
+import { GuildMembersChunkData } from "@/events/GUILD_MEMBERS_CHUNK";
+import { GuildRoleCreateData } from "@/events/GUILD_ROLE_CREATE";
+import { GuildRoleUpdateData } from "@/events/GUILD_ROLE_UPDATE";
+import { GuildRoleDeleteData } from "@/events/GUILD_ROLE_DELETE";
+import { GuildBanAddData } from "@/events/GUILD_BAN_ADD";
+import { GuildBanRemoveData } from "@/events/GUILD_BAN_REMOVE";
+import { GuildEmojisUpdateData } from "@/events/GUILD_EMOJIS_UPDATE";
+import { GuildStickersUpdateData } from "@/events/GUILD_STICKERS_UPDATE";
+import { GuildIntegrationsUpdateData } from "@/events/GUILD_INTEGRATIONS_UPDATE";
+import { ChannelCreateData } from "@/events/CHANNEL_CREATE";
+import { ChannelUpdateData } from "@/events/CHANNEL_UPDATE";
+import { ChannelDeleteData } from "@/events/CHANNEL_DELETE";
+import { ChannelPinsUpdateData } from "@/events/CHANNEL_PINS_UPDATE";
+import { ThreadCreateData } from "@/events/THREAD_CREATE";
+import { ThreadUpdateData } from "@/events/THREAD_UPDATE";
+import { ThreadDeleteData } from "@/events/THREAD_DELETE";
+import { ThreadListSyncData } from "@/events/THREAD_LIST_SYNC";
+import { ThreadMemberUpdateData } from "@/events/THREAD_MEMBER_UPDATE";
+import { ThreadMembersUpdateData } from "@/events/THREAD_MEMBERS_UPDATE";
+import { InteractionCreateData } from "@/events/INTERACTION_CREATE";
+import { InviteCreateData } from "@/events/INVITE_CREATE";
+import { InviteDeleteData } from "@/events/INVITE_DELETE";
+import { TypingStartData } from "@/events/TYPING_START";
+import { MessageReactionAddData } from "@/events/MESSAGE_REACTION_ADD";
+import { MessageReactionRemoveData } from "@/events/MESSAGE_REACTION_REMOVE";
+import { MessageReactionRemoveAllData } from "@/events/MESSAGE_REACTION_REMOVE_ALL";
+import { MessageReactionRemoveEmojiData } from "@/events/MESSAGE_REACTION_REMOVE_EMOJI";
+import { PresenceUpdateData } from "@/events/PRESENCE_UPDATE";
+import { VoiceStateUpdateData } from "@/events/VOICE_STATE_UPDATE";
+import { VoiceServerUpdateData } from "@/events/VOICE_SERVER_UPDATE";
+import { WebhooksUpdateData } from "@/events/WEBHOOKS_UPDATE";
+import { UserUpdateData } from "@/events/USER_UPDATE";
+import { ApplicationCommandPermissionsUpdateData } from "@/events/APPLICATION_COMMAND_PERMISSIONS_UPDATE";
 // Auto Moderation Events
-import { AutoModerationRuleCreateEventData } from "@/events/AUTO_MODERATION_RULE_CREATE";
-import { AutoModerationRuleUpdateEventData } from "@/events/AUTO_MODERATION_RULE_UPDATE";
-import { AutoModerationRuleDeleteEventData } from "@/events/AUTO_MODERATION_RULE_DELETE";
-import { AutoModerationActionExecutionEventData } from "@/events/AUTO_MODERATION_ACTION_EXECUTION";
+import { AutoModerationRuleCreateData } from "@/events/AUTO_MODERATION_RULE_CREATE";
+import { AutoModerationRuleUpdateData } from "@/events/AUTO_MODERATION_RULE_UPDATE";
+import { AutoModerationRuleDeleteData } from "@/events/AUTO_MODERATION_RULE_DELETE";
+import { AutoModerationActionExecutionData } from "@/events/AUTO_MODERATION_ACTION_EXECUTION";
 // Stage Instance Events
-import { StageInstanceCreateEventData } from "@/events/STAGE_INSTANCE_CREATE";
-import { StageInstanceUpdateEventData } from "@/events/STAGE_INSTANCE_UPDATE";
-import { StageInstanceDeleteEventData } from "@/events/STAGE_INSTANCE_DELETE";
+import { StageInstanceCreateData } from "@/events/STAGE_INSTANCE_CREATE";
+import { StageInstanceUpdateData } from "@/events/STAGE_INSTANCE_UPDATE";
+import { StageInstanceDeleteData } from "@/events/STAGE_INSTANCE_DELETE";
 // Guild Scheduled Events
-import { GuildScheduledEventCreateEventData } from "@/events/GUILD_SCHEDULED_EVENT_CREATE";
-import { GuildScheduledEventUpdateEventData } from "@/events/GUILD_SCHEDULED_EVENT_UPDATE";
-import { GuildScheduledEventDeleteEventData } from "@/events/GUILD_SCHEDULED_EVENT_DELETE";
-import { GuildScheduledEventUserAddEventData } from "@/events/GUILD_SCHEDULED_EVENT_USER_ADD";
-import { GuildScheduledEventUserRemoveEventData } from "@/events/GUILD_SCHEDULED_EVENT_USER_REMOVE";
+import { GuildScheduledEventCreateData } from "@/events/GUILD_SCHEDULED_EVENT_CREATE";
+import { GuildScheduledEventUpdateData } from "@/events/GUILD_SCHEDULED_EVENT_UPDATE";
+import { GuildScheduledEventDeleteData } from "@/events/GUILD_SCHEDULED_EVENT_DELETE";
+import { GuildScheduledEventUserAddData } from "@/events/GUILD_SCHEDULED_EVENT_USER_ADD";
+import { GuildScheduledEventUserRemoveData } from "@/events/GUILD_SCHEDULED_EVENT_USER_REMOVE";
 // Poll Events
-import { MessagePollVoteAddEventData } from "@/events/MESSAGE_POLL_VOTE_ADD";
-import { MessagePollVoteRemoveEventData } from "@/events/MESSAGE_POLL_VOTE_REMOVE";
+import { MessagePollVoteAddData } from "@/events/MESSAGE_POLL_VOTE_ADD";
+import { MessagePollVoteRemoveData } from "@/events/MESSAGE_POLL_VOTE_REMOVE";
 // Entitlement Events
-import { EntitlementCreateEventData } from "@/events/ENTITLEMENT_CREATE";
-import { EntitlementUpdateEventData } from "@/events/ENTITLEMENT_UPDATE";
-import { EntitlementDeleteEventData } from "@/events/ENTITLEMENT_DELETE";
+import { EntitlementCreateData } from "@/events/ENTITLEMENT_CREATE";
+import { EntitlementUpdateData } from "@/events/ENTITLEMENT_UPDATE";
+import { EntitlementDeleteData } from "@/events/ENTITLEMENT_DELETE";
 // Integration Events
-import { IntegrationCreateEventData } from "@/events/INTEGRATION_CREATE";
-import { IntegrationUpdateEventData } from "@/events/INTEGRATION_UPDATE";
-import { IntegrationDeleteEventData } from "@/events/INTEGRATION_DELETE";
+import { IntegrationCreateData } from "@/events/INTEGRATION_CREATE";
+import { IntegrationUpdateData } from "@/events/INTEGRATION_UPDATE";
+import { IntegrationDeleteData } from "@/events/INTEGRATION_DELETE";
 
 /**
  * The main Typicord client - this is what you'll be using to interact with Discord!
@@ -108,19 +109,39 @@ export class Client extends EnhancedClient {
   public user: import("@/structures/User").User | null = null;
   public guilds: any[] = [];
   public commands: ApplicationCommandManager | null = null;
-  private readonly _gateway: GatewayClient;
+  private readonly _shardManager: ShardManager;
+  private readonly _rateLimitManager: RateLimitManager;
 
   /**
    * Creates a new Typicord client instance
    * @param token Your bot's token from Discord
    * @param intents What events you want to receive (use GatewayIntentBits)
+   * @param options Optional client configuration
    */
-  constructor(token: string, intents: number) {
+  constructor(
+    token: string,
+    intents: number,
+    options?: {
+      shardCount?: number;
+      shardIds?: number[];
+      totalShards?: number;
+    }
+  ) {
     super();
     this.token = token;
     this.intents = intents;
-    this.rest = new RESTClient({ token });
-    this._gateway = new GatewayClient(this);
+    this._rateLimitManager = new RateLimitManager();
+    this.rest = new RESTClient({
+      token,
+      rateLimitManager: this._rateLimitManager,
+    });
+    this._shardManager = new ShardManager({
+      token,
+      intents,
+      shardCount: options?.shardCount || 1,
+      shardIds: options?.shardIds,
+      totalShards: options?.totalShards,
+    });
     this.cache = {
       guilds: new GuildCacheManager(),
       users: new UserCacheManager(),
@@ -131,7 +152,7 @@ export class Client extends EnhancedClient {
    * Actually connects to Discord - this starts everything up!
    */
   public connect(): void {
-    this._gateway.connect();
+    this._shardManager.spawn();
   }
 
   /**
@@ -151,7 +172,7 @@ export class Client extends EnhancedClient {
    * Cleanly disconnects from Discord
    */
   public disconnect(): void {
-    this._gateway.disconnect();
+    this._shardManager.destroy();
   }
 
   /**
@@ -159,15 +180,22 @@ export class Client extends EnhancedClient {
    * Call this when you're shutting down your bot to free up connections
    */
   destroy() {
-    this._gateway.disconnect();
+    this._shardManager.destroy();
     this.rest.destroy();
   }
 
   /**
-   * Gets our gateway client for advanced usage
+   * Gets our shard manager for advanced usage
    */
-  public get gateway(): GatewayClient {
-    return this._gateway;
+  public get shards(): ShardManager {
+    return this._shardManager;
+  }
+
+  /**
+   * Gets the rate limit manager for advanced usage
+   */
+  public get rateLimits(): RateLimitManager {
+    return this._rateLimitManager;
   }
 
   public override on<K extends keyof ClientEvents>(
@@ -196,122 +224,115 @@ export class Client extends EnhancedClient {
    * @private
    */
   private readonly eventHandlers = new Map<string, (data: any) => any>([
-    ["READY", data => new ReadyEventData(data)],
-    ["RESUMED", () => new ResumedEventData()],
+    ["READY", data => new ReadyData(data)],
+    ["RESUMED", () => new ResumedData()],
     [
       "MESSAGE_CREATE",
       data => {
-        const message = new Message(this, data);
-        return new MessageCreateEventData(message);
+        return new MessageCreateData(data, this.rest);
       },
     ],
-    ["MESSAGE_UPDATE", data => new MessageUpdateEventData(data)],
-    ["MESSAGE_DELETE", data => new MessageDeleteEventData(data)],
-    ["MESSAGE_DELETE_BULK", data => new MessageDeleteBulkEventData(data)],
-    ["GUILD_CREATE", data => new GuildCreateEventData(data)],
-    ["GUILD_UPDATE", data => new GuildUpdateEventData(data)],
-    ["GUILD_DELETE", data => new GuildDeleteEventData(data)],
-    ["CHANNEL_CREATE", data => new ChannelCreateEventData(data)],
-    ["CHANNEL_UPDATE", data => new ChannelUpdateEventData(data)],
-    ["CHANNEL_DELETE", data => new ChannelDeleteEventData(data)],
-    ["CHANNEL_PINS_UPDATE", data => new ChannelPinsUpdateEventData(data)],
-    ["INTERACTION_CREATE", data => new InteractionCreateEventData(data)],
-    ["TYPING_START", data => new TypingStartEventData(data)],
-    ["MESSAGE_REACTION_ADD", data => new MessageReactionAddEventData(data)],
-    [
-      "MESSAGE_REACTION_REMOVE",
-      data => new MessageReactionRemoveEventData(data),
-    ],
+    ["MESSAGE_UPDATE", data => new MessageUpdateData(data)],
+    ["MESSAGE_DELETE", data => new MessageDeleteData(data)],
+    ["MESSAGE_DELETE_BULK", data => new MessageDeleteBulkData(data)],
+    ["GUILD_CREATE", data => new GuildCreateData(data, this.rest)],
+    ["GUILD_UPDATE", data => new GuildUpdateData(data)],
+    ["GUILD_DELETE", data => new GuildDeleteData(data)],
+    ["CHANNEL_CREATE", data => new ChannelCreateData(data)],
+    ["CHANNEL_UPDATE", data => new ChannelUpdateData(data)],
+    ["CHANNEL_DELETE", data => new ChannelDeleteData(data)],
+    ["CHANNEL_PINS_UPDATE", data => new ChannelPinsUpdateData(data)],
+    ["INTERACTION_CREATE", data => new InteractionCreateData(data, this.rest)],
+    ["TYPING_START", data => new TypingStartData(data)],
+    ["MESSAGE_REACTION_ADD", data => new MessageReactionAddData(data)],
+    ["MESSAGE_REACTION_REMOVE", data => new MessageReactionRemoveData(data)],
     [
       "MESSAGE_REACTION_REMOVE_ALL",
-      data => new MessageReactionRemoveAllEventData(data),
+      data => new MessageReactionRemoveAllData(data),
     ],
     [
       "MESSAGE_REACTION_REMOVE_EMOJI",
-      data => new MessageReactionRemoveEmojiEventData(data),
+      data => new MessageReactionRemoveEmojiData(data),
     ],
-    ["PRESENCE_UPDATE", data => new PresenceUpdateEventData(data)],
-    ["VOICE_STATE_UPDATE", data => new VoiceStateUpdateEventData(data)],
-    ["VOICE_SERVER_UPDATE", data => new VoiceServerUpdateEventData(data)],
-    ["USER_UPDATE", data => new UserUpdateEventData(data)],
+    ["PRESENCE_UPDATE", data => new PresenceUpdateData(data)],
+    ["VOICE_STATE_UPDATE", data => new VoiceStateUpdateData(data)],
+    ["VOICE_SERVER_UPDATE", data => new VoiceServerUpdateData(data)],
+    ["USER_UPDATE", data => new UserUpdateData(data)],
     [
       "APPLICATION_COMMAND_PERMISSIONS_UPDATE",
-      data => new ApplicationCommandPermissionsUpdateEventData(data),
+      data => new ApplicationCommandPermissionsUpdateData(data),
     ],
-    ["GUILD_MEMBER_ADD", data => new GuildMemberAddEventData(data)],
-    ["GUILD_MEMBER_UPDATE", data => new GuildMemberUpdateEventData(data)],
-    ["GUILD_MEMBER_REMOVE", data => new GuildMemberRemoveEventData(data)],
-    ["GUILD_MEMBERS_CHUNK", data => new GuildMembersChunkEventData(data)],
-    ["GUILD_ROLE_CREATE", data => new GuildRoleCreateEventData(data)],
-    ["GUILD_ROLE_UPDATE", data => new GuildRoleUpdateEventData(data)],
-    ["GUILD_ROLE_DELETE", data => new GuildRoleDeleteEventData(data)],
-    ["GUILD_BAN_ADD", data => new GuildBanAddEventData(data)],
-    ["GUILD_BAN_REMOVE", data => new GuildBanRemoveEventData(data)],
-    ["GUILD_EMOJIS_UPDATE", data => new GuildEmojisUpdateEventData(data)],
-    ["GUILD_STICKERS_UPDATE", data => new GuildStickersUpdateEventData(data)],
+    ["GUILD_MEMBER_ADD", data => new GuildMemberAddData(data, this.rest)],
+    ["GUILD_MEMBER_UPDATE", data => new GuildMemberUpdateData(data)],
+    ["GUILD_MEMBER_REMOVE", data => new GuildMemberRemoveData(data, this.rest)],
+    ["GUILD_MEMBERS_CHUNK", data => new GuildMembersChunkData(data)],
+    ["GUILD_ROLE_CREATE", data => new GuildRoleCreateData(data)],
+    ["GUILD_ROLE_UPDATE", data => new GuildRoleUpdateData(data)],
+    ["GUILD_ROLE_DELETE", data => new GuildRoleDeleteData(data)],
+    ["GUILD_BAN_ADD", data => new GuildBanAddData(data)],
+    ["GUILD_BAN_REMOVE", data => new GuildBanRemoveData(data)],
+    ["GUILD_EMOJIS_UPDATE", data => new GuildEmojisUpdateData(data)],
+    ["GUILD_STICKERS_UPDATE", data => new GuildStickersUpdateData(data)],
     [
       "GUILD_INTEGRATIONS_UPDATE",
-      data => new GuildIntegrationsUpdateEventData(data),
+      data => new GuildIntegrationsUpdateData(data),
     ],
-    ["THREAD_CREATE", data => new ThreadCreateEventData(data)],
-    ["THREAD_UPDATE", data => new ThreadUpdateEventData(data)],
-    ["THREAD_DELETE", data => new ThreadDeleteEventData(data)],
-    ["THREAD_LIST_SYNC", data => new ThreadListSyncEventData(data)],
-    ["THREAD_MEMBER_UPDATE", data => new ThreadMemberUpdateEventData(data)],
-    ["THREAD_MEMBERS_UPDATE", data => new ThreadMembersUpdateEventData(data)],
-    ["INVITE_CREATE", data => new InviteCreateEventData(data)],
-    ["INVITE_DELETE", data => new InviteDeleteEventData(data)],
-    ["WEBHOOKS_UPDATE", data => new WebhooksUpdateEventData(data)],
+    ["THREAD_CREATE", data => new ThreadCreateData(data)],
+    ["THREAD_UPDATE", data => new ThreadUpdateData(data)],
+    ["THREAD_DELETE", data => new ThreadDeleteData(data)],
+    ["THREAD_LIST_SYNC", data => new ThreadListSyncData(data)],
+    ["THREAD_MEMBER_UPDATE", data => new ThreadMemberUpdateData(data)],
+    ["THREAD_MEMBERS_UPDATE", data => new ThreadMembersUpdateData(data)],
+    ["INVITE_CREATE", data => new InviteCreateData(data)],
+    ["INVITE_DELETE", data => new InviteDeleteData(data)],
+    ["WEBHOOKS_UPDATE", data => new WebhooksUpdateData(data)],
     [
       "AUTO_MODERATION_RULE_CREATE",
-      data => new AutoModerationRuleCreateEventData(data),
+      data => new AutoModerationRuleCreateData(data),
     ],
     [
       "AUTO_MODERATION_RULE_UPDATE",
-      data => new AutoModerationRuleUpdateEventData(data),
+      data => new AutoModerationRuleUpdateData(data),
     ],
     [
       "AUTO_MODERATION_RULE_DELETE",
-      data => new AutoModerationRuleDeleteEventData(data),
+      data => new AutoModerationRuleDeleteData(data),
     ],
     [
       "AUTO_MODERATION_ACTION_EXECUTION",
-      data => new AutoModerationActionExecutionEventData(data),
+      data => new AutoModerationActionExecutionData(data),
     ],
-    ["STAGE_INSTANCE_CREATE", data => new StageInstanceCreateEventData(data)],
-    ["STAGE_INSTANCE_UPDATE", data => new StageInstanceUpdateEventData(data)],
-    ["STAGE_INSTANCE_DELETE", data => new StageInstanceDeleteEventData(data)],
+    ["STAGE_INSTANCE_CREATE", data => new StageInstanceCreateData(data)],
+    ["STAGE_INSTANCE_UPDATE", data => new StageInstanceUpdateData(data)],
+    ["STAGE_INSTANCE_DELETE", data => new StageInstanceDeleteData(data)],
     [
       "GUILD_SCHEDULED_EVENT_CREATE",
-      data => new GuildScheduledEventCreateEventData(data),
+      data => new GuildScheduledEventCreateData(data),
     ],
     [
       "GUILD_SCHEDULED_EVENT_UPDATE",
-      data => new GuildScheduledEventUpdateEventData(data),
+      data => new GuildScheduledEventUpdateData(data),
     ],
     [
       "GUILD_SCHEDULED_EVENT_DELETE",
-      data => new GuildScheduledEventDeleteEventData(data),
+      data => new GuildScheduledEventDeleteData(data),
     ],
     [
       "GUILD_SCHEDULED_EVENT_USER_ADD",
-      data => new GuildScheduledEventUserAddEventData(data),
+      data => new GuildScheduledEventUserAddData(data),
     ],
     [
       "GUILD_SCHEDULED_EVENT_USER_REMOVE",
-      data => new GuildScheduledEventUserRemoveEventData(data),
+      data => new GuildScheduledEventUserRemoveData(data),
     ],
-    ["MESSAGE_POLL_VOTE_ADD", data => new MessagePollVoteAddEventData(data)],
-    [
-      "MESSAGE_POLL_VOTE_REMOVE",
-      data => new MessagePollVoteRemoveEventData(data),
-    ],
-    ["ENTITLEMENT_CREATE", data => new EntitlementCreateEventData(data)],
-    ["ENTITLEMENT_UPDATE", data => new EntitlementUpdateEventData(data)],
-    ["ENTITLEMENT_DELETE", data => new EntitlementDeleteEventData(data)],
-    ["INTEGRATION_CREATE", data => new IntegrationCreateEventData(data)],
-    ["INTEGRATION_UPDATE", data => new IntegrationUpdateEventData(data)],
-    ["INTEGRATION_DELETE", data => new IntegrationDeleteEventData(data)],
+    ["MESSAGE_POLL_VOTE_ADD", data => new MessagePollVoteAddData(data)],
+    ["MESSAGE_POLL_VOTE_REMOVE", data => new MessagePollVoteRemoveData(data)],
+    ["ENTITLEMENT_CREATE", data => new EntitlementCreateData(data)],
+    ["ENTITLEMENT_UPDATE", data => new EntitlementUpdateData(data)],
+    ["ENTITLEMENT_DELETE", data => new EntitlementDeleteData(data)],
+    ["INTEGRATION_CREATE", data => new IntegrationCreateData(data)],
+    ["INTEGRATION_UPDATE", data => new IntegrationUpdateData(data)],
+    ["INTEGRATION_DELETE", data => new IntegrationDeleteData(data)],
   ]);
 
   /**
@@ -452,7 +473,8 @@ export class Client extends EnhancedClient {
       },
     };
 
-    this._gateway.sendRawPayload(payload);
+    // Send to all shards
+    this._shardManager.broadcast(payload);
   }
 
   /**

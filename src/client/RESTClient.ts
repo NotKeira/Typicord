@@ -1,5 +1,6 @@
 import { fetch as undiciFetch, Agent } from "undici";
 import { debug, DebugNamespace } from "@/debug";
+import type { RateLimitManager } from "./RateLimitManager";
 
 /**
  * What you need to configure the REST client
@@ -11,6 +12,8 @@ export interface RESTOptions {
   version?: number;
   /** Custom API base URL if you need it (probably don't) */
   baseURL?: string;
+  /** Optional rate limit manager for advanced rate limiting */
+  rateLimitManager?: RateLimitManager;
 }
 
 /**
@@ -49,6 +52,8 @@ export class RESTClient {
   /** Reusable HTTP agent for connection pooling and better performance */
   private readonly agent: Agent;
   private readonly rateLimits: Map<string, number> = new Map();
+  /** Advanced rate limiting manager */
+  private readonly rateLimitManager?: RateLimitManager;
   /** Optional callback to track how long API requests take */
   public onAPILatency?: APILatencyCallback;
 
@@ -66,6 +71,7 @@ export class RESTClient {
     this.version = options.version ?? 10;
     this.baseURL =
       options.baseURL ?? `https://discord.com/api/v${this.version}`;
+    this.rateLimitManager = options.rateLimitManager;
 
     debug.info(
       DebugNamespace.REST,
@@ -144,10 +150,45 @@ export class RESTClient {
       extraHeaders: Object.keys(extraHeaders || {}),
     });
 
+    // Use advanced rate limiting if available
+    if (this.rateLimitManager) {
+      return await this.rateLimitManager.queueRequest<T>(
+        method,
+        endpoint,
+        async () => {
+          return await this.makeRequest<T>(
+            method,
+            endpoint,
+            body,
+            extraHeaders,
+            isForm
+          );
+        }
+      );
+    }
+
+    // Fallback to simple rate limiting
     if (this.isRateLimited(endpoint)) {
       debug.warn(DebugNamespace.REST, `Rate limited for endpoint: ${endpoint}`);
       throw new RESTError(429, `Rate limited for endpoint: ${endpoint}`);
     }
+
+    return await this.makeRequest<T>(
+      method,
+      endpoint,
+      body,
+      extraHeaders,
+      isForm
+    );
+  }
+
+  private async makeRequest<T = unknown>(
+    method: string,
+    endpoint: string,
+    body?: unknown,
+    extraHeaders?: Record<string, string>,
+    isForm?: boolean
+  ): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
     const headers: Record<string, string> = {
       Authorization: `Bot ${this.token}`,
