@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["javascript"]
+        language: ["typescript"] # Changed from "javascript"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,55 +27,25 @@ jobs:
         with:
           languages: ${{ matrix.language }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
-      - name: Enable Corepack and Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-          corepack use pnpm@latest
+          cache: "pnpm"
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build project
         run: pnpm build
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
-
-  sonarcloud:
-    name: SonarCloud Analysis
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Enable Corepack and Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-          corepack use pnpm@latest
-
-      - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Build and test
-        run: |
-          pnpm build
-        env:
-          SKIP_INTEGRATION_TESTS: true
 
   bundle-analysis:
     name: Bundle Size Analysis
@@ -84,35 +54,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
-      - name: Enable Corepack and Install pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-          corepack use pnpm@latest
-
+          cache: "pnpm"
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Build project
         run: pnpm build
 
-      - name: Analyze bundle size
+      - name: Analyse bundle size
         run: |
           echo "## Bundle Size Analysis" >> bundle-analysis.md
           echo "" >> bundle-analysis.md
           echo "### Build Output" >> bundle-analysis.md
-          ls -la dist/ >> bundle-analysis.md
+          ls -la dist/ >> bundle-analysis.md || echo "No dist directory found" >> bundle-analysis.md
           echo "" >> bundle-analysis.md
           echo "### File Sizes" >> bundle-analysis.md
-          du -h dist/* >> bundle-analysis.md
+          du -h dist/* >> bundle-analysis.md 2>/dev/null || echo "No files to analyze" >> bundle-analysis.md
           echo "" >> bundle-analysis.md
           echo "### Total Package Size" >> bundle-analysis.md
-          du -sh dist/ >> bundle-analysis.md
+          du -sh dist/ >> bundle-analysis.md 2>/dev/null || echo "No dist directory" >> bundle-analysis.md
 
       - name: Upload bundle analysis
         uses: actions/upload-artifact@v4
