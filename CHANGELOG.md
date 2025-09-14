@@ -5,7 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.2.3] - 2025-08-07
+## [3.2.4](https://github.com/NotKeira/typicord/releases/tag/v3.2.4) - 2025-09-14
+
+### Changed
+- **License**: Migrated from Apache-2.0 to MIT for simpler licensing and broader compatibility
+- Updated all GitHub Actions workflows to use modern actions
+- Replaced deprecated Corepack setup with pnpm/action-setup@v4 across all workflows
+- Improved CI/CD performance with pnpm caching and enhanced workflow reliability
+- Updated pnpm package manager from 10.14.0 to 10.16.1
+- Updated development dependencies to latest versions for better security and performance
+- Refreshed pnpm-lock.yaml with updated dependency versions
+
+### Fixed
+- Fixed deprecated actions/create-release@v1 usage in release workflow
+- Resolved workflow compatibility issues for better CI/CD stability
+
+### Removed
+- Removed unused sonar-project.properties configuration file
+- Removed empty TODO.md file for cleaner repository structure
+
+### Dependencies Updated
+- **Development Dependencies**: Updated ESLint, TypeScript, and related tooling to latest versions
+- **Runtime Dependencies**: Updated dotenv, globals, and undici for better performance and security
+- **Package Manager**: Updated to pnpm 10.16.1 with refreshed lockfile
+
+## [3.2.3](https://github.com/NotKeira/typicord/releases/tag/v3.2.3) - 2025-08-07
 
 ### Fixed
 - **Critical Event System Fix**: Added missing event forwarding from ShardManager to Client
@@ -17,7 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added packet event listener in Client constructor to forward ShardManager packets to dispatch handlers
 - Events are now properly processed through the gateway event handling system
 
-## [3.2.1] - 2025-08-07
+## [3.2.1](https://github.com/NotKeira/typicord/releases/tag/v3.2.1) - 2025-08-07
 
 ### Fixed
 - Fixed TypeScript build errors related to incorrect type imports
@@ -29,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Resolved DTS build errors caused by mixing class imports with interface types
 - Ensured consistent type usage across event handlers for better type safety
 
-## [3.2.0] - 2025-08-07
+## [3.2.0](https://github.com/NotKeira/typicord/releases/tag/v3.2.0) - 2025-08-07
 
 ### Added
 - **Enhanced Event System**: Event data now provides full class functionality instead of raw interfaces
@@ -54,7 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed example bots and test files to clean up repository for production use
 - Cleaned up development artifacts and benchmarks
 
-## [3.1.2] - 2025-08-06
+## [3.1.2](https://github.com/NotKeira/typicord/releases/tag/v3.1.2) - 2025-08-06
 
 ### Fixed
 - Fixed duplicate `getStats` methods in ShardManager causing TypeScript compilation errors
@@ -67,7 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Enhanced event forwarding from shards through ShardManager to Client
 - Added debug logging for shard event processing
 
-## [3.1.1] - 2025-08-06
+## [3.1.1](https://github.com/NotKeira/typicord/releases/tag/v3.1.1) - 2025-08-06
 
 ### Added
 - Added backwards compatibility methods for gateway access
@@ -79,7 +103,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Resolved WebSocket latency retrieval for existing code patterns
 - Updated event type exports and gateway events interface
 
-## [3.0.0] - 2025-08-06
+## [3.0.0](https://github.com/NotKeira/typicord/releases/tag/v3.0.0) - 2025-08-06
 
 ### Added
 - **Enterprise-Grade Sharding System**: Production-ready multi-shard architecture
@@ -141,7 +165,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - For enterprise features, use new constructor options: `new Client(token, intents, { shardCount: 4 })`
 - Event handler code remains unchanged despite internal class renames
 
-## [2.0.0] - 2025-08-05
+## [2.0.0](https://github.com/NotKeira/typicord/releases/tag/v2.0.0) - 2025-08-05
 
 ### Added
 - **Enhanced Event System**: Complete Discord.js-like event handling with TypeScript support
@@ -184,7 +208,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed unnecessary type assertions throughout codebase
 - Improved memory management in event handling
 
-## [1.9.2] - 2025-08-05
+## [1.9.2](https://github.com/NotKeira/typicord/releases/tag/v1.9.2) - 2025-08-05
 
 ### Added
 - Comprehensive type definitions directly in structure files for better accessibility
@@ -208,7 +232,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 This release significantly improves the developer experience by making all types directly available
 from their respective structure imports, eliminating the confusion around missing exports like `GuildMember`.
 
-## [1.9.1] - 2025-08-03
+## [1.9.1](https://github.com/NotKeira/typicord/releases/tag/v1.9.1) - 2025-08-03
 
 ### Fixed
 - CI pipeline configuration issues with pnpm commands
@@ -224,7 +248,7 @@ from their respective structure imports, eliminating the confusion around missin
 - Enhanced workflow reliability with proper dependency installation
 - Improved ESLint configuration for different file types (tests, examples, benchmarks)
 
-## [1.9.0] - 2025-08-03
+## [1.9.0](https://github.com/NotKeira/typicord/releases/tag/v1.9.0) - 2025-08-03
 
 ### Added
 - Comprehensive example implementations demonstrating progressive complexity
@@ -260,7 +284,7 @@ from their respective structure imports, eliminating the confusion around missin
 - Feature highlights and examples table with complexity ratings
 - Debug system documentation with environment variable usage
 
-## [1.8.2] - 2025-08-03
+## [1.8.2](https://github.com/NotKeira/typicord/releases/tag/v1.8.2) - 2025-08-03
 
 ### Changed
 - Enhanced TypeScript configuration with stricter type checking
@@ -273,7 +297,7 @@ from their respective structure imports, eliminating the confusion around missin
 ### Removed
 - Removed obsolete TODO.md file
 
-## [1.8.1] - 2025-08-03
+## [1.8.1](https://github.com/NotKeira/typicord/releases/tag/v1.8.1) - 2025-08-03
 
 ### Added
 - Comprehensive documentation and example implementations
@@ -284,7 +308,7 @@ from their respective structure imports, eliminating the confusion around missin
 - simple-enhanced-bot.ts as improved basic bot template
 - Updated documentation structure for better developer experience
 
-## [1.8.0] - 2025-08-03
+## [1.8.0](https://github.com/NotKeira/typicord/releases/tag/v1.8.0) - 2025-08-03
 
 ### Added
 - Client.once() method for one-time event listening with automatic cleanup
@@ -296,7 +320,7 @@ from their respective structure imports, eliminating the confusion around missin
 - Enhanced RESTClient with improved error handling and type safety
 - Updated Client import/export structure for better modularity
 
-## [1.7.0] - 2025-08-03
+## [1.7.0](https://github.com/NotKeira/typicord/releases/tag/v1.7.0) - 2025-08-03
 
 ### Added
 - Modular, scalable Gateway dispatch event handler system
@@ -311,7 +335,7 @@ from their respective structure imports, eliminating the confusion around missin
 ### Changed
 - Updated GatewayClient to use modular dispatch system instead of hardcoded handlers
 
-## [1.6.0] - 2025-08-03
+## [1.6.0](https://github.com/NotKeira/typicord/releases/tag/v1.6.0) - 2025-08-03
 
 ### Added
 - Dynamic event system with Events namespace export
@@ -323,7 +347,7 @@ from their respective structure imports, eliminating the confusion around missin
 ### Changed
 - Updated main index.ts to export Events namespace
 
-## [1.5.0] - 2025-08-03
+## [1.5.0](https://github.com/NotKeira/typicord/releases/tag/v1.5.0) - 2025-08-03
 
 ### Added
 - Comprehensive TypeScript type safety overhaul
@@ -335,7 +359,7 @@ from their respective structure imports, eliminating the confusion around missin
 - Replaced all 'any' types with proper Discord API type definitions
 - Enhanced Message, Guild, Channel, and other structure classes with proper typing
 
-## [1.4.4] - 2025-08-03
+## [1.4.4](https://github.com/NotKeira/typicord/releases/tag/v1.4.4) - 2025-08-03
 
 ### Added
 - TYPI_DEBUG environment variable debug system
