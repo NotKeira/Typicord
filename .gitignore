@@ -41,10 +41,6 @@ coverage/
 # Optional eslint cache
 .eslintcache
 
-# Package files
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
 
 
 
