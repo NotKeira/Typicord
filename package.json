@@ -1,6 +1,6 @@
 {
   "name": "typicord",
-  "version": "3.2.4",
+  "version": "3.2.5",
   "description": "A modern, efficient Discord API library for Node.js with full TypeScript support",
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
